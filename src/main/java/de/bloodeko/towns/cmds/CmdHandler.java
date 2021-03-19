@@ -3,7 +3,6 @@ package de.bloodeko.towns.cmds;
 import static de.bloodeko.towns.util.Util.filterList;
 import static de.bloodeko.towns.util.Util.strip0;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -37,8 +36,8 @@ public class CmdHandler {
     }
     
     /**
-     * Dispatches tab-completion to a sub-command 
-     * and returns the resulting filtered List.
+     * Dispatches tab-completion to a sub-command with the first 
+     * argument cut off. and returns the resulting filtered List.
      */
     public List<String> onTabComplete(String[] args, Player player) {
         if (args.length == 1) {
@@ -53,9 +52,5 @@ public class CmdHandler {
             return fmCmd.completeTab(strip0(args), player);
         }
         return simple;
-    }
-    
-    public Collection<CmdBase> getCmds() {
-        return cmds.values();
     }
 }

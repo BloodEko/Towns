@@ -68,7 +68,7 @@ public class ClaimCmd extends CmdBase {
         List<Town> list = new ArrayList<>();
         for (Yaw yaw : Yaw.DIRECTIONS) {
             Chunk chunk = Chunk.fromEntity(player);
-            Town town = getMap().query(chunk.add(yaw));
+            Town town = getMap().getTown(chunk.add(yaw));
             if (town != null && town.getPeople().isGovernor(player.getUniqueId())) {
                 list.add(town);
             }

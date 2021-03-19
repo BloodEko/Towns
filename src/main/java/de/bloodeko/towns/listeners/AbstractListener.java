@@ -27,14 +27,14 @@ public abstract class AbstractListener implements Listener {
     }
     
     public Town getTown(Chunk chunk) {
-        return map.query(chunk);
+        return map.getTown(chunk);
     }
     
     public Town getTown(Entity entity) {
-        return map.query(Chunk.fromLocation(entity.getLocation()));
+        return map.getTown(Chunk.fromLocation(entity.getLocation()));
     }
     
     public Town getTown(Location loc) {
-        return map.query(Chunk.fromLocation(loc));
+        return map.getTown(Chunk.fromLocation(loc));
     }
 }

@@ -104,7 +104,7 @@ public abstract class CmdBase {
      * Throws an exception, if no Town is found.
      */
     public Town getTownAsPlayer(Player player) {
-        Town town = map.query(Chunk.fromEntity(player));
+        Town town = map.getTown(Chunk.fromEntity(player));
         if (town == null) {
             throw new ModifyException("cmds.base.noTownAtLocation");
         }

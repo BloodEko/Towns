@@ -56,7 +56,7 @@ public class TownArea {
      * Adds the chunk to the area. Sets the chunk for the town in the ChunkMap. 
      */
     public void expand(ChunkMap map, Town town, Chunk chunk) {
-        if (map.query(chunk) != null) {
+        if (map.getTown(chunk) != null) {
             throw new ModifyException("town.townarea.alreadyTaken");
         }
         rules.checkExpand(map, town, this, chunk);

@@ -1,6 +1,7 @@
 package de.bloodeko.towns.cmds.general;
 
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
 
@@ -12,17 +13,21 @@ import de.bloodeko.towns.cmds.CmdBase;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.people.TownPeople;
-import de.bloodeko.towns.town.settings.TownSetting;
+import de.bloodeko.towns.town.settings.Setting;
+import de.bloodeko.towns.town.settings.SettingsRegistry;
+import de.bloodeko.towns.town.settings.SettingsRegistry.RegisteredSetting;
 import de.bloodeko.towns.util.Messages;
 
 public class InfoCmd extends CmdBase {
-    private final String separator = Messages.get("cmds.info.separator");
-    private final String resetColor = Messages.get("cmds.info.resetColor");
-    private final String boldColor = Messages.get("cmds.info.boldColor");
-    private final String onlineColor = Messages.get("cmds.info.onlineColor");
+    private static final String separator = Messages.get("cmds.info.separator");
+    private static final String resetColor = Messages.get("cmds.info.resetColor");
+    private static final String boldColor = Messages.get("cmds.info.boldColor");
+    private static final String onlineColor = Messages.get("cmds.info.onlineColor");
+    private SettingsRegistry registry;
     
-    public InfoCmd(ChunkMap map) {
+    public InfoCmd(ChunkMap map, SettingsRegistry registry) {
         super(map);
+        this.registry = registry;
     }
     
     @Override
@@ -38,7 +43,7 @@ public class InfoCmd extends CmdBase {
 
         Messages.say(player, "cmds.info.peopleHeader");
         Messages.say(player, "cmds.info.governors", getGovernors(town.getPeople()));
-        Messages.say(player, "cmds.info.builders", getBuilders(town.getPeople()));
+        Messages.say(player, "cmds.info.builders", getBuilders(town.getPeople().getBuilders()));
         
         Messages.say(player, "cmds.info.areaHeader");
         Messages.say(player, "cmds.info.minX", town.getArea().getSides().minX);
@@ -47,14 +52,26 @@ public class InfoCmd extends CmdBase {
         Messages.say(player, "cmds.info.maxZ", town.getArea().getSides().maxZ);
 
         Messages.say(player, "cmds.info.settingsHeader");
-        for (Entry<TownSetting, Object> entry : town.getSettings().getSettings().entrySet()) {
-            TownSetting setting = entry.getKey();
-            Messages.say(player, "cmds.info.setting", setting.getDisplay(),
-              setting.display(entry.getValue()));
+        for (Entry<Setting, Object> entry : town.getSettings().getSettings().entrySet()) {
+            printFullInfo(player, entry.getKey(), entry.getValue());
         }
     }
     
-    private String getGovernors(TownPeople people) {
+    private void printFullInfo(Player player, Setting setting, Object value) {
+        RegisteredSetting ui = registry.fromId(setting.getId());
+        String name;
+        Object val;
+        if (ui == null) {
+            name = setting.getId();
+            val = value;
+        } else {
+            name = ui.display;
+            val = ui.display(value);
+        }
+        Messages.say(player, "cmds.info.setting", name, val);
+    }
+    
+    public static String getGovernors(TownPeople people) {
         StringJoiner joiner = new StringJoiner(separator);
         for (UUID uuid : people.getGovernors()) {
             if (people.isOwner(uuid)) {
@@ -66,15 +83,15 @@ public class InfoCmd extends CmdBase {
         return joiner.toString();
     }
     
-    private String getBuilders(TownPeople people) {
+    public static String getBuilders(Set<UUID> set) {
         StringJoiner joiner = new StringJoiner(separator);
-        for (UUID uuid : people.getBuilders()) {
+        for (UUID uuid : set) {
             joiner.add(withPrefix(uuid, false));
         }
         return joiner.toString();
     }
     
-    private String withPrefix(UUID uuid, boolean bold) {
+    public static String withPrefix(UUID uuid, boolean bold) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
         String val = player.getName();
         if (val == null) {

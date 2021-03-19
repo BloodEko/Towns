@@ -62,6 +62,6 @@ public abstract class BooleanCmd extends CmdBase {
      */
     @Override
     public List<String> completeTab(String[] args) {
-        return Util.filterList(Arrays.asList(ON, OFF), args);
+        return Util.filterList(Arrays.asList(ON, OFF), args[0]);
     }
 }

@@ -23,6 +23,21 @@ public class Util {
         if (args.length == 0) return args;
         return Arrays.copyOfRange(args, 1, args.length);
     }
+
+    /**
+     * Returns a list of entries that start with the argument.
+     * Ignores case sensitivity.
+     */
+    public static List<String> filterLowerList(Collection<String> filter, String arg) {
+        List<String> list = new ArrayList<>();
+        arg = arg.toLowerCase();
+        for (String key : filter) {
+            if (key.toLowerCase().startsWith(arg)) {
+                list.add(key);
+            }
+        }
+        return list;
+    }
     
     /**
      * Returns a list of entries that start with the argument.
@@ -33,16 +48,6 @@ public class Util {
             if (key.startsWith(arg)) {
                 list.add(key);
             }
-        }
-        return list;
-    }
-
-    /**
-     * Filters the list of entries for the first argument.
-     */
-    public static List<String> filterList(List<String> list, String[] args) {
-        if (args.length == 1) {
-            return filterList(list, args[0]);
         }
         return list;
     }

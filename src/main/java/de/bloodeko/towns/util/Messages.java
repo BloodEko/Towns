@@ -25,7 +25,7 @@ public class Messages {
     }
     
     private Messages(Map<String, String> map) {
-        this.map = new HashMap<>();
+        this.map = map;
     }
     
     /**

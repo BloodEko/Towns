@@ -15,7 +15,7 @@ public class ChunkMap {
         this.map = map;
     }
     
-    public Town query(Chunk chunk) {
+    public Town getTown(Chunk chunk) {
         return map.get(chunk);
     }
     
@@ -32,7 +32,7 @@ public class ChunkMap {
     }
     
     public ItemStack getIcon(Chunk chunk) {
-        Town town = query(chunk);
+        Town town = getTown(chunk);
         if (town == null) return null;
         return Items.createItem(Material.LIME_STAINED_GLASS_PANE, town.getSettings().getName());
     }

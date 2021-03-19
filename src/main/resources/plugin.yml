@@ -8,5 +8,8 @@ softdepend: [WorldEdit, WorldGuard]
 
 commands:
   town:
-    description: Bundles town commands.
+    description: Town commands.
+    usage: /<command>
+  plot:
+    description: Plot commands.
     usage: /<command>

@@ -69,7 +69,7 @@ public class ClaimRules {
     private void checkNear(ChunkMap map, Town town, Chunk chunk) {
         int count = 0;
         for (Chunk ch : chunk.getNear(NEAR_RANGE)) {
-            if (map.query(ch) == town) count++;
+            if (map.getTown(ch) == town) count++;
         }
         if (count < MIN_COUNT_NEAR) {
             throw new ModifyException("town.chunkrules.notEnoughChunksNear", 

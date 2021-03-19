@@ -9,8 +9,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+
 import com.google.common.base.Objects;
 
+import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.area.TownArea.ChunkRegion;
 import de.bloodeko.towns.util.ModifyException;
 
@@ -60,18 +65,19 @@ public class TownPeople {
         owner = to;
     }
     
-    public void addGovenor(UUID from, UUID to) {
+    public void addGovenor(UUID from, UUID to, Town town) {
         if (!isGovernor(from)) {
             throw new ModifyException("town.townpeople.youAreNoGovernor");
         }
         if (isGovernor(to)) {
             throw new ModifyException("town.townpeople.targetIsAlreadyGovernor");
         }
+        Bukkit.getPluginManager().callEvent(new AddGovernorEvent(to, town));
         region.getOwners().addPlayer(to);
         governors.add(to);
     }
     
-    public void removeGovenor(UUID from, UUID to) {
+    public void removeGovenor(UUID from, UUID to, Town town) {
         if (Objects.equal(from, to)) {
             throw new ModifyException("town.townpeople.cantRemoveYourself");
         }
@@ -81,6 +87,7 @@ public class TownPeople {
         if (!isGovernor(to)) {
             throw new ModifyException("town.townpeople.targetIsNoGovernor");
         }
+        Bukkit.getPluginManager().callEvent(new RemoveGovernorEvent(to, town));
         region.getOwners().removePlayer(to);
         governors.remove(to);
     }
@@ -128,5 +135,37 @@ public class TownPeople {
             region.getMembers().addPlayer(uuid);
         }
         return new TownPeople(asUUID(root.get("owner")), governors, builders, region);
+    }
+    
+    public static class AddGovernorEvent extends Event {
+        private static HandlerList handlers = new HandlerList();
+        public final UUID uuid;
+        public final Town town;
+        
+        public AddGovernorEvent(UUID uuid, Town town) {
+            this.uuid = uuid;
+            this.town = town;
+        }
+
+        @Override
+        public HandlerList getHandlers() {
+            return handlers;
+        }
+    }
+    
+    public static class RemoveGovernorEvent extends Event {
+        private static HandlerList handlers = new HandlerList();
+        public final UUID uuid;
+        public final Town town;
+        
+        public RemoveGovernorEvent(UUID uuid, Town town) {
+            this.uuid = uuid;
+            this.town = town;
+        }
+
+        @Override
+        public HandlerList getHandlers() {
+            return handlers;
+        }
     }
 }

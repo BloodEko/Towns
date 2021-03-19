@@ -14,6 +14,7 @@ import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownFactory;
 import de.bloodeko.towns.town.TownRegistry;
+import de.bloodeko.towns.town.settings.SettingsFactory;
 import de.bloodeko.towns.town.settings.SettingsRegistry;
 import de.bloodeko.towns.util.BukkitFactory;
 import de.bloodeko.towns.util.Messages;
@@ -41,9 +42,9 @@ import de.bloodeko.towns.util.YamlSerializer;
  * ?MoreSettings/+SettingsUpgrade
  * ?Plots, PlotManager. WorldMap, ChunkMap, ChunkToTownWrapper.
  * ?Location/Chunk/Region hooks. (for unclaim)
- * ?StufenAufstiege. 
- * ?Config.
+ * ?StufenAufstiege.
  * ?Chatsystem. 
+ * ?Config.
  * ?Permissions town.mod/admin/notifyTownUpgrade
  */
 public class Towns extends JavaPlugin {
@@ -56,7 +57,7 @@ public class Towns extends JavaPlugin {
         Messages.enable(Util.readLines(getResource("messages.properties")));
         
         chunkmap = BukkitFactory.newChunkHandler(this);
-        settings = CmdFactory.newSettingsRegistry();
+        settings = SettingsFactory.newSettingsRegistry();
         registry = loadRegistry();
         CmdFactory.init(this);
         ListenerFactory.init(this);
@@ -117,5 +118,9 @@ public class Towns extends JavaPlugin {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public SettingsRegistry getSettingsRegistry() {
+        return settings;
     }
 }

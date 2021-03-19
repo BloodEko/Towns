@@ -21,7 +21,7 @@ public class UnclaimCmd extends CmdBase {
     }
     
     public void unclaim(Chunk chunk, Player player) {
-        Town town = getMap().query(chunk);
+        Town town = getMap().getTown(chunk);
         if (town == null) {
             Messages.say(player, "cmds.unclaim.notClaimed");
             return;
