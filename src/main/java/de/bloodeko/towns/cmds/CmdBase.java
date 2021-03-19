@@ -10,6 +10,7 @@ import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.ModifyException;
+import net.milkbowl.vault.economy.Economy;
 
 /**
  * Base for commands within the plugin.
@@ -88,6 +89,17 @@ public abstract class CmdBase {
     }
     
     /**
+     * Checks if the player has enough money.
+     * Throws an exception otherwise.
+     */
+    public void checkMoney(Economy economy, Player player, double price) {
+        if (economy.getBalance(player) < price) {
+            throw new ModifyException("cmds.base.notEnoughMoney", 
+              price, economy.currencyNamePlural());
+        }
+    }
+    
+    /**
      * Gets the town at the current location with permission checks.
      * Otherwise throws an exception.
      */
@@ -107,6 +119,18 @@ public abstract class CmdBase {
         Town town = map.getTown(Chunk.fromEntity(player));
         if (town == null) {
             throw new ModifyException("cmds.base.noTownAtLocation");
+        }
+        return town;
+    }
+    
+    /**
+     * Gets the town at the current location without permission checks.
+     * Throws an exception, if no Town is found.
+     */
+    public Town getTownAsMod(Player player) {
+        Town town = getTownAsPlayer(player);
+        if (!player.hasPermission("towns.mod")) {
+            throw new ModifyException("cmds.base.noModPermission");
         }
         return town;
     }

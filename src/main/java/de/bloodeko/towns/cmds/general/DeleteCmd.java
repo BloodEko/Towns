@@ -9,7 +9,8 @@ import de.bloodeko.towns.town.TownFactory;
 import de.bloodeko.towns.town.TownRegistry;
 import de.bloodeko.towns.util.Messages;
 
-// todo TempMap. Map<UUID, Long>
+//todo, double check safety.
+//todo, prevent, if it has plots.
 public class DeleteCmd extends CmdBase {
     private TownRegistry registry;
     

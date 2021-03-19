@@ -15,13 +15,14 @@ public class StageCmd extends CmdBase {
 
     @Override
     public void execute(Player player, String[] args) {
-        Town town = getTown(player);
+        Town town = getTownAsMod(player);
         String stage = getArg(0, args);
         try {
             town.getSettings().setStage(Integer.parseInt(stage));
             String name = town.getSettings().getName();
             Messages.say(player, "cmds.stage.setStage", name, stage);
-        } catch (NumberFormatException ex) {
+        } 
+        catch (NumberFormatException ex) {
             Messages.say(player, "cmds.stage.invalidNumber");
         }
     }

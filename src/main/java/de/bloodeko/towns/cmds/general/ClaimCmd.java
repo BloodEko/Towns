@@ -12,22 +12,26 @@ import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.Yaw;
+import net.milkbowl.vault.economy.Economy;
 
-// TODO. there is a bug after server restart
-//  that no near towns are found. (add sysout of chunkmap/list.)
 public class ClaimCmd extends CmdBase {
+    private static int price = 512;
+    private Economy economy;
     
-    public ClaimCmd(ChunkMap chunks) {
+    public ClaimCmd(ChunkMap chunks, Economy economy) {
         super(chunks);
+        this.economy = economy;
     }
     
     @Override
     public void execute(Player player, String[] args) {
+        checkMoney(economy, player, price);
         if (args.length == 0) {
             claim(player);
         } else {
             claim(player, args[0]);
         }
+        economy.withdrawPlayer(player, price);
         Messages.say(player, "cmds.claim.claimedChunk");
     }
     

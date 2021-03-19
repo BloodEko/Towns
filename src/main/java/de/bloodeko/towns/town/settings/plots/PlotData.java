@@ -8,6 +8,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import de.bloodeko.towns.util.Node;
 
+//name to note?
 public class PlotData {
     public int id;
     public String name;

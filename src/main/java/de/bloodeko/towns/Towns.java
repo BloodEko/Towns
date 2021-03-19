@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.bloodeko.towns.cmds.CmdFactory;
@@ -19,10 +20,12 @@ import de.bloodeko.towns.town.settings.plots.cmds.PlotCmd;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotPayrentCmd;
 import de.bloodeko.towns.util.BukkitFactory;
 import de.bloodeko.towns.util.Messages;
+import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.Node;
 import de.bloodeko.towns.util.Util;
 import de.bloodeko.towns.util.YamlDeserializer;
 import de.bloodeko.towns.util.YamlSerializer;
+import net.milkbowl.vault.economy.Economy;
 
 /**
  * TownCommand (handler system with tab completion)
@@ -53,6 +56,7 @@ public class Towns extends JavaPlugin {
     private ChunkMap chunkmap;
     private TownRegistry registry;
     private SettingsRegistry settings;
+    private Economy economy;
 
     public ChunkMap getChunkMap() {
         return chunkmap;
@@ -66,12 +70,20 @@ public class Towns extends JavaPlugin {
         return settings;
     }
     
+    public Economy getEconomy() {
+        if (economy == null) {
+            throw new ModifyException("Economy is null!");
+        }
+        return economy;
+    }
+    
     @Override
     public void onEnable() {
         loadMessages();
         loadChunkMap();
         loadSettings();
         loadNames();
+        loadEconomy();
         loadCommands();
         loadListeners();
         loadSerializer();
@@ -101,8 +113,16 @@ public class Towns extends JavaPlugin {
         CmdFactory.init(this);
     }
     
+    private void loadEconomy() {
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return;
+        }
+        economy = rsp.getProvider();
+    }
+    
     private void loadListeners() {
-        RentService service = new RentService(TownFactory.getWorldManager(), registry);
+        RentService service = new RentService(TownFactory.getWorldManager(), registry, economy);
         Bukkit.getPluginManager().registerEvents(service, this);
         
         PlotCmd cmd = (PlotCmd) Bukkit.getPluginCommand("plot").getExecutor();

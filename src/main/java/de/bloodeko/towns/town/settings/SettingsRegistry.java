@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.bloodeko.towns.town.Town;
+import de.bloodeko.towns.town.settings.SettingsFactory.DisplayHandler;
 import de.bloodeko.towns.util.Messages;
 
 public class SettingsRegistry {
@@ -62,6 +63,7 @@ public class SettingsRegistry {
         public final int price;
         public final String display;
         public final boolean hidden;
+        public DisplayHandler displayHandler;
         
         public RegisteredSetting(Setting setting, int minStage, int price, String display, boolean hidden) {
             this.value = setting;
@@ -90,16 +92,26 @@ public class SettingsRegistry {
          * Formats the value to be used for an display. If the object
          * or the result value is null, displays an empty value.
          */
-        public String display(Object obj) {
-            String empty = Messages.get("cmds.info.nullValue");
+        public String display(Town town, Object obj) {
             if (obj == null)  {
-                return empty;
+                return Messages.get("cmds.info.nullValue");
             }
-            Object result = value.serialize(obj);
-            if (result == null) {
-                return empty;
+            if (displayHandler == null) {
+                Object result = value.serialize(obj);
+                if (result == null) {
+                    return Messages.get("cmds.info.nullValue");
+                }
+                return result.toString();
             }
-            return result.toString();
+            return displayHandler.display(town, obj);
+        }
+        
+        /**
+         * Sets the DisplayHandler for this setting, which formats
+         * the settings value in UIs.
+         */
+        public void addDisplayHandler(DisplayHandler displayHandler) {
+            this.displayHandler = displayHandler;
         }
     }
     

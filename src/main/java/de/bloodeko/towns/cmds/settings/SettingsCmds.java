@@ -11,44 +11,37 @@ import de.bloodeko.towns.town.settings.TownSettings;
 import de.bloodeko.towns.util.Messages;
 
 /**
- * Commands to toggle and define various setitngs
- * in towns.
+ * Commands to define and toggle settings
+ * for towns.
  */
 public class SettingsCmds {
     
-    /**
-     * Toggles DAMAGE_ANIMALS.
-     */
-    public static class DamageAnimalsCmd extends BooleanCmd {
+    public static class AnimalProtectCmd extends BooleanCmd {
 
-        public DamageAnimalsCmd(ChunkMap map, String name) {
-            super(map, name);
+        public AnimalProtectCmd(ChunkMap map, String name) {
+            super(map, name, State.ALLOW, State.DENY);
         }
         
-        @Override
+        @Override 
         public void setValue(TownSettings settings, State value) {
             settings.writeSetting(Settings.DAMAGE_ANIMALS, value);
         }
     }
     
-    /**
-     * Toggles PVP.
-     */
-    public static class PvpCmd extends BooleanCmd {
+    
+    public static class PvpProtectCmd extends BooleanCmd {
 
-        public PvpCmd(ChunkMap map, String name) {
-            super(map, name);
+        public PvpProtectCmd(ChunkMap map, String name) {
+            super(map, name, State.ALLOW, State.DENY);
         }
         
-        @Override
+        @Override 
         public void setValue(TownSettings settings, State value) {
             settings.writeSetting(Settings.PVP, value);
         }
     }
     
-    /**
-     * Sets the WARP_POINT.
-     */
+    
     public static class WarpCmd extends CmdBase {
 
         public WarpCmd(ChunkMap map) {

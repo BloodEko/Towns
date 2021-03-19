@@ -31,13 +31,11 @@ public class Settings {
 
         @Override
         public Object serialize(Object obj) {
-            //return "enabled";
             return ((PlotHandler) obj).serialize();
         }
 
         @Override
         public Object deserialize(Object obj) {
-            //return getDefault();
             return PlotHandler.deserialize((Node) obj);
         }
     }

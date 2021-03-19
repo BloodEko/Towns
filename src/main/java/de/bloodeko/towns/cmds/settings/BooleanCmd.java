@@ -21,11 +21,16 @@ import de.bloodeko.towns.util.Util;
 public abstract class BooleanCmd extends CmdBase {
     private static final String ON = Messages.get("booleanCmd.on");
     private static final String OFF = Messages.get("booleanCmd.off");
+    
+    private State allow;
+    private State deny;
     private String name;
     
-    public BooleanCmd(ChunkMap map, String name) {
+    public BooleanCmd(ChunkMap map, String name, State allow, State deny) {
         super(map);
         this.name = name;
+        this.allow = allow;
+        this.deny = deny;
     }
     
     /**
@@ -40,12 +45,12 @@ public abstract class BooleanCmd extends CmdBase {
         Town town = getTown(player);
         if (args[0].equals(ON)) {
             Messages.say(player, "booleanCmd.enabled", name);
-            setValue(town.getSettings(), State.ALLOW);
+            setValue(town.getSettings(), allow);
             return;
         }
         if (args[0].equals(OFF)) {
             Messages.say(player, "booleanCmd.disabled", name);
-            setValue(town.getSettings(), State.DENY);
+            setValue(town.getSettings(), deny);
             return;
         }
         sendError(player);

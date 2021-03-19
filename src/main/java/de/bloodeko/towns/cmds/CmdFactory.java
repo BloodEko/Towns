@@ -16,10 +16,11 @@ import de.bloodeko.towns.cmds.general.MapCmd;
 import de.bloodeko.towns.cmds.general.MapCmd.MapClickHandler;
 import de.bloodeko.towns.cmds.general.RenameCmd;
 import de.bloodeko.towns.cmds.general.StageCmd;
+import de.bloodeko.towns.cmds.general.TestCmd;
 import de.bloodeko.towns.cmds.general.TpCmd;
 import de.bloodeko.towns.cmds.general.UnclaimCmd;
-import de.bloodeko.towns.cmds.settings.SettingsCmds.DamageAnimalsCmd;
-import de.bloodeko.towns.cmds.settings.SettingsCmds.PvpCmd;
+import de.bloodeko.towns.cmds.settings.SettingsCmds.AnimalProtectCmd;
+import de.bloodeko.towns.cmds.settings.SettingsCmds.PvpProtectCmd;
 import de.bloodeko.towns.cmds.settings.SettingsCmds.WarpCmd;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.TownCmd;
@@ -38,6 +39,7 @@ import de.bloodeko.towns.town.settings.plots.cmds.PlotRentCmd;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotRentoutCmd;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotReserveCmd;
 import de.bloodeko.towns.util.Messages;
+import net.milkbowl.vault.economy.Economy;
 
 public class CmdFactory {
     
@@ -47,7 +49,7 @@ public class CmdFactory {
         plugin.getCommand("town").setExecutor(cmd);
         plugin.getCommand("town").setTabCompleter(cmd);
         
-        PlotCmd plotCmd = newPlotCmd(plugin.getChunkMap());
+        PlotCmd plotCmd = newPlotCmd(plugin.getChunkMap(), plugin.getEconomy());
         plugin.getCommand("plot").setExecutor(plotCmd);
         plugin.getCommand("plot").setTabCompleter(plotCmd);
     }
@@ -60,25 +62,26 @@ public class CmdFactory {
         
         put(cmds, "map", new MapCmd(map, newClickHandler(plugin)));
         put(cmds, "info", new InfoCmd(map, settings));
+        put(cmds, "test", new TestCmd(map));
         put(cmds, "tp", new TpCmd(map, towns));
         
-        put(cmds, "claim", new ClaimCmd(map));
+        put(cmds, "claim", new ClaimCmd(map, plugin.getEconomy()));
         put(cmds, "unclaim", new UnclaimCmd(map));
         put(cmds, "rename", new RenameCmd(map, towns));
         
         put(cmds, "builder", new BuilderCmd(map));
         put(cmds, "governor", new GovenorCmd(map));
-        put(cmds, "found", new FoundCmd(map, towns));
+        put(cmds, "found", new FoundCmd(map, towns, plugin.getEconomy()));
         put(cmds, "delete", new DeleteCmd(map, towns));
         
         put(cmds, "stage", new StageCmd(map));
         put(cmds, "warp", new WarpCmd(map));
-        put(cmds, "pvp", new PvpCmd(map, "PvP"));
-        put(cmds, "damageAnimals", new DamageAnimalsCmd(map, "DamageAnimals"));
+        put(cmds, "pvp", new PvpProtectCmd(map, "PvP"));
+        put(cmds, "damageAnimals", new AnimalProtectCmd(map, "DamageAnimals"));
         
         put(cmds, "extensions", new ExtensionsCmd(map, settings));
         put(cmds, "extension", new ExtensionCmd(map, settings));
-        put(cmds, "plot", newPlotCmd(map));
+        //put(cmds, "plot", newPlotCmd(map, plugin.getEconomy()));
         
         return new CmdHandler(cmds);
     }
@@ -87,17 +90,17 @@ public class CmdFactory {
         cmds.put(Messages.get("cmds." + id), base);
     }
     
-    public static PlotCmd newPlotCmd(ChunkMap map) {
+    public static PlotCmd newPlotCmd(ChunkMap map, Economy economy) {
         Map<String, CmdBase> cmds = new HashMap<>();
         put(cmds, "plot.builder", new PlotBuilderCmd(map));
         put(cmds, "plot.create", new PlotCreateCmd(map));
         put(cmds, "plot.expropriate", new PlotExpropriateCmd(map));
         put(cmds, "plot.info", new PlotInfoCmd(map));
-        put(cmds, "plot.leave", new PlotLeaveCmd(map));
+        put(cmds, "plot.leave", new PlotLeaveCmd(map, economy));
         put(cmds, "plot.list", new PlotListCmd(map));
         put(cmds, "plot.name", new PlotNameCmd(map));
         put(cmds, "plot.remove", new PlotRemoveCmd(map));
-        put(cmds, "plot.rent", new PlotRentCmd(map));
+        put(cmds, "plot.rent", new PlotRentCmd(map, economy));
         put(cmds, "plot.rentout", new PlotRentoutCmd(map));
         put(cmds, "plot.reserve", new PlotReserveCmd(map));
         return new PlotCmd(map, new CmdHandler(cmds));

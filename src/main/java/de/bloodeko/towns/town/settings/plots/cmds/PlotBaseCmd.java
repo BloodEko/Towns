@@ -1,7 +1,10 @@
 package de.bloodeko.towns.town.settings.plots.cmds;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -21,6 +24,7 @@ import de.bloodeko.towns.town.settings.Settings;
 import de.bloodeko.towns.town.settings.plots.PlotData;
 import de.bloodeko.towns.town.settings.plots.PlotHandler;
 import de.bloodeko.towns.util.ModifyException;
+import net.milkbowl.vault.economy.Economy;
 
 public abstract class PlotBaseCmd extends CmdBase {
     
@@ -73,6 +77,18 @@ public abstract class PlotBaseCmd extends CmdBase {
             throw new ModifyException("settings.plot.basecmd.notYourPlot");
         }
         return plot;
+    }
+    
+    /**
+     * Checks if the player has enough money. Otherwise throws an exception.
+     * Pays the price to the towns first found governor.
+     */
+    public void payRentToTown(Economy economy, Player player, int price, Town town) {
+        checkMoney(economy, player, price);
+        UUID toUUID = town.getPeople().getGovernors().iterator().next();
+        OfflinePlayer toPlayer = Bukkit.getOfflinePlayer(toUUID);
+        economy.withdrawPlayer(player, price);
+        economy.depositPlayer(toPlayer, price);
     }
     
     /**

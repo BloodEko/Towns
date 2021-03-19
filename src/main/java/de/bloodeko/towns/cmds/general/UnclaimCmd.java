@@ -16,21 +16,8 @@ public class UnclaimCmd extends CmdBase {
     
     @Override
     public void execute(Player player, String[] args) {
-        Chunk chunk = Chunk.fromEntity(player);
-        unclaim(chunk, player);
-    }
-    
-    public void unclaim(Chunk chunk, Player player) {
-        Town town = getMap().getTown(chunk);
-        if (town == null) {
-            Messages.say(player, "cmds.unclaim.notClaimed");
-            return;
-        }
-        if (!town.getPeople().isGovernor(player.getUniqueId())) {
-            Messages.say(player, "cmds.unclaim.notAllowed");
-            return;
-        }
-        town.getArea().contract(getMap(), chunk);
-        Messages.say(player, "cmds.unclaim.unclaimed", chunk, town);
+        Town town = getTown(player);
+        town.getArea().contract(getMap(), Chunk.fromEntity(player));
+        Messages.say(player, "cmds.unclaim.unclaimed", Chunk.fromEntity(player), town);
     }
 }

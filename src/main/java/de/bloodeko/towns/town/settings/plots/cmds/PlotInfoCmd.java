@@ -27,6 +27,7 @@ public class PlotInfoCmd extends PlotBaseCmd {
         Messages.say(player, "settings.plot.infocmd.members", plot.region.getMembers().getUniqueIds());
         Messages.say(player, "settings.plot.infocmd.rentable", plot.rentable);
         Messages.say(player, "settings.plot.infocmd.rent", plot.rent);
+        Messages.say(player, "settings.plot.infocmd.debt", plot.debt);
         Messages.say(player, "settings.plot.infocmd.reservedFor", plot.reversedFor);
         Messages.say(player, "settings.plot.infocmd.footer");
     }

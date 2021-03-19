@@ -2,7 +2,10 @@ package de.bloodeko.towns.town.settings.plots;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -13,14 +16,17 @@ import de.bloodeko.towns.town.TownLoadEvent;
 import de.bloodeko.towns.town.TownRegistry;
 import de.bloodeko.towns.town.TownDeletedEvent;
 import de.bloodeko.towns.town.settings.Settings;
+import net.milkbowl.vault.economy.Economy;
 
 public class RentService implements Listener {
     private RegionManager manager;
     private TownRegistry towns;
+    private Economy economy;
     
-    public RentService(RegionManager manager, TownRegistry towns) {
+    public RentService(RegionManager manager, TownRegistry towns, Economy economy) {
         this.manager = manager;
         this.towns = towns;
+        this.economy = economy;
     }
     
     @EventHandler
@@ -55,12 +61,28 @@ public class RentService implements Listener {
     
     public void payRents() {
         for (Town town : towns.getTowns()) {
-            for (PlotData plot : getPlots(town)) {                    
-                System.out.println("Checking to collect rent for " + plot.id 
-                  + " in " + town.getSettings().getName());
-                System.out.println("Renter: " + plot.renter);
-                System.out.println("Rent: " + plot.rent);
-                System.out.println("");
+            UUID ownerId = town.getPeople().getGovernors().iterator().next();
+            OfflinePlayer owner = Bukkit.getPlayer(ownerId);
+            
+            for (PlotData plot : getPlots(town)) {
+                int price = plot.rent;
+                if (plot.renter == null || price == 0) {
+                    continue;
+                }
+                OfflinePlayer player = Bukkit.getPlayer(plot.renter);
+                double money = economy.getBalance(player);
+                
+                if (money - price < 0) {
+                    plot.debt += price;
+                    System.out.println(plot.id + ": Increasing depth " + price + " for " + owner.getName());
+                }
+                else {
+                    economy.withdrawPlayer(player, price);
+                    economy.depositPlayer(owner, price);
+                    
+                    System.out.println(plot.id + ": Taking " + price + " from " + player.getName());
+                    System.out.println(plot.id + ": Giving " + price + " to " + owner.getName());
+                }
             }
         }
     }

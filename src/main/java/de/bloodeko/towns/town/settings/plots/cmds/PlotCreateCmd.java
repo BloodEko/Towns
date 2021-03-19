@@ -60,7 +60,7 @@ public class PlotCreateCmd extends PlotBaseCmd {
         Messages.say(player, "settings.plot.createcmd.created");
     }
     
-    public int getMaxPlots(Town town) {
+    public static int getMaxPlots(Town town) {
         return town.getSettings().getStage() * 2;
     }
 }

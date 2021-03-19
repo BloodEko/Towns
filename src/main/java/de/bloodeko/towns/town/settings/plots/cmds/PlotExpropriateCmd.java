@@ -22,6 +22,7 @@ public class PlotExpropriateCmd extends PlotBaseCmd {
             return;
         }
         
+        plot.debt = 0;
         plot.rentable = true;
         plot.renter = null;
         plot.region.getMembers().clear();

@@ -4,7 +4,7 @@ version: ${project.version}
 main: de.bloodeko.towns.Towns
 api-version: 1.13
 
-softdepend: [WorldEdit, WorldGuard]
+softdepend: [WorldEdit, WorldGuard, Vault]
 
 commands:
   town:

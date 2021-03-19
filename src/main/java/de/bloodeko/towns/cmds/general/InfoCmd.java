@@ -53,20 +53,20 @@ public class InfoCmd extends CmdBase {
 
         Messages.say(player, "cmds.info.settingsHeader");
         for (Entry<Setting, Object> entry : town.getSettings().getSettings().entrySet()) {
-            printFullInfo(player, entry.getKey(), entry.getValue());
+            printFullInfo(player, town, entry.getKey(), entry.getValue());
         }
     }
     
-    private void printFullInfo(Player player, Setting setting, Object value) {
+    private void printFullInfo(Player player, Town town, Setting setting, Object obj) {
         RegisteredSetting ui = registry.fromId(setting.getId());
         String name;
         Object val;
         if (ui == null) {
             name = setting.getId();
-            val = value;
+            val = obj;
         } else {
             name = ui.display;
-            val = ui.display(value);
+            val = ui.display(town, obj);
         }
         Messages.say(player, "cmds.info.setting", name, val);
     }

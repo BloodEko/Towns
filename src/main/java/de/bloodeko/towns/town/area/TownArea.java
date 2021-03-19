@@ -71,6 +71,9 @@ public class TownArea {
         if (!chunks.contains(chunk)) {
             throw new ModifyException("town.townarea.notTaken");
         }
+        if (chunks.size() == 1) {
+            throw new ModifyException("town.townarea.cantRemoveLast");
+        }
         chunks.remove(chunk);
         updateShape();
         map.removeTown(chunk);

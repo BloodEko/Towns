@@ -5,11 +5,14 @@ import org.bukkit.entity.Player;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.settings.plots.PlotData;
 import de.bloodeko.towns.util.Messages;
+import net.milkbowl.vault.economy.Economy;
 
 public class PlotRentCmd extends PlotBaseCmd {
-
-    public PlotRentCmd(ChunkMap map) {
+    private Economy economy;
+    
+    public PlotRentCmd(ChunkMap map, Economy economy) {
         super(map);
+        this.economy = economy;
     }
 
     @Override
@@ -24,15 +27,15 @@ public class PlotRentCmd extends PlotBaseCmd {
             Messages.say(player, "settings.plot.rentcmd.notRentable");
             return;
         }
-        if (plot.reversedFor != null && plot.reversedFor != player.getUniqueId()) {
+        if (plot.reversedFor != null && !plot.reversedFor.equals(player.getUniqueId())) {
             Messages.say(player, "settings.plot.rentcmd.notReservedFor");
             return;
         }
         
+        payRentToTown(economy, player, plot.rent, getTownAsPlayer(player));
         plot.rentable = false;
         plot.renter = player.getUniqueId();
         plot.region.getMembers().addPlayer(player.getUniqueId());
-        
         Messages.say(player, "settings.plot.rentcmd.rented");
     }
 }
