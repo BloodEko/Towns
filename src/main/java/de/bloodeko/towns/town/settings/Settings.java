@@ -30,7 +30,7 @@ public class Settings {
 
         @Override
         public Object serialize(Object obj) {
-            return "null";
+            return "enabled";
             //return ((PlotTownHandler) obj).serialize();
         }
 

@@ -1,32 +1,29 @@
 package de.bloodeko.towns.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class YamlDeserializer {
-    private Map<Object, Object> map;
+    private Node root;
 
     public YamlDeserializer(YamlConfiguration config) {
-        this.map = new HashMap<>();
-        deserialize(map, config);
+        root = new Node();
+        deserialize(root, config);
     }
     
-    public Map<Object, Object> getResult() {
-        return map;
+    public Node getRoot() {
+        return root;
     }
     
-    private void deserialize(Map<Object, Object> root, ConfigurationSection section) {
+    private void deserialize(Node root, ConfigurationSection section) {
         for (String name : section.getKeys(false)) {
             if (section.isConfigurationSection(name)) {
-                Map<Object, Object> map = new HashMap<>();
-                root.put(name, map);
-                deserialize(map, section.getConfigurationSection(name));
+                Node node = new Node();
+                root.set(name, node);
+                deserialize(node, section.getConfigurationSection(name));
             } 
             else {
-                root.put(name, section.get(name));
+                root.set(name, section.get(name));
             }
         }
     }

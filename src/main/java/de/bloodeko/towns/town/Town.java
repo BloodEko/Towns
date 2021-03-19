@@ -1,13 +1,9 @@
 package de.bloodeko.towns.town;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import com.sk89q.worldguard.protection.managers.RegionManager;
-
-import static de.bloodeko.towns.util.Serialization.asRoot;
 
 import de.bloodeko.towns.town.area.TownArea;
 import de.bloodeko.towns.town.area.TownArea.ChunkRegion;
@@ -15,6 +11,7 @@ import de.bloodeko.towns.town.people.TownPeople;
 import de.bloodeko.towns.town.settings.SettingsRegistry;
 import de.bloodeko.towns.town.settings.TownSettings;
 import de.bloodeko.towns.util.Chunk;
+import de.bloodeko.towns.util.Node;
 
 /**
  * TownMembers, TownSerializer, TownArea,
@@ -49,6 +46,32 @@ public class Town {
         return people;
     }
     
+    /**
+     * Returns a Node that represent a town and its entries.
+     */
+    public Node serialize() {
+        Node node = new Node();
+        node.set("settings", settings.serialize());
+        node.set("area", area.serialize());
+        node.set("people", people.serialize());
+        return node;
+    }
+    
+    /**
+     * Creates a town from a town-node.
+     */
+    public static Town deserialize(int id, Node town, SettingsRegistry registry, RegionManager manager) {
+        Set<Chunk> chunks = new HashSet<>();
+        ChunkRegion region = TownFactory.newChunkRegion(chunks, id, manager);
+        
+        TownSettings settings = TownSettings.deserialize(town.getNode("settings"), region, registry);
+        TownArea area = TownArea.deserialize(town.getNode("area"), chunks, region);
+        TownPeople people = TownPeople.deserialize(town.getNode("people"), region);
+        
+        return new Town(id, settings, area, people);
+    }
+    
+    /*
     public Map<String, Object> serialize() {
         Map<String, Object> map = new HashMap<>();
         map.put("settings", settings.serialize());
@@ -67,4 +90,5 @@ public class Town {
         
         return new Town(id, settings, area, people);
     }
+    */
 }

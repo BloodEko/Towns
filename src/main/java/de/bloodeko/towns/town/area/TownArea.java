@@ -1,9 +1,6 @@
 package de.bloodeko.towns.town.area;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.sk89q.worldedit.math.BlockVector3;
@@ -16,6 +13,7 @@ import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownFactory;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.ModifyException;
+import de.bloodeko.towns.util.Node;
 
 public class TownArea {
     private Set<Chunk> chunks;
@@ -144,6 +142,20 @@ public class TownArea {
         }
     }
     
+    public Node serialize() {
+        Node node = new Node();
+        node.set("chunks", chunks);
+        return node;
+    }
+    
+    public static TownArea deserialize(Node area, Set<Chunk> chunks, ChunkRegion region) {
+        for (String chunk : area.getStringList("chunks")) {
+            chunks.add(Chunk.fromString(chunk));
+        }
+        return TownFactory.newArea(chunks, region);
+    }
+    
+    /*
     public Map<String, Object> serialize() {
         Map<String, Object> map = new HashMap<>();
         map.put("chunks", chunks);
@@ -156,7 +168,7 @@ public class TownArea {
             chunks.add(Chunk.fromString(chunk));
         }
         return TownFactory.newArea(chunks, region);
-    }
+    }*/
     
     
     

@@ -20,6 +20,10 @@ public class PlotCmd extends CmdBase implements CommandExecutor, TabCompleter {
         super(map);
         this.handler = handler;
     }
+    
+    public void register(String name, CmdBase cmd) {
+        handler.register(name, cmd);
+    }
 
     @Override
     public void execute(Player player, String[] args) {

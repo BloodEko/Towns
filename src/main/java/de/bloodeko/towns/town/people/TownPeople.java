@@ -1,11 +1,6 @@
 package de.bloodeko.towns.town.people;
 
-import static de.bloodeko.towns.util.Serialization.asUUID;
-import static de.bloodeko.towns.util.Serialization.asUUIDSet;
-
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,6 +13,7 @@ import com.google.common.base.Objects;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.area.TownArea.ChunkRegion;
 import de.bloodeko.towns.util.ModifyException;
+import de.bloodeko.towns.util.Node;
 
 public class TownPeople {
     private UUID owner;
@@ -116,7 +112,27 @@ public class TownPeople {
         region.getMembers().removePlayer(to);
         builders.remove(to);
     }
+    public Node serialize() {
+        Node node = new Node();
+        node.set("owner", owner);
+        node.set("governors", governors);
+        node.set("builders", builders);
+        return node;
+    }
     
+    public static TownPeople deserialize(Node people, ChunkRegion region) {
+        Set<UUID> governors = people.getUUIDSet("governors");
+        Set<UUID> builders = people.getUUIDSet("builders");
+        for (UUID uuid : governors) {
+            region.getMembers().addPlayer(uuid);
+        }
+        for (UUID uuid : builders) {
+            region.getMembers().addPlayer(uuid);
+        }
+        return new TownPeople(people.getUUID("owner"), governors, builders, region);
+    }
+    
+    /*
     public Map<String, Object> serialize() {
         Map<String, Object> map = new HashMap<>();
         map.put("owner", owner.toString());
@@ -135,7 +151,7 @@ public class TownPeople {
             region.getMembers().addPlayer(uuid);
         }
         return new TownPeople(asUUID(root.get("owner")), governors, builders, region);
-    }
+    }*/
     
     public static class AddGovernorEvent extends Event {
         private static HandlerList handlers = new HandlerList();

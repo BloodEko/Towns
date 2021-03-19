@@ -19,6 +19,10 @@ public class CmdHandler {
         this.cmds = cmds;
     }
     
+    public void register(String key, CmdBase cmd) {
+        this.cmds.put(key, cmd);
+    }
+    
     /**
      * Dispatches the first argument to a sub-command
      * and executes it, with the first argument cut off.

@@ -13,8 +13,8 @@ public class SettingsRegistry {
     private Map<String, RegisteredSetting> byDisplay;
     
     public SettingsRegistry() {
-        this.byDisplay = new HashMap<>();
-        this.byInternal = new HashMap<>();
+        byDisplay = new HashMap<>();
+        byInternal = new HashMap<>();
     }
 
     public void register(RegisteredSetting setting) {
@@ -55,6 +55,7 @@ public class SettingsRegistry {
         return list;
     }
     
+    //events for create,load,delete.
     public static class RegisteredSetting {
         public final Setting value;
         public final int minStage;

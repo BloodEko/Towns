@@ -2,22 +2,24 @@ package de.bloodeko.towns;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.bloodeko.towns.cmds.CmdFactory;
-import de.bloodeko.towns.listeners.ListenerFactory;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownFactory;
 import de.bloodeko.towns.town.TownRegistry;
 import de.bloodeko.towns.town.settings.SettingsFactory;
 import de.bloodeko.towns.town.settings.SettingsRegistry;
+import de.bloodeko.towns.town.settings.plots.RentService;
+import de.bloodeko.towns.town.settings.plots.cmds.PlotCmd;
+import de.bloodeko.towns.town.settings.plots.cmds.PlotPayrentCmd;
 import de.bloodeko.towns.util.BukkitFactory;
 import de.bloodeko.towns.util.Messages;
+import de.bloodeko.towns.util.Node;
 import de.bloodeko.towns.util.Util;
 import de.bloodeko.towns.util.YamlDeserializer;
 import de.bloodeko.towns.util.YamlSerializer;
@@ -51,27 +53,6 @@ public class Towns extends JavaPlugin {
     private ChunkMap chunkmap;
     private TownRegistry registry;
     private SettingsRegistry settings;
-    
-    @Override
-    public void onEnable() {
-        Messages.enable(Util.readLines(getResource("messages.properties")));
-        
-        chunkmap = BukkitFactory.newChunkHandler(this);
-        settings = SettingsFactory.newSettingsRegistry();
-        registry = loadRegistry();
-        CmdFactory.init(this);
-        ListenerFactory.init(this);
-        loadTowns();
-        
-        //load class.
-        YamlSerializer.class.getName();
-    }
-    
-    @Override
-    public void onDisable() {
-        saveRegistry();
-        saveTowns();
-    }
 
     public ChunkMap getChunkMap() {
         return chunkmap;
@@ -80,12 +61,70 @@ public class Towns extends JavaPlugin {
     public TownRegistry getTownRegistry() {
         return registry;
     }
+
+    public SettingsRegistry getSettingsRegistry() {
+        return settings;
+    }
     
-    public TownRegistry loadRegistry() {
+    @Override
+    public void onEnable() {
+        loadMessages();
+        loadChunkMap();
+        loadSettings();
+        loadNames();
+        loadCommands();
+        loadListeners();
+        loadSerializer();
+        loadTowns();
+    }
+    
+    private void loadMessages() {
+        Messages.enable(Util.readLines(getResource("messages.properties")));
+    }
+    
+    private void loadChunkMap() {
+        chunkmap = BukkitFactory.newChunkHandler(this);
+    }
+    
+    private void loadSettings() {
+        settings = SettingsFactory.newSettingsRegistry();
+    }
+    
+    private void loadNames() {
         File file = new File(getDataFolder() + "/registry.yml");
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
         int id = config.getInt("id", 0);
-        return TownFactory.newRegistry(chunkmap, id);
+        registry = TownFactory.newRegistry(chunkmap, id);
+    }
+    
+    private void loadCommands() {
+        CmdFactory.init(this);
+    }
+    
+    private void loadListeners() {
+        RentService service = new RentService(TownFactory.getWorldManager(), registry);
+        Bukkit.getPluginManager().registerEvents(service, this);
+        
+        PlotCmd cmd = (PlotCmd) Bukkit.getPluginCommand("plot").getExecutor();
+        cmd.register("payrent", new PlotPayrentCmd(chunkmap, service));
+    }
+    
+    private void loadSerializer() {
+        YamlSerializer.class.getName();
+    }
+    
+    private void loadTowns() {
+        File file = new File(getDataFolder() + "/towns.yml");
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+        Node towns = new YamlDeserializer(config).getRoot();
+        TownFactory.loadTowns(towns, chunkmap, registry, settings,
+          TownFactory.getWorldManager());
+    }
+    
+    @Override
+    public void onDisable() {
+        saveRegistry();
+        saveTowns();
     }
     
     public void saveRegistry() {
@@ -98,19 +137,11 @@ public class Towns extends JavaPlugin {
         }
     }
     
-    public void loadTowns() {
-        File file = new File(getDataFolder() + "/towns.yml");
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        Map<Object, Object> result = new YamlDeserializer(config).getResult();
-        TownFactory.loadTowns(result, chunkmap, settings, registry,
-          TownFactory.getWorldManager());
-    }
-    
     public void saveTowns() {
         try {
-            Map<String, Object> towns = new HashMap<>();
+            Node towns = new Node();
             for (Town town : registry.getTowns()) {
-                towns.put("" + town.getId(), town.serialize());
+                towns.set("" + town.getId(), town.serialize());
             }
             YamlSerializer serializer = new YamlSerializer(new YamlConfiguration(), towns);
             YamlConfiguration config = serializer.getResult();
@@ -118,9 +149,5 @@ public class Towns extends JavaPlugin {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-    }
-
-    public SettingsRegistry getSettingsRegistry() {
-        return settings;
     }
 }

@@ -1,9 +1,5 @@
 package de.bloodeko.towns.town.settings;
 
-import static de.bloodeko.towns.util.Serialization.asInt;
-import static de.bloodeko.towns.util.Serialization.asRoot;
-import static de.bloodeko.towns.util.Serialization.asString;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -13,6 +9,8 @@ import com.sk89q.worldguard.protection.flags.Flags;
 import de.bloodeko.towns.town.area.TownArea.ChunkRegion;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.ModifyException;
+import de.bloodeko.towns.util.Node;
+import de.bloodeko.towns.util.Node.Pair;
 
 public class TownSettings {
     private ChunkRegion region;
@@ -92,9 +90,10 @@ public class TownSettings {
 
     /**
      * Writes the extensions values to the region values.
+     * @return 
      */
     @SuppressWarnings("deprecation")
-    public void updateFlags() {
+    public TownSettings updateFlags() {
         region.setFlag(Flags.GREET_MESSAGE, Messages.get("town.townsettings.enterRegion", name));
         region.setFlag(Flags.FAREWELL_MESSAGE, Messages.get("town.townsettings.leaveRegion"));
         
@@ -103,8 +102,42 @@ public class TownSettings {
                 region.getFlags().put(entry.getKey().getFlag(), entry.getValue());
             }
         }
+        return this;
+    }
+    
+    /**
+     * Creates a Node with keys that represent 
+     * the settings of a town.
+     */
+    public Node serialize() {
+        Node node = new Node();
+        node.set("name", name);
+        node.set("stage", stage);
+        
+        Node settings = node.newNode("settings");
+        for (Entry<Setting, Object> entry : extensions.entrySet()) {
+            settings.set(entry.getKey().getId(), entry.getKey().serialize(entry.getValue()));
+        }
+        return node;
+    }
+    
+    /**
+     * Creates TownSettings and writes them to a region from a Node 
+     * with keys that represent the settings of a town.
+     */
+    public static TownSettings deserialize(Node townSettings, ChunkRegion region, SettingsRegistry registry) {
+        Map<Setting, Object> flags = new HashMap<>();
+        
+        for (Pair pair : townSettings.getNode("settings").entries()) {
+            Setting setting = registry.fromId(pair.key).value;
+            flags.put(setting, setting.deserialize(pair.value));
+        }
+        
+        return new TownSettings(region, townSettings.getString("name"), 
+          townSettings.getInt("stage"), flags).updateFlags();
     }
 
+    /*
     public Map<String, Object> serialize() {
         Map<String, Object> map = new HashMap<>();
         map.put("name", name);
@@ -128,5 +161,5 @@ public class TownSettings {
           asInt(root.get("stage")), map);
         settings.updateFlags();
         return settings;
-    }
+    } */
 }

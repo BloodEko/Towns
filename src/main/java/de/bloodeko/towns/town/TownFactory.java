@@ -1,12 +1,7 @@
 package de.bloodeko.towns.town;
 
-import static de.bloodeko.towns.util.Serialization.asInt;
-import static de.bloodeko.towns.util.Serialization.asRoot;
-
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
@@ -26,6 +21,8 @@ import de.bloodeko.towns.town.people.TownPeople;
 import de.bloodeko.towns.town.settings.SettingsRegistry;
 import de.bloodeko.towns.town.settings.TownSettings;
 import de.bloodeko.towns.util.Chunk;
+import de.bloodeko.towns.util.Node;
+import de.bloodeko.towns.util.Node.Pair;
 
 public class TownFactory {
     
@@ -100,24 +97,23 @@ public class TownFactory {
     /**
      * Creates and registers towns from the towndata provided.
      */
-    public static void loadTowns(Map<Object, Object> root, ChunkMap map, SettingsRegistry settings, TownRegistry registry, RegionManager manager) {
-        for (Entry<Object, Object> entry : root.entrySet()) {
-            
-            Town town = Town.deserialize(asRoot(entry.getValue()), 
-              asInt(entry.getKey()), settings, manager);
-            registerTown(town, map, registry, manager);
+    public static void loadTowns(Node towns, ChunkMap map, TownRegistry names, SettingsRegistry settings, RegionManager manager) {
+        for (Pair pair : towns.entries()) {
+            Town town = Town.deserialize(Integer.valueOf(pair.key), (Node) pair.value, settings, manager);
+            registerTown(town, map, names, manager);
         }
     }
     
     /**
      * Registers the town to all used services.
      */
-    public static void registerTown(Town town, ChunkMap map, TownRegistry registry, RegionManager manager) {
+    public static void registerTown(Town town, ChunkMap map, TownRegistry names, RegionManager manager) {
         for (Chunk chunk : town.getArea().getChunks()) {
             map.setTown(chunk, town);
         }
-        registry.add(town);
+        names.add(town);
         manager.addRegion(town.getArea().getRegion());
+        Bukkit.getPluginManager().callEvent(new TownRegisterEvent(town));
     }
     
     /**
@@ -129,5 +125,6 @@ public class TownFactory {
         }
         registry.remove(town.getSettings().getName());
         manager.removeRegion("town_" + town.getId());
+        Bukkit.getPluginManager().callEvent(new TownUnregisterEvent(town));
     }
 }
