@@ -7,13 +7,15 @@ import de.bloodeko.towns.util.ModifyException;
 
 public class TownArea {
     private Set<Chunk> area;
+    private ChunkRules rules;
     private int minX;
     private int maxX;
     private int minZ;
     private int maxZ;
     
-    public TownArea(Set<Chunk> area, int minX, int maxX, int minZ, int maxZ) {
+    public TownArea(Set<Chunk> area, ChunkRules rules, int minX, int maxX, int minZ, int maxZ) {
         this.area = area;
+        this.rules = rules;
         this.minX = minX;
         this.maxX = maxX;
         this.minZ = minZ;
@@ -29,10 +31,17 @@ public class TownArea {
         return area.size();
     }
     
+    public int getMaxSize() {
+        int a = maxX - minX + 1;
+        int b = maxZ - minZ + 1;
+        return a * b;
+    }
+    
     public void expand(ChunkMap map, Town town, Chunk chunk) {
         if (map.query(chunk) != null) {
             throw new ModifyException("Chunk is already taken!");
         }
+        rules.checkExpand(map, town, this, chunk);
         boolean update = addShape(chunk, town.getName());
         if (update) {
             updateCuboid(town.getName());

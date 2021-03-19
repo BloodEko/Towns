@@ -69,7 +69,7 @@ public class BukkitFactory {
         public static ItemStack[] createMapContent() {
             ItemStack[] items = new ItemStack[54];
             ItemStack pane = Items.createItem(Material.BLACK_STAINED_GLASS_PANE, "~~~");
-            items[0] = pane;
+            items[0] = Items.createItem(Material.STONE, "center");
             items[1] = Items.createItem(Material.STONE, "zoom");
             items[2] = pane;
             items[3] = Items.createItem(Material.STONE, "↑");

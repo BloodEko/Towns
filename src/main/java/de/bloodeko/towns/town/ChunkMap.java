@@ -5,8 +5,8 @@ import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.BukkitFactory.Items;
+import de.bloodeko.towns.util.Chunk;
 
 public class ChunkMap {
     private Map<Chunk, Town> map;

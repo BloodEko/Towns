@@ -14,7 +14,8 @@ public class TownFactory {
     }
     
     public static TownArea newArea(Chunk base) {
-        return new TownArea(new HashSet<>(), base.x, base.x, base.z, base.z);
+        ChunkRules rules = new ChunkRules();
+        return new TownArea(new HashSet<>(), rules, base.x, base.x, base.z, base.z);
     }
     
     public static TownSettings newSettings() {

@@ -113,6 +113,14 @@ public class MapCmd extends CmdBase {
             return ((HEAD_Z_OFF + z) * ROW_LENGTH) + x;
         }
         
+        public void toCenter() {
+            Chunk chunk = Chunk.fromEntity(player);
+            if (!chunk.equals(center)) {
+                center = chunk;
+                render();
+            }
+        }
+        
         public void moveUp() {
             center = center.add(zoom * rotation.up.getX(), zoom * rotation.up.getZ());
             render();
@@ -204,6 +212,7 @@ public class MapCmd extends CmdBase {
             }
             click.setCancelled(true);
             switch(click.getSlot()) {
+                case 0: view.toCenter(); break;
                 case 1: view.zoom(click.getClick()); break;
                 case 3: view.moveUp(); break;
                 case 4: view.moveDown(); break;
