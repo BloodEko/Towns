@@ -16,6 +16,8 @@ import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownFactory;
 import de.bloodeko.towns.town.TownRegistry;
 import de.bloodeko.towns.util.BukkitFactory;
+import de.bloodeko.towns.util.Messages;
+import de.bloodeko.towns.util.Util;
 import de.bloodeko.towns.util.YamlDeserializer;
 import de.bloodeko.towns.util.YamlSerializer;
 
@@ -31,7 +33,7 @@ import de.bloodeko.towns.util.YamlSerializer;
  * 
  * +FoundCMD, +AnimalProtect, +PVP, +Serialiable Settings objects.
  * Plots, PlotManager. WorldMap, ChunkMap, ChunkToTownWrapper.
- * Config. Messages/Claimingvariables. Location/Chunk/Region hooks. (for unclaim)
+ * Config. +Messages/Claimingvariables. Location/Chunk/Region hooks. (for unclaim)
  * StufenAufstiege. Chatsystem. PlayerCache. file. per line UUID:name. onJoin/Quit is set. 
  * onEnable/Disable to/from file. Where to save nextId when no indent?
  * 
@@ -46,6 +48,8 @@ public class Towns extends JavaPlugin {
     
     @Override
     public void onEnable() {
+        Messages.enable(Util.readLines(getResource("messages.properties")));
+        
         chunkmap = BukkitFactory.newChunkHandler(this);
         settings = CmdFactory.newSettingsRegistry();
         registry = loadRegistry();

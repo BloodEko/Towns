@@ -13,6 +13,7 @@ import static de.bloodeko.towns.util.Serialization.asString;
 import de.bloodeko.towns.cmds.settings.SettingsRegistry;
 import de.bloodeko.towns.cmds.settings.TownSetting;
 import de.bloodeko.towns.town.TownArea.ChunkRegion;
+import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.ModifyException;
 
 public class TownSettings {
@@ -28,13 +29,13 @@ public class TownSettings {
         this.flags = extensions;
     }
     
-    public int getState() {
+    public int getStage() {
         return stage;
     }
     
     public void setStage(int stage) {
         if (stage < 0) {
-            throw new ModifyException("Stage must be positive.");
+            throw new ModifyException("town.townsettings.negativeStage");
         }
         this.stage = stage;
     }
@@ -57,7 +58,7 @@ public class TownSettings {
 
     public void addExtension(TownSetting setting) {
         if (flags.containsKey(setting)) {
-            throw new ModifyException("This setting was already bought.");
+            throw new ModifyException("town.townsettings.alreadyBought");
         }
         flags.put(setting, setting.getDefault());
         if (setting.getFlag() != null) {
@@ -78,7 +79,7 @@ public class TownSettings {
      */
     public void writeSetting(TownSetting setting, Object value) {
         if (!flags.containsKey(setting)) {
-            throw new ModifyException("The town doesn't have this setting.");
+            throw new ModifyException("town.townsettings.notBought");
         }
         flags.put(setting, value);
         if (setting.getFlag() == null) {
@@ -96,8 +97,10 @@ public class TownSettings {
      */
     @SuppressWarnings("deprecation")
     public void updateFlags() {
-        region.setFlag(Flags.GREET_MESSAGE, "&b~ Stadt " + name);
-        region.setFlag(Flags.FAREWELL_MESSAGE, "&2~ Wildnis &4(PvP)");
+        //region.setFlag(Flags.GREET_MESSAGE, "&b~ Stadt " + name);
+        //region.setFlag(Flags.FAREWELL_MESSAGE, "&2~ Wildnis &4(PvP)");
+        region.setFlag(Flags.GREET_MESSAGE, Messages.get("town.townsettings.enterRegion", name));
+        region.setFlag(Flags.FAREWELL_MESSAGE, Messages.get("town.townsettings.leaveRegion"));
         
         for (Entry<TownSetting, Object> entry : flags.entrySet()) {
             if (entry.getKey().getFlag() != null && entry.getValue() != null) {
@@ -112,7 +115,7 @@ public class TownSettings {
         map.put("stage", stage);
         Map<String, Object> settings = new HashMap<>();
         for (Entry<TownSetting, Object> entry : flags.entrySet()) {
-            settings.put(entry.getKey().getName(), entry.getKey().serialize(entry.getValue()));
+            settings.put(entry.getKey().getId(), entry.getKey().serialize(entry.getValue()));
         }
         map.put("settings", settings);
         return map;
@@ -121,7 +124,7 @@ public class TownSettings {
     public static TownSettings deserialize(Map<String, Object> root, ChunkRegion region, SettingsRegistry registry) {
         Map<TownSetting, Object> map = new HashMap<>();
         for (Entry<String, Object> entry : asRoot(root.get("settings")).entrySet()) {
-            TownSetting setting = registry.get(entry.getKey());
+            TownSetting setting = registry.fromId(entry.getKey());
             Object value = setting.deserialize(entry.getValue());
             map.put(setting, value);
         }

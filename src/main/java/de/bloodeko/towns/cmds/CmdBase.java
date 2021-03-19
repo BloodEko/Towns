@@ -43,7 +43,7 @@ public abstract class CmdBase {
     public Player getTarget(String name) {
         Player target = Bukkit.getPlayer(name);
         if (target == null) {
-            throw new ModifyException("Player " + name + " is not online.");
+            throw new ModifyException("cmds.base.targetNotOnline", name);
         }
         return target;
     }
@@ -56,7 +56,7 @@ public abstract class CmdBase {
     public OfflinePlayer getOfflineTarget(String name) {
         OfflinePlayer target = Bukkit.getOfflinePlayer(name);
         if (target == null) {
-            throw new ModifyException("Player " + name + " does not exist.");
+            throw new ModifyException("cmds.base.targetNotFound", name);
         }
         return target;
     }
@@ -66,16 +66,16 @@ public abstract class CmdBase {
      * exception with a default message.
      */
     public String getArg(int index, String[] args) {
-        return getArg(index, args, "Argument " + index + " not found.");
+        return getArg(index, args, "cmds.base.indexNotFound", index);
     }
     
     /**
      * Returns the argument at the index. If it doesn't exist throws an 
      * exception with the message.
      */
-    public String getArg(int index, String[] args, String message) {
+    public String getArg(int index, String[] args, String message, Object... vargs) {
         if (!hasArg(index, args)) {
-            throw new ModifyException(message);
+            throw new ModifyException(message, vargs);
         }
         return args[index];
     }
@@ -94,7 +94,7 @@ public abstract class CmdBase {
     public Town getTown(Player player) {
         Town town = getTownAsPlayer(player);
         if (!town.getPeople().isGovernor(player.getUniqueId())) {
-            throw new ModifyException("You have no right to modify that town.");
+            throw new ModifyException("cmds.base.noEditPermission");
         }
         return town;
     }
@@ -106,7 +106,7 @@ public abstract class CmdBase {
     public Town getTownAsPlayer(Player player) {
         Town town = map.query(Chunk.fromEntity(player));
         if (town == null) {
-            throw new ModifyException("There is no town at your location.");
+            throw new ModifyException("cmds.base.noTownAtLocation");
         }
         return town;
     }

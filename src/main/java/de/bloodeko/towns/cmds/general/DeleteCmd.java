@@ -7,6 +7,7 @@ import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownFactory;
 import de.bloodeko.towns.town.TownRegistry;
+import de.bloodeko.towns.util.Messages;
 
 // todo TempMap. Map<UUID, Long>
 public class DeleteCmd extends CmdBase {
@@ -21,6 +22,6 @@ public class DeleteCmd extends CmdBase {
     public void execute(Player player, String[] args) {
         Town town = getTown(player);
         TownFactory.unregisterTown(town, getMap(), registry, TownFactory.getWorldManager());
-        player.sendMessage("Deleted town " + town.getSettings().getName());
+        Messages.say(player, "cmds.delete.deleted", town.getSettings().getName());
     }
 }

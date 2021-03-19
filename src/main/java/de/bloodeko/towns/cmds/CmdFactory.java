@@ -13,6 +13,7 @@ import de.bloodeko.towns.cmds.general.FoundCmd;
 import de.bloodeko.towns.cmds.general.GovenorCmd;
 import de.bloodeko.towns.cmds.general.InfoCmd;
 import de.bloodeko.towns.cmds.general.MapCmd;
+import de.bloodeko.towns.cmds.general.PlotCmd;
 import de.bloodeko.towns.cmds.general.MapCmd.MapClickHandler;
 import de.bloodeko.towns.cmds.general.RenameCmd;
 import de.bloodeko.towns.cmds.general.StageCmd;
@@ -60,12 +61,13 @@ public class CmdFactory {
         
         cmds.put("extensions", new ExtensionsCmd(map, newSettingsRegistry()));
         cmds.put("extension", new ExtensionCmd(map, newSettingsRegistry()));
+        cmds.put("plot", new PlotCmd(map));
         
         return new CmdHandler(cmds);
     }
     
     public static SettingsRegistry newSettingsRegistry() {
-        SettingsRegistry registry = new SettingsRegistry(new HashMap<>());
+        SettingsRegistry registry = new SettingsRegistry();
         registry.register(SettingsRegistry.DAMAGE_ANIMALS);
         registry.register(SettingsRegistry.PVP);
         registry.register(SettingsRegistry.WARP);

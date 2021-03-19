@@ -47,7 +47,7 @@ public class TownPeople {
     
     public void setOwner(UUID from, UUID to) {
         if (!isOwner(from)) {
-            throw new ModifyException("You are no owner of this town!");
+            throw new ModifyException("town.townpeople.youAreNotOwner");
         }
         setOwner(to);
     }
@@ -60,10 +60,10 @@ public class TownPeople {
     
     public void addGovenor(UUID from, UUID to) {
         if (!isGovernor(from)) {
-            throw new ModifyException("You are no govenor of this town!");
+            throw new ModifyException("town.townpeople.youAreNoGovernor");
         }
         if (isGovernor(to)) {
-            throw new ModifyException("The target is already govenor of this town.");
+            throw new ModifyException("town.townpeople.targetIsAlreadyGovernor");
         }
         region.getOwners().getPlayerDomain().addPlayer(to);
         governors.add(to);
@@ -71,10 +71,10 @@ public class TownPeople {
     
     public void removeGovenor(UUID from, UUID to) {
         if (!isOwner(from)) {
-            throw new ModifyException("You are no owner of this town!");
+            throw new ModifyException("town.townpeople.youAreNotOwner");
         }
         if (!isGovernor(to)) {
-            throw new ModifyException("The target is no govenor of this town.");
+            throw new ModifyException("town.townpeople.targetIsNoGovernor");
         }
         region.getOwners().getPlayerDomain().removePlayer(to);
         governors.remove(to);
@@ -82,10 +82,10 @@ public class TownPeople {
     
     public void addBuilder(UUID from, UUID to) {
         if (!isGovernor(from)) {
-            throw new ModifyException("You are no govenor of this town!");
+            throw new ModifyException("town.townpeople.youAreNoGovernor");
         }
         if (isBuilder(to)) {
-            throw new ModifyException("The target is already builder.");
+            throw new ModifyException("town.townpeople.targetIsAlreadyBuilder");
         }
         region.getMembers().getPlayerDomain().addPlayer(to);
         builders.add(to);
@@ -93,10 +93,10 @@ public class TownPeople {
     
     public void removeBuilder(UUID from, UUID to) {
         if (!isGovernor(from)) {
-            throw new ModifyException("You are no govenor of this town!");
+            throw new ModifyException("town.townpeople.youAreNoGovernor");
         }
         if (!isBuilder(to)) {
-            throw new ModifyException("The target is no builder of this town.");
+            throw new ModifyException("town.townpeople.targetIsNoBuilder");
         }
         region.getMembers().getPlayerDomain().removePlayer(to);
         builders.remove(to);

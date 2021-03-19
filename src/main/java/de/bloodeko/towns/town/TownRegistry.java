@@ -44,7 +44,7 @@ public class TownRegistry {
      */
     public void validateCreation(Chunk chunk, String name, UUID owner) {
         if (map.hasTown(chunk)) {
-            throw new ModifyException("There is already a town at this location.");
+            throw new ModifyException("town.townregistry.chunkAlreadyTaken");
         }
         if (owner == null) {
             throw new ModifyException("Can't create a town without owner.");
@@ -74,7 +74,7 @@ public class TownRegistry {
     public void rename(Town town, String to) {
         if (!town.getSettings().getName().equalsIgnoreCase(to)) {
             if (containsName(to)) {
-                throw new ModifyException("There is already a town with this name.");
+                throw new ModifyException("town.townregistry.nameAlreadyTaken");
             }
         }
         towns.remove(town.getSettings().getName());
@@ -87,7 +87,7 @@ public class TownRegistry {
     public Town get(String name) {
         Town town = find(name);
         if (town == null) {
-            throw new ModifyException("No town was found with this name.");
+            throw new ModifyException("town.townregistry.nameNotFound");
         }
         return town;
     }
@@ -140,13 +140,13 @@ public class TownRegistry {
     public void validateName(String name) {
         name = name.toLowerCase();
         if (name.length() < 3 || name.length() > 20) {
-            throw new ModifyException("The name is too short/long.");
+            throw new ModifyException("town.townregistry.invalidNameSize");
         }
         if (!Util.isValidName(name)) {
-            throw new ModifyException("The name contains invalid characters.");
+            throw new ModifyException("town.townregistry.invalidNameChars");
         }
         if (containsName(name)) {
-            throw new ModifyException("There is already a town with this name.");
+            throw new ModifyException("town.townregistry.nameAlreadyTaken");
         }
     }
 }

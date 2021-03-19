@@ -36,16 +36,18 @@ public class Chunk {
     /**
      * Returns the Chunks within the area.
      */
-    public Chunk[] getChunksWithin(Chunk a, Chunk b) {
-        return getChunksWithin(Math.min(a.x, b.x), Math.min(a.x, b.x),
-          Math.min(a.z, b.z), Math.max(a.z, b.z));
+    public static Chunk[] getChunksWithin(Chunk a, Chunk b) {
+        return getChunksWithin(Math.min(a.x, b.x), Math.min(a.z, b.z),
+          Math.max(a.x, b.x), Math.max(a.z, b.z));
     }
     
     /**
-     * Returns the chunks in the area by looping over the startPos include and 
-     * the endPos exclusive. The startPos needs to be smaller than the endPos.
+     * Returns the chunks in the area by looping over the startPos inclusive and 
+     * the endPos inclusive. The startPos needs to be smaller than the endPos.
      */
     private static Chunk[] getChunksWithin(int startX, int startZ, int endX, int endZ) {
+        endX += 1;
+        endZ += 1;
         int a = endX - startX;
         int b = endZ - startZ;
         Chunk[] chunks = new Chunk[a*b];

@@ -6,6 +6,7 @@ import de.bloodeko.towns.cmds.CmdBase;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.TownRegistry;
 import de.bloodeko.towns.util.Chunk;
+import de.bloodeko.towns.util.Messages;
 
 public class FoundCmd extends CmdBase {
     private TownRegistry registry;
@@ -17,9 +18,9 @@ public class FoundCmd extends CmdBase {
 
     @Override
     public void execute(Player player, String[] args) {
-        String name = getArg(0, args, "You need to specify a name.");
+        String name = getArg(0, args, "cmds.found.needName");
         registry.foundTown(Chunk.fromEntity(player), name, player.getUniqueId());
-        player.sendMessage("Town " + name + " created.");
+        Messages.say(player, "cmds.found.created", name);
     }
 
 }

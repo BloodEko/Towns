@@ -9,6 +9,7 @@ import de.bloodeko.towns.cmds.CmdBase;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.util.Chunk;
+import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.Yaw;
 
@@ -27,7 +28,7 @@ public class ClaimCmd extends CmdBase {
         } else {
             claim(player, args[0]);
         }
-        player.sendMessage("Claimed chunk!");
+        Messages.say(player, "cmds.claim.claimedChunk");
     }
     
     private void claim(Player player) {
@@ -47,17 +48,17 @@ public class ClaimCmd extends CmdBase {
                 return town;
             }
         }
-        throw new ModifyException("No town found with that name.");
+        throw new ModifyException("cmds.claim.townNameNotFound");
     }
     
     private Town getTown(List<Town> list) {
         if (list.size() == 0) {
-            throw new ModifyException("No near town found.");
+            throw new ModifyException("cmds.claim.noNearTown");
         }
         Town first = list.get(0);
         for (Town town : list) {
             if (town != first) {
-                throw new ModifyException("Multiple towns found. /town claim <name>");
+                throw new ModifyException("cmds.claim.cmdUsage");
             }
         }
         return first;

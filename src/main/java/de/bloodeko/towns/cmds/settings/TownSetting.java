@@ -10,26 +10,39 @@ import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
 import de.bloodeko.towns.town.Town;
 
+//name and display need to be separated
+//already lead to errors.
 public abstract class TownSetting {
     private Flag<?> flag;
-    private String name;
+    private String id;
+    private String display;
     private int minStage;
     private int price;
     private Object defaultValue;
     
-    public TownSetting(Flag<?> flag, String name, int minStage, int price, Object defaultValue) {
+    public TownSetting(Flag<?> flag, String id, String display, int minStage, int price, Object defaultValue) {
         this.flag = flag;
-        this.name = name;
+        this.id = id;
+        this.display = display;
         this.minStage = minStage;
         this.price = price;
         this.defaultValue = defaultValue;
     }
     
     /**
-     * Gets the identifier/name used.
+     * Returns the internal name used for
+     * identification in serialization.
      */
-    public String getName() {
-        return name;
+    public String getId() {
+        return id;
+    }
+    
+    /**
+     * Returns the display name which is also
+     * used as identifier in the UI.
+     */
+    public String getDisplay() {
+        return display;
     }
     
     /**
@@ -44,7 +57,7 @@ public abstract class TownSetting {
      * Per default only checks on the stage.
      */
     public boolean accepts(Town town) {
-        return matchesStage(town.getSettings().getState());
+        return matchesStage(town.getSettings().getStage());
     }
     
     /**

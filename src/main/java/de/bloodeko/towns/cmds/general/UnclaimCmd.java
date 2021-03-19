@@ -6,6 +6,7 @@ import de.bloodeko.towns.cmds.CmdBase;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.util.Chunk;
+import de.bloodeko.towns.util.Messages;
 
 public class UnclaimCmd extends CmdBase {
     
@@ -22,14 +23,14 @@ public class UnclaimCmd extends CmdBase {
     public void unclaim(Chunk chunk, Player player) {
         Town town = getMap().query(chunk);
         if (town == null) {
-            player.sendMessage("This chunk is not claimed.");
+            Messages.say(player, "cmds.unclaim.notClaimed");
             return;
         }
         if (!town.getPeople().isGovernor(player.getUniqueId())) {
-            player.sendMessage("You are not allowed to unclaim here.");
+            Messages.say(player, "cmds.unclaim.notAllowed");
             return;
         }
         town.getArea().contract(getMap(), chunk);
-        player.sendMessage("Unclaimed " + chunk + " for " + town);
+        Messages.say(player, "cmds.unclaim.unclaimed", chunk, town);
     }
 }

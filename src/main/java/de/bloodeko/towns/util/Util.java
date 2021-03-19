@@ -1,9 +1,16 @@
 package de.bloodeko.towns.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
 
 public class Util {
@@ -82,5 +89,53 @@ public class Util {
     public static double trimDouble(double value) {
         long temp = (long) (value * 100.0);
         return ((double) temp) / 100.0;
+    }
+    
+    /**
+     * Parses all lines in a properties file and writes the results 
+     * to the map.
+     */
+    public static void parseProperties(Map<String, String> map, List<String> lines) {
+        for (String line : lines) {
+            parseLine(map, line);
+        }
+    }
+    
+    /**
+     * Parses the line and adds the result to the map. Ignores lines 
+     * beginning with a '#' and splits on the '=' symbol.
+     */
+    public static void parseLine(Map<String, String> map, String line) {
+        if (line.startsWith("#")) {
+            return;
+        }
+        int delimeter = line.indexOf('=');
+        if (delimeter == -1) {
+            return;
+        }
+        String key = line.substring(0, delimeter);
+        String value = line.substring(delimeter+1, line.length());
+        map.put(key, value);
+    }
+    
+    /**
+     * Reads the input stream in UTF8 and writes the lines
+     * to an result List.
+     */
+    public static List<String> readLines(InputStream in) {
+        List<String> list = new ArrayList<>();
+        Charset charset = StandardCharsets.UTF_8;
+        try (InputStreamReader inReader = new InputStreamReader(in, charset);
+          BufferedReader reader = new BufferedReader(inReader)
+        ) {
+            String line;
+            while((line = reader.readLine()) != null) {
+                list.add(line);
+            }
+        } 
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return list;
     }
 }

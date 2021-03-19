@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import de.bloodeko.towns.cmds.CmdBase;
 import de.bloodeko.towns.cmds.settings.SettingsRegistry;
 import de.bloodeko.towns.town.ChunkMap;
+import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.Util;
 
 public class ExtensionsCmd extends CmdBase {
@@ -20,6 +21,6 @@ public class ExtensionsCmd extends CmdBase {
     @Override
     public void execute(Player player, String[] args) {
         List<String> list = registry.getPossibleNames(getTown(player));
-        player.sendMessage("Possible extensions to buy: " + Util.join(list, ", "));
+        Messages.say(player, "cmds.extensions.list", Util.join(list, ", "));
     }
 }

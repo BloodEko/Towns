@@ -38,7 +38,7 @@ public class ChunkRules {
         double minSide = Math.min(lengthX, lengthZ);
         double maxSide = Math.max(lengthX, lengthZ);
         if (maxSide / minSide > SIDES_RATIO) {
-            throw new ModifyException("Sides must be in a " + SIDES_RATIO + ":1 ratio.");
+            throw new ModifyException("town.chunkrules.wrongRatio", SIDES_RATIO);
         }
     }
     
@@ -55,8 +55,8 @@ public class ChunkRules {
         double areaMax = townArea.getMaxSize();
         double percentage = areaCur/areaMax;
         if (percentage < AREA_PERCENTAGE) {
-            throw new ModifyException("Not enough area filled. " + areaCur + "/" + areaMax 
-              + " are only " + (percentage*100) + "/" + AREA_PERCENTAGE + "%.");
+            throw new ModifyException("town.chunkrules.notEnoughAreaFilled",
+              areaCur, areaMax, (percentage*100), AREA_PERCENTAGE);
         }
     }
     
@@ -70,7 +70,8 @@ public class ChunkRules {
             if (map.query(ch) == town) count++;
         }
         if (count < MIN_COUNT_NEAR) {
-            throw new ModifyException("Not enough chunks nearby. " + count + "/" + MIN_COUNT_NEAR);
+            throw new ModifyException("town.chunkrules.notEnoughChunksNear", 
+              count, MIN_COUNT_NEAR);
         }
     }
 }

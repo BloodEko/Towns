@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import de.bloodeko.towns.cmds.CmdBase;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
+import de.bloodeko.towns.util.Messages;
 
 public class StageCmd extends CmdBase {
 
@@ -19,9 +20,9 @@ public class StageCmd extends CmdBase {
         try {
             town.getSettings().setStage(Integer.parseInt(stage));
             String name = town.getSettings().getName();
-            player.sendMessage("Set the stage of " + name + " to " + stage + ".");
+            Messages.say(player, "cmds.stage.setStage", name, stage);
         } catch (NumberFormatException ex) {
-            player.sendMessage("You must define a valid number.");
+            Messages.say(player, "cmds.stage.invalidNumber");
         }
     }
 }

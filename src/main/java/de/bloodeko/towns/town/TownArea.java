@@ -54,7 +54,7 @@ public class TownArea {
      */
     public void expand(ChunkMap map, Town town, Chunk chunk) {
         if (map.query(chunk) != null) {
-            throw new ModifyException("Chunk is already taken!");
+            throw new ModifyException("town.townarea.alreadyTaken");
         }
         rules.checkExpand(map, town, this, chunk);
         updateShape(chunk);
@@ -68,7 +68,7 @@ public class TownArea {
      */
     public void contract(ChunkMap map, Chunk chunk) {
         if (!chunks.contains(chunk)) {
-            throw new ModifyException("The town doesn't contain the chunk");
+            throw new ModifyException("town.townarea.notTaken");
         }
         chunks.remove(chunk);
         updateShape();

@@ -10,6 +10,7 @@ import de.bloodeko.towns.cmds.settings.TownSetting;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.util.Chunk;
+import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.Util;
 
 public class ExtensionCmd extends CmdBase {
@@ -22,13 +23,13 @@ public class ExtensionCmd extends CmdBase {
 
     @Override
     public void execute(Player player, String[] args) {
-        TownSetting setting = registry.settings().get(getArg(0, args));
+        TownSetting setting = registry.fromDisplay(getArg(0, args));
         if (setting == null) {
-            player.sendMessage("This setting does not exist.");
+            Messages.say(player, "cmds.extension.notFound");
             return;
         }
         getTown(player).getSettings().addExtension(setting);
-        player.sendMessage("Bought extension " + setting.getName() + " for the town.");
+        Messages.say(player, "cmds.extension.bought", setting.getDisplay());
     }
     
     @Override

@@ -18,6 +18,7 @@ import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.util.BukkitFactory;
 import de.bloodeko.towns.util.BukkitFactory.Items;
 import de.bloodeko.towns.util.Chunk;
+import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.Yaw;
 
 /**
@@ -69,14 +70,14 @@ public class MapCmd extends CmdBase {
             if (type == ClickType.LEFT) {
                 if (zoom != MIN_ZOOM) {
                     zoom--;
-                    player.sendMessage("Zoom is now:" + zoom);
+                    Messages.say(player, "cmds.map.setZoom", zoom);
                     render();
                 }
             } 
             if (type == ClickType.RIGHT) {
                 if (zoom != MAX_ZOOM) {
                     zoom++;
-                    player.sendMessage("Zoom is now:" + zoom);
+                    Messages.say(player, "cmds.map.setZoom", zoom);
                     render();
                 }
             }
@@ -84,8 +85,8 @@ public class MapCmd extends CmdBase {
         
         public void open() {
             render();
-            player.sendMessage("Open view in format: " + rotation.up);
             player.openInventory(inv);
+            Messages.say(player, "cmds.map.openView", rotation.up);
         }
         
         private void render() {

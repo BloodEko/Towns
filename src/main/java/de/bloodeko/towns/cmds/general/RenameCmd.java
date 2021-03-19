@@ -6,6 +6,7 @@ import de.bloodeko.towns.cmds.CmdBase;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownRegistry;
+import de.bloodeko.towns.util.Messages;
 
 public class RenameCmd extends CmdBase {
     private TownRegistry registry;
@@ -18,11 +19,11 @@ public class RenameCmd extends CmdBase {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length == 0) {
-            player.sendMessage("Use /town name <newname> to set a new name.");
+            Messages.say(player, "cmds.rename.cmdUsage");
             return;
         }
         rename(getTown(player), registry, args[0]);
-        player.sendMessage("Renamed your town to: " + args[0]);
+        Messages.say(player, "cmds.rename.renamed", args[0]);
     }
     
     public void rename(Town town, TownRegistry registry, String name) {

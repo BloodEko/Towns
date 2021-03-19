@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import de.bloodeko.towns.cmds.CmdBase;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
+import de.bloodeko.towns.util.Messages;
 
 public class BuilderCmd extends CmdBase {
 
@@ -21,13 +22,13 @@ public class BuilderCmd extends CmdBase {
         if (hasArg(1, args)) {
             OfflinePlayer target = getOfflineTarget(name);
             town.getPeople().removeBuilder(player.getUniqueId(), target.getUniqueId());
-            player.sendMessage(name  + " is no longer builder here.");
+            Messages.say(player, "cmds.builder.removedPlayer");
         }
         else {
             Player target = getTarget(name);
             town.getPeople().addBuilder(player.getUniqueId(), target.getUniqueId());
-            player.sendMessage(name  + " is now builder here.");
-            target.sendMessage("You are now builder in " + town.getSettings().getName() + ".");
+            Messages.say(player, "cmds.builder.addedPlayer");
+            Messages.say(target, "cmds.builder.gainedRank", town.getSettings().getName());
         }
     }
 }

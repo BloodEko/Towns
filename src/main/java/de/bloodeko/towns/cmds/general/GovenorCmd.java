@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import de.bloodeko.towns.cmds.CmdBase;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
+import de.bloodeko.towns.util.Messages;
 
 public class GovenorCmd extends CmdBase {
 
@@ -21,13 +22,13 @@ public class GovenorCmd extends CmdBase {
         if (hasArg(1, args)) {
             OfflinePlayer target = getOfflineTarget(name);
             town.getPeople().removeGovenor(player.getUniqueId(), target.getUniqueId());
-            player.sendMessage(name  + " is no longer govenor here.");
+            Messages.say(player, "cmds.governor.removedPlayer", name);
         }
         else {
             Player target = getTarget(name);
             town.getPeople().addGovenor(player.getUniqueId(), target.getUniqueId());
-            player.sendMessage(name  + " is now govenor here.");
-            target.sendMessage("You are now govenor in " + town.getSettings().getName() + ".");
+            Messages.say(player, "cmds.governor.addedPlayer", name);
+            Messages.say(target, "cmds.governor.gainedRank", town.getSettings().getName());
         }
     }
 }

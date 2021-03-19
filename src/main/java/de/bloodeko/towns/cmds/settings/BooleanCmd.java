@@ -11,6 +11,7 @@ import de.bloodeko.towns.cmds.CmdBase;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownSettings;
+import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.Util;
 
 /**
@@ -18,8 +19,8 @@ import de.bloodeko.towns.util.Util;
  * boolean settings.
  */
 public abstract class BooleanCmd extends CmdBase {
-    private static final String ON = "true";
-    private static final String OFF = "false";
+    private static final String ON = Messages.get("booleanCmd.on");
+    private static final String OFF = Messages.get("booleanCmd.off");
     private String name;
     
     public BooleanCmd(ChunkMap map, String name) {
@@ -38,12 +39,12 @@ public abstract class BooleanCmd extends CmdBase {
         }
         Town town = getTown(player);
         if (args[0].equals(ON)) {
-            player.sendMessage(name + " is now enabled.");
+            Messages.say(player, "booleanCmd.enabled", name);
             setValue(town.getSettings(), State.ALLOW);
             return;
         }
         if (args[0].equals(OFF)) {
-            player.sendMessage(name + " is now disabled.");
+            Messages.say(player, "booleanCmd.disabled", name);
             setValue(town.getSettings(), State.DENY);
             return;
         }
@@ -53,7 +54,7 @@ public abstract class BooleanCmd extends CmdBase {
     public abstract void setValue(TownSettings settings, State value);
     
     private void sendError(Player player) {
-        player.sendMessage("Specify a valid boolean.");
+        Messages.say(player, "booleanCmd.invalidInput");
     }
     
     /**

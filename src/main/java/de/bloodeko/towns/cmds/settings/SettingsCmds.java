@@ -7,6 +7,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import de.bloodeko.towns.cmds.CmdBase;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.TownSettings;
+import de.bloodeko.towns.util.Messages;
 
 /**
  * Commands to toggle and define various setitngs
@@ -57,10 +58,10 @@ public class SettingsCmds {
         public void execute(Player player, String[] args) {
             if (args.length == 0) {
                 getTown(player).getSettings().writeSetting(SettingsRegistry.WARP, player.getLocation());
-                player.sendMessage("Warppoint set to your location.");
+                Messages.say(player, "settings.warp.set");
             } else {
                 getTown(player).getSettings().writeSetting(SettingsRegistry.WARP, null);
-                player.sendMessage("Disabled the warppoint for this town.");
+                Messages.say(player, "settings.warp.disabled");
             }
         }
     }
