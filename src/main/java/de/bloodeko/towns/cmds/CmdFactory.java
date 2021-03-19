@@ -25,6 +25,7 @@ import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.TownCmd;
 import de.bloodeko.towns.town.TownRegistry;
 import de.bloodeko.towns.town.settings.SettingsRegistry;
+import de.bloodeko.towns.town.settings.plots.cmds.PlotBuilderCmd;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotCmd;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotCreateCmd;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotExpropriateCmd;
@@ -35,6 +36,7 @@ import de.bloodeko.towns.town.settings.plots.cmds.PlotNameCmd;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotRemoveCmd;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotRentCmd;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotRentoutCmd;
+import de.bloodeko.towns.town.settings.plots.cmds.PlotReserveCmd;
 import de.bloodeko.towns.util.Messages;
 
 public class CmdFactory {
@@ -87,6 +89,7 @@ public class CmdFactory {
     
     public static PlotCmd newPlotCmd(ChunkMap map) {
         Map<String, CmdBase> cmds = new HashMap<>();
+        put(cmds, "plot.builder", new PlotBuilderCmd(map));
         put(cmds, "plot.create", new PlotCreateCmd(map));
         put(cmds, "plot.expropriate", new PlotExpropriateCmd(map));
         put(cmds, "plot.info", new PlotInfoCmd(map));
@@ -96,6 +99,7 @@ public class CmdFactory {
         put(cmds, "plot.remove", new PlotRemoveCmd(map));
         put(cmds, "plot.rent", new PlotRentCmd(map));
         put(cmds, "plot.rentout", new PlotRentoutCmd(map));
+        put(cmds, "plot.reserve", new PlotReserveCmd(map));
         return new PlotCmd(map, new CmdHandler(cmds));
     }
     

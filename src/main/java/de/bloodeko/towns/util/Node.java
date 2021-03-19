@@ -6,6 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import com.sk89q.worldedit.math.BlockVector3;
+
 import java.util.Set;
 import java.util.UUID;
 
@@ -25,6 +28,13 @@ public class Node {
      */
     public void set(String key, Object obj) {
         map.put(key, obj);
+    }
+    
+    /**
+     * Sets the BlockVector3 serialized.
+     */
+    public void set(String key, BlockVector3 vec) {
+        set(key, vec.getBlockX() + "," + vec.getBlockY() + "," + vec.getBlockZ());
     }
     
     /**
@@ -72,8 +82,8 @@ public class Node {
     }
 
     /**
-     * Returns the value casted as an String-List and converted 
-     * to an UUID-Set. Might throw an exception.
+     * Returns an empty Set or the value casted as an String-List 
+     * and converted to an UUID-Set. Might throw an exception.
      */
     public Set<UUID> getUUIDSet(String key) {
         Set<UUID> set = new HashSet<>();
@@ -94,6 +104,18 @@ public class Node {
     public UUID getUUID(String key) {
         Object obj = map.get(key);
         return obj == null ? null : UUID.fromString((String) obj);
+    }
+    
+    /**
+     * Returns the value converted as an BlockVector3.
+     * Might throw an exception.
+     */
+    public BlockVector3 getVector(String key) {
+        String[] split = getString(key).split(",");
+        int x = Integer.valueOf(split[0]);
+        int y = Integer.valueOf(split[1]);
+        int z = Integer.valueOf(split[2]);
+        return BlockVector3.at(x, y, z);
     }
 
     /**

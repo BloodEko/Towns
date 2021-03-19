@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.settings.plots.PlotData;
-import de.bloodeko.towns.town.settings.plots.PlotTownHandler;
+import de.bloodeko.towns.town.settings.plots.PlotHandler;
 import de.bloodeko.towns.util.Messages;
 
 public class PlotListCmd extends PlotBaseCmd {
@@ -15,7 +15,7 @@ public class PlotListCmd extends PlotBaseCmd {
 
     @Override
     public void execute(Player player, String[] args) {
-        PlotTownHandler handler = getPlotHandler(getTown(player));
+        PlotHandler handler = getPlotHandler(getTown(player));
         
         if (handler.plots.isEmpty()) {
             Messages.say(player, "settings.plot.listcmd.noPlotsDefined");

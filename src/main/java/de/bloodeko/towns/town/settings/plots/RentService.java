@@ -1,14 +1,17 @@
 package de.bloodeko.towns.town.settings.plots;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import com.sk89q.worldguard.protection.managers.RegionManager;
 
 import de.bloodeko.towns.town.Town;
-import de.bloodeko.towns.town.TownRegisterEvent;
+import de.bloodeko.towns.town.TownLoadEvent;
 import de.bloodeko.towns.town.TownRegistry;
-import de.bloodeko.towns.town.TownUnregisterEvent;
+import de.bloodeko.towns.town.TownDeletedEvent;
 import de.bloodeko.towns.town.settings.Settings;
 
 public class RentService implements Listener {
@@ -21,17 +24,20 @@ public class RentService implements Listener {
     }
     
     @EventHandler
-    public void onTownLoad(TownRegisterEvent event) {
-        manager.getClass(); //todo register regions.
-        if (hasPlots(event.town)) {
-            System.out.println("Loading town with plots:" + event.town.getSettings().getName());
+    public void onTownLoad(TownLoadEvent event) {
+        for (PlotData plot : getPlots(event.town)) {
+            manager.addRegion(plot.region);
+            System.out.println("Loading wg region for " + plot.id);
+            System.out.println("");
         }
     }
     
     @EventHandler
-    public void onTownUnload(TownUnregisterEvent event) {
-        if (hasPlots(event.town)) {
-            System.out.println("Unloading town with plots:" + event.town.getSettings().getName());
+    public void onTownUnload(TownDeletedEvent event) {
+        for (PlotData plot : getPlots(event.town)) {
+            manager.removeRegion(plot.region.getId());
+            System.out.println("Deleting wg rg region for " 
+              + plot.id + " " + plot.region.getId());
         }
     }
     
@@ -39,17 +45,22 @@ public class RentService implements Listener {
         return town.getSettings().hasSetting(Settings.PLOTS);
     }
     
+    public Collection<PlotData> getPlots(Town town) {
+        if (hasPlots(town)) {
+            PlotHandler plots = (PlotHandler) town.getSettings().readSetting(Settings.PLOTS);
+            return plots.getPlots();
+        }
+        return Collections.emptyList();
+    }
+    
     public void payRents() {
         for (Town town : towns.getTowns()) {
-            if (hasPlots(town)) {
-                PlotTownHandler plots = (PlotTownHandler) town.getSettings().readSetting(Settings.PLOTS);
-                for (PlotData plot : plots.plots.values()) {
-                    
-                    System.out.println("Checking to collect rent for " + plot.id + " in " + town.getSettings().getName());
-                    System.out.println("Renter: " + plot.renter);
-                    System.out.println("Rent: " + plot.rent);
-                    System.out.println("");
-                }
+            for (PlotData plot : getPlots(town)) {                    
+                System.out.println("Checking to collect rent for " + plot.id 
+                  + " in " + town.getSettings().getName());
+                System.out.println("Renter: " + plot.renter);
+                System.out.println("Rent: " + plot.rent);
+                System.out.println("");
             }
         }
     }

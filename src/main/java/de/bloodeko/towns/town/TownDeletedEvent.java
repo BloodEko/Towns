@@ -3,12 +3,15 @@ package de.bloodeko.towns.town;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class TownUnregisterEvent extends Event {
+/**
+ * Called when a town was deleted.
+ */
+public class TownDeletedEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
     
     public final Town town;
     
-    public TownUnregisterEvent(Town town) {
+    public TownDeletedEvent(Town town) {
         this.town = town;
     }
     

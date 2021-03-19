@@ -113,7 +113,7 @@ public class TownFactory {
         }
         names.add(town);
         manager.addRegion(town.getArea().getRegion());
-        Bukkit.getPluginManager().callEvent(new TownRegisterEvent(town));
+        Bukkit.getPluginManager().callEvent(new TownLoadEvent(town));
     }
     
     /**
@@ -125,6 +125,6 @@ public class TownFactory {
         }
         registry.remove(town.getSettings().getName());
         manager.removeRegion("town_" + town.getId());
-        Bukkit.getPluginManager().callEvent(new TownUnregisterEvent(town));
+        Bukkit.getPluginManager().callEvent(new TownDeletedEvent(town));
     }
 }

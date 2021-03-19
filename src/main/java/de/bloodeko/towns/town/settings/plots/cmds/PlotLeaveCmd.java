@@ -18,7 +18,7 @@ public class PlotLeaveCmd extends PlotBaseCmd {
     public void execute(Player player, String[] args) {
         PlotData plot = getPlotAsPlayer(player);
         
-        if (plot.renter != player.getUniqueId()) {
+        if (!player.getUniqueId().equals(plot.renter)) {
             Messages.say(player, "settings.plot.leavecmd.notYourPlot");
             return;
         }

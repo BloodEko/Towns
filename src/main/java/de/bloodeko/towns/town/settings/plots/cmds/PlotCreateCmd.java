@@ -8,7 +8,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
-import de.bloodeko.towns.town.settings.plots.PlotTownHandler;
+import de.bloodeko.towns.town.settings.plots.PlotHandler;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.ModifyException;
@@ -32,7 +32,7 @@ public class PlotCreateCmd extends PlotBaseCmd {
         Town tb = getMap().getTown(b);
         
         if (ta == null) {
-            throw new ModifyException("settings.plot.createcmd.outsideOfTown=");
+            throw new ModifyException("settings.plot.createcmd.outsideOfTown");
         }
         if (ta != tb) {
             throw new ModifyException("settings.plot.createcmd.notSameTown");
@@ -50,7 +50,7 @@ public class PlotCreateCmd extends PlotBaseCmd {
                 throw new ModifyException("settings.plot.createcmd.notFullyCoversTown");
             }
         }
-        PlotTownHandler handler = getPlotHandler(ta);
+        PlotHandler handler = getPlotHandler(ta);
         int size = handler.plots.size();
         int max = getMaxPlots(ta);
         if (size == max) {

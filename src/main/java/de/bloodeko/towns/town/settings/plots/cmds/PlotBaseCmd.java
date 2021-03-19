@@ -19,7 +19,7 @@ import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownFactory;
 import de.bloodeko.towns.town.settings.Settings;
 import de.bloodeko.towns.town.settings.plots.PlotData;
-import de.bloodeko.towns.town.settings.plots.PlotTownHandler;
+import de.bloodeko.towns.town.settings.plots.PlotHandler;
 import de.bloodeko.towns.util.ModifyException;
 
 public abstract class PlotBaseCmd extends CmdBase {
@@ -28,8 +28,8 @@ public abstract class PlotBaseCmd extends CmdBase {
         super(map);
     }
     
-    public PlotTownHandler getPlotHandler(Town town) {
-        PlotTownHandler handler = (PlotTownHandler) town.getSettings().readSetting(Settings.PLOTS);
+    public PlotHandler getPlotHandler(Town town) {
+        PlotHandler handler = (PlotHandler) town.getSettings().readSetting(Settings.PLOTS);
         if (handler == null) {
             throw new ModifyException("settings.plot.basecmd.settingNotBought");
         }
@@ -46,7 +46,7 @@ public abstract class PlotBaseCmd extends CmdBase {
         if (plotId == null) {
             throw new ModifyException("settings.plot.basecmd.noPlotAtLocation");
         }
-        PlotTownHandler handler = (PlotTownHandler) town.getSettings().readSetting(Settings.PLOTS);
+        PlotHandler handler = (PlotHandler) town.getSettings().readSetting(Settings.PLOTS);
         return handler.getPlot(Integer.valueOf(plotId));
     }
     
@@ -57,6 +57,22 @@ public abstract class PlotBaseCmd extends CmdBase {
     public PlotData getPlotAsGovernor(Player player) {
         getTown(player);
         return getPlotAsPlayer(player);
+    }
+
+    /**
+     * Gets the plot. Throws an exception if the player is
+     * no renter or governor or no plot was found.
+     */
+    public PlotData getPlotAsRenter(Player player) {
+        PlotData plot = getPlotAsPlayer(player);
+        if (plot.renter == null) {
+            getTown(player);
+            return plot;
+        }
+        if (!player.getUniqueId().equals(plot.renter)) {
+            throw new ModifyException("settings.plot.basecmd.notYourPlot");
+        }
+        return plot;
     }
     
     /**
