@@ -34,6 +34,11 @@ public class ChunkMap {
     public ItemStack getIcon(Chunk chunk) {
         Town town = query(chunk);
         if (town == null) return null;
-        return Items.createItem(Material.LIME_STAINED_GLASS_PANE, town.getName());
+        return Items.createItem(Material.LIME_STAINED_GLASS_PANE, town.getSettings().getName());
+    }
+    
+    @Override
+    public String toString() {
+        return "ChunkMap " + map.toString();
     }
 }

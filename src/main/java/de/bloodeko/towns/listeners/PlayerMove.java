@@ -6,8 +6,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import de.bloodeko.towns.town.ChunkMap;
-import de.bloodeko.towns.town.Town;
-import de.bloodeko.towns.util.Chunk;
 
 /**
  * TODO, move messages to town events.
@@ -21,6 +19,7 @@ public class PlayerMove extends AbstractListener {
     }
 
     public void process(Player player, Location toLoc) {
+        /*
         if (player.getLocation().getChunk() == toLoc.getChunk()) {
             return;
         }
@@ -35,6 +34,7 @@ public class PlayerMove extends AbstractListener {
                 player.sendMessage("You entered " + to.getName());
             }
         }
+        */
     }
     
     // https://github.com/DenizenScript/Denizen/blob/dev/plugin/src/main/java/com/denizenscript/denizen/events/entity/AreaEnterExitScriptEvent.java

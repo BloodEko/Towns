@@ -1,12 +1,20 @@
 package de.bloodeko.towns;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.bloodeko.towns.cmds.CmdFactory;
 import de.bloodeko.towns.listeners.ListenerFactory;
 import de.bloodeko.towns.town.ChunkMap;
+import de.bloodeko.towns.town.Town.TownData;
+import de.bloodeko.towns.town.TownDeserializer;
 import de.bloodeko.towns.town.TownFactory;
 import de.bloodeko.towns.town.TownRegistry;
+import de.bloodeko.towns.town.TownSerializer;
 import de.bloodeko.towns.util.BukkitFactory;
 
 /**
@@ -19,29 +27,74 @@ import de.bloodeko.towns.util.BukkitFactory;
  * > chunkmap. towns. claiming. map. info. commands. util.
  * > one package per command. features that are used by multiple commands, get an own package.
  * 
- * FoundCMD
- * Movement/LiquidFlow from/to, for enter/leave/move.
+ * +FoundCMD, AnimalProtect, PVP, Serialiable Settings objects.
+ * Plots, PlotManager. WorldMap, ChunkMap, ChunkToTownWrapper.
+ * Config. Messages/Claimingvariables. StufenAufstiege. Chatsystem.
+ * PlayerCache. file. per line UUID:name. onJoin/Quit is set. 
+ * onEnable/Disable to/from file. Where to save nextId when no indent?
  * 
- * TODO: Tierschutz, PVP.
+ * town.nodifymod notifies for townupgrades on join.
+ * town.mod allows cmds.
+ * town.admin allows cmds.
  */
 public class Towns extends JavaPlugin {
-
-    private ChunkMap chunkMap;
-    private TownRegistry towns;
+    
+    private ChunkMap chunkmap;
+    private TownRegistry registry;
     
     @Override
     public void onEnable() {
-        chunkMap = BukkitFactory.newChunkHandler(this);
-        towns = TownFactory.newRegistry(chunkMap);
+        chunkmap = BukkitFactory.newChunkHandler(this);
+        registry = loadRegistry();
         CmdFactory.init(this);
         ListenerFactory.init(this);
+        loadTowns();
+    }
+    
+    @Override
+    public void onDisable() {
+        saveRegistry();
+        saveTowns();
     }
 
     public ChunkMap getChunkMap() {
-        return chunkMap;
+        return chunkmap;
     }
     
     public TownRegistry getTownRegistry() {
-        return towns;
+        return registry;
+    }
+    
+    public TownRegistry loadRegistry() {
+        File file = new File(getDataFolder() + "/registry.yml");
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+        int id = config.getInt("id", 0);
+        return TownFactory.newRegistry(chunkmap, id);
+    }
+    
+    public void saveRegistry() {
+        try {
+            YamlConfiguration config = new YamlConfiguration();
+            config.set("id", registry.getId());
+            config.save(getDataFolder() + "/registry.yml");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public void loadTowns() {
+        File file = new File(getDataFolder() + "/towns.yml");
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+        List<TownData> data = TownDeserializer.deserializeTowns(config);
+        TownFactory.loadTowns(data, chunkmap, registry, TownFactory.getWorldManager());
+    }
+    
+    public void saveTowns() {
+        try {
+            YamlConfiguration config = TownSerializer.serialize(registry);
+            config.save(getDataFolder() + "/towns.yml");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

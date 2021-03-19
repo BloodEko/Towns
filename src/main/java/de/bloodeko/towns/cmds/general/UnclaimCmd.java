@@ -25,11 +25,11 @@ public class UnclaimCmd extends CmdBase {
             player.sendMessage("This chunk is not claimed.");
             return;
         }
-        if (!town.isOwner(player)) {
+        if (!town.getPeople().isGovernor(player.getUniqueId())) {
             player.sendMessage("You are not allowed to unclaim here.");
             return;
         }
-        town.getArea().contract(getMap(), chunk, town.getName());
+        town.getArea().contract(getMap(), chunk);
         player.sendMessage("Unclaimed " + chunk + " for " + town);
     }
 }

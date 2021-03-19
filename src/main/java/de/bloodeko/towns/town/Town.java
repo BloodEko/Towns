@@ -1,79 +1,60 @@
 package de.bloodeko.towns.town;
 
-import java.util.UUID;
-
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import de.bloodeko.towns.town.TownArea.TownAreaData;
+import de.bloodeko.towns.town.TownPeople.TownPeopleData;
+import de.bloodeko.towns.town.TownSettings.TownSettingsData;
 
 /**
  * TownMembers, TownSerializer, TownArea,
- * TownExpandContractRules.
- *
- *  private TownArea newArea;
- *  private TownMembers members;
- *  private UUID owner;
- *  private Set<UUID> residents;
- *  private Set<UUID> builders;
+ * TownExpandContractRules
  */
 public class Town {
     private int id;
-    private String name;
     private TownSettings settings;
-    private UUID owner;
-    private Location warp;
     private TownArea area;
+    private TownPeople people;
     
-    public Town(int id, String name, TownSettings settings, TownArea area, UUID owner) {
+    public Town(int id, TownSettings settings, TownArea area, TownPeople people) {
         this.id = id;
-        this.name = name;
         this.settings = settings;
         this.area = area;
-        this.owner = owner;
+        this.people = people;
     }
     
     public int getId() {
         return id;
     }
     
-    public String getName() {
-        return name;
-    }
-    
-    public void rename(TownRegistry registry, String name) {
-        registry.rename(this, name);
-        this.name = name;
-    }
-
-    public UUID getOwner() {
-        return owner;
+    public TownSettings getSettings() {
+        return settings;
     }
     
     public TownArea getArea() {
         return area;
     }
 
-    public boolean isOwner(Player player) {
-        return owner == player.getUniqueId();
-    }
-
-    public boolean isAllowedToBuild() {
-        return settings.canBuild();
+    public TownPeople getPeople() {
+        return people;
     }
     
-    public TownSettings getSettings() {
-        return settings;
+    public TownData getData() {
+        return new TownData(id, settings.getData(), area.getData(), people.getData());
     }
     
-    @Override
-    public String toString() {
-        return name;
-    }
-
-    public void setWarp(Location location) {
-        this.warp = location;
-    }
-    
-    public Location getWarp() {
-        return warp;
+    /**
+     * Data for serialization.
+     */
+    public static class TownData {
+        public int id;
+        public TownSettingsData settings;
+        public TownAreaData area;
+        public TownPeopleData people;
+        
+        public TownData(int id, TownSettingsData settings, TownAreaData area, TownPeopleData people) {
+            this.id = id;
+            this.settings = settings;
+            this.area = area;
+            this.people = people;
+        }
     }
 }

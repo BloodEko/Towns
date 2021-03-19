@@ -2,6 +2,8 @@ package de.bloodeko.towns.cmds;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import de.bloodeko.towns.town.ChunkMap;
@@ -29,19 +31,74 @@ public abstract class CmdBase {
     public ChunkMap getMap() {
         return map;
     }
+
+    /**
+     * Returns an online player for the the name. Otherwise throws 
+     * an exception with a default message.
+     */
+    public Player getTarget(String name) {
+        Player target = Bukkit.getPlayer(name);
+        if (target == null) {
+            throw new ModifyException("Player " + name + " is not online.");
+        }
+        return target;
+    }
     
     /**
-     * Gets the town at the players current location. Throws an exception 
-     * if none is found, or the player can't modify there.
+     * Returns an offline player for the name. Otherwise throws 
+     * an exception with a default message.
+     */
+    @SuppressWarnings("deprecation")
+    public OfflinePlayer getOfflineTarget(String name) {
+        OfflinePlayer target = Bukkit.getOfflinePlayer(name);
+        if (target == null) {
+            throw new ModifyException("Player " + name + " does not exist.");
+        }
+        return target;
+    }
+    
+    /**
+     * Returns the argument at the index. If it doesn't exist throws an 
+     * exception with a default message.
+     */
+    public String getArg(int index, String[] args) {
+        return getArg(index, args, "Argument " + index + " not found.");
+    }
+    
+    /**
+     * Returns the argument at the index. If it doesn't exist throws an 
+     * exception with the message.
+     */
+    public String getArg(int index, String[] args, String message) {
+        if (!hasArg(index, args)) {
+            throw new ModifyException(message);
+        }
+        return args[index];
+    }
+    
+    /**
+     * Returns whether the index exits in the array.
+     */
+    public boolean hasArg(int index, String[] args) {
+        return args.length > index;
+    }
+    
+    /**
+     * Gets the town at the current location with permission checks.
+     * Otherwise throws an exception.
      */
     public Town getTown(Player player) {
         Town town = getTownAsPlayer(player);
-        if (town.getOwner() != player.getUniqueId()) {
+        if (!town.getPeople().isGovernor(player.getUniqueId())) {
             throw new ModifyException("You have no right to modify that town.");
         }
         return town;
     }
     
+    /**
+     * Gets the town at the current location without permission checks.
+     * Throws an exception, if no Town is found.
+     */
     public Town getTownAsPlayer(Player player) {
         Town town = map.query(Chunk.fromEntity(player));
         if (town == null) {

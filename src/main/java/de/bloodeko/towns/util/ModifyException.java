@@ -7,4 +7,8 @@ public class ModifyException extends RuntimeException {
     public ModifyException(String text) {
         super(text);
     }
+
+    public ModifyException(String text, Exception ex) {
+        super(text, ex);
+    }
 }

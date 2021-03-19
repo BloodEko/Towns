@@ -12,6 +12,8 @@ import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.Yaw;
 
+// TODO. there is a bug after server restart
+//  that no near towns are found. (add sysout of chunkmap/list.)
 public class ClaimCmd extends CmdBase {
     
     public ClaimCmd(ChunkMap chunks) {
@@ -42,7 +44,7 @@ public class ClaimCmd extends CmdBase {
     
     private Town getTown(List<Town> list, String name) {
         for (Town town : list) {
-            if (town.getName().equalsIgnoreCase(name)) {
+            if (town.getSettings().getName().equalsIgnoreCase(name)) {
                 return town;
             }
         }
@@ -66,7 +68,7 @@ public class ClaimCmd extends CmdBase {
         List<Town> list = new ArrayList<>();
         for (Yaw yaw : Yaw.DIRECTIONS) {
             Town town = getMap().query(chunk.add(yaw));
-            if (town != null && town.isOwner(player)) {
+            if (town != null && town.getPeople().isGovernor(player.getUniqueId())) {
                 list.add(town);
             }
         }

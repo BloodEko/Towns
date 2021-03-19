@@ -1,11 +1,20 @@
 package de.bloodeko.towns.cmds.general;
 
+import java.util.Map.Entry;
+import java.util.StringJoiner;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+
+import com.sk89q.worldguard.protection.flags.Flag;
 
 import de.bloodeko.towns.cmds.CmdBase;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
+import de.bloodeko.towns.town.TownPeople;
 
 public class InfoCmd extends CmdBase {
     
@@ -18,21 +27,72 @@ public class InfoCmd extends CmdBase {
         printInfo(getTownAsPlayer(player), player);
     }
 
+    //TODO check formatting in treefarm with many people.
     public void printInfo(Town town, Player player) {
         player.sendMessage("--- Town info ---");
-        player.sendMessage("Name: "  + town.getName() + "(" + town.getId() + ")");
+        player.sendMessage("Name: "  + town.getSettings().getName() + "(" + town.getId() + ")");
         player.sendMessage("Size: "  + town.getArea().getSize());
-        player.sendMessage("Owner: " + Bukkit.getOfflinePlayer(town.getOwner()).getName());
+        
+        player.sendMessage("-- People --");
+        player.sendMessage("Governors: " + getGovernors(town.getPeople()));
+        player.sendMessage("Builders: " + getBuilders(town.getPeople()));
         
         player.sendMessage("-- Area --");
-        player.sendMessage("minX: " + town.getArea().getMinX());
-        player.sendMessage("minZ: " + town.getArea().getMinZ());
-        player.sendMessage("maxX: " + town.getArea().getMaxX());
-        player.sendMessage("maxZ: " + town.getArea().getMaxZ());
+        player.sendMessage("minX: " + town.getArea().getSides().minX);
+        player.sendMessage("minZ: " + town.getArea().getSides().minZ);
+        player.sendMessage("maxX: " + town.getArea().getSides().maxX);
+        player.sendMessage("maxZ: " + town.getArea().getSides().maxZ);
         
         player.sendMessage("-- Settings --");
-        player.sendMessage("Warp:   " + String.valueOf(town.getWarp() != null));
-        player.sendMessage("Building: " + town.getSettings().canBuild());
-        player.sendMessage("Killing: " + town.getSettings().canKillAnimals());
+        for (Entry<Flag<?>, Object> entry : town.getSettings().getExtensions().entrySet()) {
+            player.sendMessage(entry.getKey().getName() + ": " + printValue(entry.getValue()));
+        }
+        //player.sendMessage("Warp: " + String.valueOf(town.getSettings().getWarp() != null));
+        //player.sendMessage("Building: " + town.getSettings().canBuild());
+        //player.sendMessage("Killing: " + town.getSettings().canKillAnimals());
+    }
+    
+    private String printValue(Object obj) {
+        if (obj == null) {
+            return "false";
+        } else {
+            return "true";
+        }
+    }
+    
+    private String getGovernors(TownPeople people) {
+        StringJoiner joiner = new StringJoiner(", ");
+        for (UUID uuid : people.getGovernors()) {
+            if (people.isOwner(uuid)) {
+                joiner.add(withPrefix(uuid, true));
+            } else {
+                joiner.add(withPrefix(uuid, false));
+            }
+        }
+        return joiner.toString();
+    }
+    
+    private String getBuilders(TownPeople people) {
+        StringJoiner joiner = new StringJoiner(", ");
+        for (UUID uuid : people.getBuilders()) {
+            joiner.add(withPrefix(uuid, false));
+        }
+        return joiner.toString();
+    }
+    
+    private String withPrefix(UUID uuid, boolean bold) {
+        OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+        String val = player.getName();
+        if (val == null) {
+            val = player.getUniqueId().toString();
+        }
+        val += ChatColor.RESET;
+        if (bold) {
+            val = ChatColor.BOLD + val;
+        }
+        if (player.isOnline()) {
+            val = ChatColor.GREEN + val;
+        }
+        return val;
     }
 }

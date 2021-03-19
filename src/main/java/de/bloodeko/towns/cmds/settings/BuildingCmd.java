@@ -12,11 +12,12 @@ public class BuildingCmd extends BooleanSetting {
     
     @Override
     public void setValue(TownSettings settings, boolean value) {
-        settings.setBuilding(value);
+        //settings.setBuilding(value);
     }
     
     @Override
     public boolean readValue(TownSettings settings) {
-        return settings.canBuild();
+        return false;
+        //return settings.canBuild();
     }
 }

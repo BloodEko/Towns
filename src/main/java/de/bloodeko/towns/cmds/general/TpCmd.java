@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import de.bloodeko.towns.cmds.CmdBase;
+import de.bloodeko.towns.cmds.settings.Settings;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownRegistry;
@@ -25,12 +26,12 @@ public class TpCmd extends CmdBase {
             return;
         }
         Town town = registry.get(args[0]);
-        Location loc = town.getWarp();
+        Location loc = town.getSettings().getSettingValue(Settings.WARP_FLAG);
         if (loc == null) {
             player.sendMessage("Warp point is not set.");
         } else {
             player.teleport(loc);
-            player.sendMessage("Teleporting to " + town.getName() + "...");
+            player.sendMessage("Teleporting to " + town.getSettings().getName() + "...");
         }
     }
     

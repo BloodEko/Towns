@@ -12,11 +12,12 @@ public class AnimalsCmd extends BooleanSetting {
     
     @Override
     public void setValue(TownSettings settings, boolean value) {
-        settings.setAnimalKilling(value);
+        //settings.setAnimalKilling(value);
     }
     
     @Override
     public boolean readValue(TownSettings settings) {
-        return settings.canKillAnimals();
+        return false;
+        //return settings.canKillAnimals();
     }
 }

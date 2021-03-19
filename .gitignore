@@ -3,3 +3,4 @@
 .project
 target/
 *.prefs
+src/test/java/de/bloodeko/towns/ConsoleDemo.java

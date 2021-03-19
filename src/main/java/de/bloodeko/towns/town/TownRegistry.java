@@ -1,6 +1,7 @@
 package de.bloodeko.towns.town;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -10,25 +11,37 @@ import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.Util;
 
-/**
- * 
- */
+//todo save id in file.
 public class TownRegistry {
     private Map<String, Town> towns;
     private ChunkMap map;
-    private int nextId;
+    private int id;
     
     public TownRegistry(Map<String, Town> towns, ChunkMap map, int nextId) {
         this.towns = towns;
         this.map = map;
-        this.nextId = nextId;
+        this.id = nextId;
+    }
+    
+    public int getId() {
+        return id;
     }
     
     /**
-     * Founds a town at this location and adds it to the service. Ensures the name and 
-     * location is valid. Throws an exception otherwise.
+     * Creates a town as player with included safety checks, that might 
+     * throw an exception. Registers the town to known services.
      */
-    public Town createTown(Chunk chunk, String name, UUID owner) {
+    public void foundTown(Chunk chunk, String name, UUID owner) {
+        validateCreation(chunk, name, owner);
+        Town town = TownFactory.newTown(map, id++, name, chunk, owner);
+        TownFactory.registerTown(town, map, this, TownFactory.getWorldManager());
+    }
+    
+    /**
+     * Validates that a town with these settings an be created.
+     * Otherwise throws an exception.
+     */
+    public void validateCreation(Chunk chunk, String name, UUID owner) {
         if (map.hasTown(chunk)) {
             throw new ModifyException("There is already a town at this location.");
         }
@@ -36,24 +49,21 @@ public class TownRegistry {
             throw new ModifyException("Can't create a town without owner.");
         }
         validateName(name);
-        Town town = TownFactory.newTown(nextId++, name, chunk, owner);
-        town.getArea().expand(map, town, chunk);
-        add(town);
-        return town;
     }
     
     /**
-     * Returns the id, the next will have.
-     */
-    public int getNextId() {
-        return nextId;
-    }
-    
-    /**
-     * Adds a town with this name.
+     * Sets this town to the registry. Its name will be
+     * taken into account for tab-completions and similar.
      */
     public void add(Town town) {
-        towns.put(town.getName(), town);
+        towns.put(town.getSettings().getName(), town);
+    }
+
+    /**
+     * Removes the mapping for this town.
+     */
+    public void remove(String name) {
+        towns.remove(name);
     }
     
     /**
@@ -61,12 +71,12 @@ public class TownRegistry {
      * Throws an exception if the name is already taken.
      */
     public void rename(Town town, String to) {
-        if (!town.getName().equalsIgnoreCase(to)) {
+        if (!town.getSettings().getName().equalsIgnoreCase(to)) {
             if (containsName(to)) {
                 throw new ModifyException("There is already a town with this name.");
             }
         }
-        towns.remove(town.getName());
+        towns.remove(town.getSettings().getName());
         towns.put(to, town);
     }
     
@@ -99,6 +109,13 @@ public class TownRegistry {
      */
     public boolean containsName(String name) {
         return find(name) != null;
+    }
+    
+    /**
+     * Return all the registered towns.
+     */
+    public Collection<Town> getTowns() {
+        return towns.values();
     }
     
     /**
