@@ -3,10 +3,11 @@ package de.bloodeko.towns.town;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import com.sk89q.worldguard.protection.managers.RegionManager;
+
+import static de.bloodeko.towns.util.Serialization.asRoot;
 
 import de.bloodeko.towns.cmds.settings.SettingsRegistry;
 import de.bloodeko.towns.town.TownArea.ChunkRegion;
@@ -53,18 +54,13 @@ public class Town {
         return map;
     }
     
-    @SuppressWarnings("unchecked")
-    public static Town deserialize(Map<Object, Object> map, SettingsRegistry registry, RegionManager manager) {
-        Entry<Object, Object> root = map.entrySet().iterator().next();
-        int id = (int) root.getKey();
+    public static Town deserialize(Map<String, Object> root, int id, SettingsRegistry registry, RegionManager manager) {
+        Set<Chunk> set = new HashSet<>();
+        ChunkRegion region = TownFactory.newChunkRegion(set, id, manager);
         
-        Set<Chunk> chunks = new HashSet<>();
-        ChunkRegion region = TownFactory.newChunkRegion(chunks, id, manager);
-        
-        Map<String, Object> submap = (Map<String, Object>) root.getValue();
-        TownSettings settings = TownSettings.deserialize((Map<String, Object>) submap.get("settings"), region, registry);
-        TownArea area = TownArea.deserialize((Map<String, Object>) submap.get("area"), chunks, region);
-        TownPeople people = TownPeople.deserialize((Map<String, Object>) submap.get("people"), region);
+        TownSettings settings = TownSettings.deserialize(asRoot(root.get("settings")), region, registry);
+        TownArea area = TownArea.deserialize(asRoot(root.get("area")), set, region);
+        TownPeople people = TownPeople.deserialize(asRoot(root.get("people")), region);
         
         return new Town(id, settings, area, people);
     }

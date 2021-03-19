@@ -54,7 +54,7 @@ public class Towns extends JavaPlugin {
         loadTowns();
         
         //load class.
-        //new TownSerializer(null, null);
+        YamlSerializer.class.getName();
     }
     
     @Override
@@ -91,8 +91,8 @@ public class Towns extends JavaPlugin {
     public void loadTowns() {
         File file = new File(getDataFolder() + "/towns.yml");
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        YamlDeserializer deserializer = new YamlDeserializer(config, new HashMap<>());
-        TownFactory.loadTowns(deserializer.getResult().values(), chunkmap, settings, registry,
+        Map<Object, Object> result = new YamlDeserializer(config).getResult();
+        TownFactory.loadTowns(result, chunkmap, settings, registry,
           TownFactory.getWorldManager());
     }
     

@@ -9,8 +9,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class YamlDeserializer {
     private Map<Object, Object> map;
 
-    public YamlDeserializer(YamlConfiguration config, Map<Object, Object> map) {
-        this.map = map;
+    public YamlDeserializer(YamlConfiguration config) {
+        this.map = new HashMap<>();
         deserialize(map, config);
     }
     
@@ -18,14 +18,15 @@ public class YamlDeserializer {
         return map;
     }
     
-    private void deserialize(Map<Object, Object> map, ConfigurationSection section) {
+    private void deserialize(Map<Object, Object> root, ConfigurationSection section) {
         for (String name : section.getKeys(false)) {
             if (section.isConfigurationSection(name)) {
-                Map<Object, Object> submap = new HashMap<>();
-                deserialize(submap, section.getConfigurationSection(name));
+                Map<Object, Object> map = new HashMap<>();
+                root.put(name, map);
+                deserialize(map, section.getConfigurationSection(name));
             } 
             else {
-                map.put(name, section.get(name));
+                root.put(name, section.get(name));
             }
         }
     }

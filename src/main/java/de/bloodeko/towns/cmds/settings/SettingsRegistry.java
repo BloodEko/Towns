@@ -13,8 +13,8 @@ import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import de.bloodeko.towns.town.Town;
 
 public class SettingsRegistry {
-    public static final DamageAnimalsSetting DAMAGE_ANIMALS = new DamageAnimalsSetting(Flags.DAMAGE_ANIMALS, "AnimalProtect", 1, 3000, State.DENY);
-    public static final PvpSetting PVP = new PvpSetting(Flags.PVP, "PvpProtect", 1, 1000, State.DENY);
+    public static final DamageAnimalsSetting DAMAGE_ANIMALS = new DamageAnimalsSetting(Flags.DAMAGE_ANIMALS, "DamageAnimals", 1, 3000, State.DENY);
+    public static final PvpSetting PVP = new PvpSetting(Flags.PVP, "PvP", 1, 1000, State.DENY);
     public static final WarpSetting WARP = new WarpSetting(null, "Warppoint", 2, 4000, null);
     
     private Map<String, TownSetting> settings;

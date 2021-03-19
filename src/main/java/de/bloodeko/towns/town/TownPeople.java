@@ -1,8 +1,10 @@
 package de.bloodeko.towns.town;
 
+import static de.bloodeko.towns.util.Serialization.asUUID;
+import static de.bloodeko.towns.util.Serialization.asUUIDSet;
+
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -109,22 +111,7 @@ public class TownPeople {
     }
     
     public static TownPeople deserialize(Map<String, Object> root, ChunkRegion region) {
-        UUID owner = getUUID(root.get("uuid"));
-        Set<UUID> governors =  getUUIDSet(root.get("governors"));
-        Set<UUID> builders =  getUUIDSet(root.get("builders"));
-        return new TownPeople(owner, governors, builders, region);
-    }
-    
-    public static UUID getUUID(Object obj) {
-        return UUID.fromString(obj.toString());
-    }
-    
-    @SuppressWarnings("unchecked")
-    public static Set<UUID> getUUIDSet(Object obj) {
-        Set<UUID> set = new HashSet<>();
-        for (String uuid : (List<String>) obj) {
-            set.add(UUID.fromString(uuid));
-        }
-        return set;
+        return new TownPeople(asUUID(root.get("owner")), asUUIDSet(root.get("governors")),
+          asUUIDSet(root.get("builders")), region);
     }
 }

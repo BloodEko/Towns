@@ -1,10 +1,11 @@
 package de.bloodeko.towns.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -26,9 +27,12 @@ public class YamlSerializer {
             String key = entry.getKey().toString();
             Object value = entry.getValue();
             
+            if ((value instanceof Collection && ((Collection<?>) value).isEmpty()) 
+              || (value instanceof Map && ((Map<?, ?>) value).isEmpty())) {
+                continue;
+            }
             if (value instanceof Map) {
-                section.set(key, "x");
-                serialize(section.getConfigurationSection(key), (Map<?, ?>) value);
+                serialize(section.createSection(key), (Map<?, ?>) value);
             }
             else if (value instanceof Set) {
                 List<String> list = new ArrayList<>();

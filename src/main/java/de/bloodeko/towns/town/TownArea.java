@@ -143,13 +143,13 @@ public class TownArea {
     
     public Map<String, Object> serialize() {
         Map<String, Object> map = new HashMap<>();
-        map.put("area", chunks);
+        map.put("chunks", chunks);
         return map;
     }
 
     @SuppressWarnings("unchecked")
     public static TownArea deserialize(Map<String, Object> root, Set<Chunk> chunks, ChunkRegion region) {
-        for (String chunk : (List<String>) root.get("area")) {
+        for (String chunk : (List<String>) root.get("chunks")) {
             chunks.add(Chunk.fromString(chunk));
         }
         return TownFactory.newArea(chunks, region);

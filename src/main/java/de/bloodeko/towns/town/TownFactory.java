@@ -1,9 +1,12 @@
 package de.bloodeko.towns.town;
 
-import java.util.Collection;
+import static de.bloodeko.towns.util.Serialization.asInt;
+import static de.bloodeko.towns.util.Serialization.asRoot;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
@@ -91,12 +94,13 @@ public class TownFactory {
     }
 
     /**
-     * Creates and registers towns from the TownData provided.
+     * Creates and registers towns from the towndata provided.
      */
-    @SuppressWarnings("unchecked")
-    public static void loadTowns(Collection<Object> townmaps, ChunkMap map, SettingsRegistry settings, TownRegistry registry, RegionManager manager) {
-        for (Object townmap : townmaps) {
-            Town town = Town.deserialize((Map<Object, Object>) townmap, settings, manager);
+    public static void loadTowns(Map<Object, Object> root, ChunkMap map, SettingsRegistry settings, TownRegistry registry, RegionManager manager) {
+        for (Entry<Object, Object> entry : root.entrySet()) {
+            
+            Town town = Town.deserialize(asRoot(entry.getValue()), 
+              asInt(entry.getKey()), settings, manager);
             registerTown(town, map, registry, manager);
         }
     }

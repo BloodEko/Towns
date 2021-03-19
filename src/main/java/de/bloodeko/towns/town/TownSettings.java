@@ -6,6 +6,10 @@ import java.util.Map.Entry;
 
 import com.sk89q.worldguard.protection.flags.Flags;
 
+import static de.bloodeko.towns.util.Serialization.asInt;
+import static de.bloodeko.towns.util.Serialization.asRoot;
+import static de.bloodeko.towns.util.Serialization.asString;
+
 import de.bloodeko.towns.cmds.settings.SettingsRegistry;
 import de.bloodeko.towns.cmds.settings.TownSetting;
 import de.bloodeko.towns.town.TownArea.ChunkRegion;
@@ -107,26 +111,23 @@ public class TownSettings {
         map.put("name", name);
         map.put("stage", stage);
         Map<String, Object> settings = new HashMap<>();
-        for (Entry<TownSetting, Object> entry : this.flags.entrySet()) {
+        for (Entry<TownSetting, Object> entry : flags.entrySet()) {
             settings.put(entry.getKey().getName(), entry.getKey().serialize(entry.getValue()));
         }
         map.put("settings", settings);
         return map;
     }
     
-    @SuppressWarnings("unchecked")
     public static TownSettings deserialize(Map<String, Object> root, ChunkRegion region, SettingsRegistry registry) {
-        String name = (String) root.get("name");
-        int stage = (int) root.get("stage");
-        Map<String, Object> settingsRoot = (Map<String, Object>) root.get("settings");
-        
-        Map<TownSetting, Object> settings = new HashMap<>();
-        for (Entry<String, Object> entry : settingsRoot.entrySet()) {
+        Map<TownSetting, Object> map = new HashMap<>();
+        for (Entry<String, Object> entry : asRoot(root.get("settings")).entrySet()) {
             TownSetting setting = registry.get(entry.getKey());
             Object value = setting.deserialize(entry.getValue());
-            settings.put(setting, value);
+            map.put(setting, value);
         }
-        
-        return new TownSettings(region, name, stage, settings);
+        TownSettings settings = new TownSettings(region, asString(root.get("name")),
+          asInt(root.get("stage")), map);
+        settings.updateFlags();
+        return settings;
     }
 }
