@@ -2,7 +2,6 @@ package de.bloodeko.towns.town;
 
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import com.sk89q.worldguard.protection.flags.Flags;
 
@@ -45,9 +44,9 @@ public class TownSettings {
     public Map<TownSetting, Object> getSettings() {
         return flags;
     }
-    
-    public Set<TownSetting> getBoughtSettings() {
-        return flags.keySet();
+
+    public boolean hasSetting(TownSetting setting) {
+        return flags.containsKey(setting);
     }
 
     public void addExtension(TownSetting setting) {

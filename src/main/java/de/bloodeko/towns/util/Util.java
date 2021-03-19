@@ -74,4 +74,13 @@ public class Util {
         }
         return joiner.toString();
     }
+    
+    /**
+     * Trims the input double to 2 places.
+     * Works best for values up to 1 Million.
+     */
+    public static double trimDouble(double value) {
+        long temp = (long) (value * 100.0);
+        return ((double) temp) / 100.0;
+    }
 }

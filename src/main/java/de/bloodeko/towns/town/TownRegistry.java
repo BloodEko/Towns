@@ -30,6 +30,7 @@ public class TownRegistry {
     /**
      * Creates a town as player with included safety checks, that might 
      * throw an exception. Registers the town to known services.
+     * SHOULD BE PART OF THE TOWN CLASS?
      */
     public void foundTown(Chunk chunk, String name, UUID owner) {
         validateCreation(chunk, name, owner);

@@ -32,18 +32,22 @@ public class SettingsRegistry {
     }
     
     /**
-     * Returns values which still can be bought for this town.
+     * Returns values which can be bought for this town.
      */
     public List<TownSetting> getPossibleSettings(Town town) {
         List<TownSetting> list = new ArrayList<>();
-        for (TownSetting value : settings.values()) {
-            if (value.accepts(town) && !town.getSettings().getBoughtSettings().contains(value)) {
-                list.add(value);
+        for (TownSetting setting : settings.values()) {
+            if (setting.accepts(town) && !town.getSettings().hasSetting(setting)) {
+                list.add(setting);
             }
         }
         return list;
     }
     
+    /**
+     * Returns the names of values which can be bought for 
+     * this town.
+     */
     public List<String> getPossibleNames(Town town) {
         List<String> list = new ArrayList<>();
         for (TownSetting setting : getPossibleSettings(town)) {
@@ -86,7 +90,6 @@ public class SettingsRegistry {
         }
     }
     
-    //todo cut output.util. 2 place after point.
     public static class WarpSetting extends TownSetting {
 
         public WarpSetting(Flag<?> flag, String name, int minStage, int price, Object defaultValue) {

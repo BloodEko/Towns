@@ -44,7 +44,9 @@ public class InfoCmd extends CmdBase {
         
         player.sendMessage("-- Settings --");
         for (Entry<TownSetting, Object> entry : town.getSettings().getSettings().entrySet()) {
-            player.sendMessage(entry.getKey().getName() + ": " + entry.getValue());
+            TownSetting setting = entry.getKey();
+            Object value = entry.getValue();
+            player.sendMessage(setting.getName() + ": " + setting.display(value));
         }
     }
     
