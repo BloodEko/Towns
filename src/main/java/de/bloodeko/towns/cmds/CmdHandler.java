@@ -40,7 +40,7 @@ public class CmdHandler {
      * Dispatches tab-completion to a sub-command 
      * and returns the resulting filtered List.
      */
-    public List<String> onTabComplete(String[] args) {
+    public List<String> onTabComplete(String[] args, Player player) {
         if (args.length == 1) {
             return filterList(cmds.keySet(), args[0]);
         }
@@ -48,7 +48,11 @@ public class CmdHandler {
         if (fmCmd == null) {
             return null;
         }
-        return fmCmd.completeTab(strip0(args));
+        List<String> simple = fmCmd.completeTab(strip0(args));
+        if (simple == null) {
+            return fmCmd.completeTab(strip0(args), player);
+        }
+        return simple;
     }
     
     public Collection<CmdBase> getCmds() {

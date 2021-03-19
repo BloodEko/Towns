@@ -31,7 +31,7 @@ public class TownFactory {
         ChunkRegion region = newChunkRegion(chunks, id, getWorldManager());
         TownArea area = newArea(chunks, region);
         TownPeople people = newTownPeople(owner, region);
-        TownSettings settings = newSettings(region, name);
+        TownSettings settings = newSettings(region, name, 0);
         
         return new Town(id, settings, area, people);
     }
@@ -76,8 +76,8 @@ public class TownFactory {
     /**
      * Creates default settings, which also update the ChunkRegion flags.
      */
-    public static TownSettings newSettings(ChunkRegion region, String name) {
-        TownSettings settings = new TownSettings(region, name, new HashMap<>());
+    public static TownSettings newSettings(ChunkRegion region, String name, int stage) {
+        TownSettings settings = new TownSettings(region, name, stage, new HashMap<>());
         settings.updateFlags();
         return settings;
     }
@@ -110,7 +110,9 @@ public class TownFactory {
         
         TownArea area = newArea(chunks, region);
         TownPeople people = newTownPeople(data.people.owner, region);
-        TownSettings settings = newSettings(region, data.settings.name);
+        TownSettings settings = new TownSettings(region, data.settings.name, 
+          data.settings.stage, data.settings.flags);
+        settings.updateFlags();
         
         return new Town(data.id, settings, area, people);
     }

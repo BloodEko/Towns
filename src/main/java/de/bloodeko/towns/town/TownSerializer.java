@@ -7,8 +7,7 @@ import java.util.Set;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.sk89q.worldguard.protection.flags.Flag;
-
+import de.bloodeko.towns.cmds.settings.TownSetting;
 import de.bloodeko.towns.town.Town.TownData;
 
 public class TownSerializer {
@@ -47,9 +46,11 @@ public class TownSerializer {
     
     private void writeSettings() {
         write("settings.name", data.settings.name);
-        for (Entry<Flag<?>, Object> entries : data.settings.flags.entrySet()) {
-            System.out.println("Write entry " + entries.getKey().getName());
-            System.out.println("With value " + entries.getValue());
+        write("settings.stage", data.settings.stage);
+        for (Entry<TownSetting, Object> entry : data.settings.flags.entrySet()) {
+            TownSetting setting = entry.getKey();
+            Object value = entry.getValue();
+            write("settings." + setting.getName(), setting.serialize(value));
         }
     }
     

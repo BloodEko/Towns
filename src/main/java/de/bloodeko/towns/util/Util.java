@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.StringJoiner;
 
 public class Util {
     
@@ -61,5 +62,16 @@ public class Util {
             }
         }
         return true;
+    }
+    
+    /**
+     * Returns the entries as separated String.
+     */
+    public static String join(Collection<?> list, String separator) {
+        StringJoiner joiner = new StringJoiner(separator);
+        for (Object value : list) {
+            joiner.add(value.toString());
+        }
+        return joiner.toString();
     }
 }

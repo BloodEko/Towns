@@ -36,6 +36,9 @@ public class TownCmd implements CommandExecutor, TabCompleter {
     
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        return handler.onTabComplete(args);
+        if (sender instanceof Player) {
+            return handler.onTabComplete(args, (Player) sender);
+        }
+        return null;
     }    
 }

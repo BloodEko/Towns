@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.bloodeko.towns.cmds.CmdFactory;
+import de.bloodeko.towns.cmds.settings.SettingsRegistry;
 import de.bloodeko.towns.listeners.ListenerFactory;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town.TownData;
@@ -38,17 +39,21 @@ import de.bloodeko.towns.util.BukkitFactory;
  * town.admin allows cmds.
  */
 public class Towns extends JavaPlugin {
-    
     private ChunkMap chunkmap;
     private TownRegistry registry;
+    private SettingsRegistry settings;
     
     @Override
     public void onEnable() {
         chunkmap = BukkitFactory.newChunkHandler(this);
+        settings = CmdFactory.newSettingsRegistry();
         registry = loadRegistry();
         CmdFactory.init(this);
         ListenerFactory.init(this);
         loadTowns();
+        
+        //load class.
+        new TownSerializer(null, null);
     }
     
     @Override
@@ -85,7 +90,7 @@ public class Towns extends JavaPlugin {
     public void loadTowns() {
         File file = new File(getDataFolder() + "/towns.yml");
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        List<TownData> data = TownDeserializer.deserializeTowns(config);
+        List<TownData> data = TownDeserializer.deserializeTowns(config, settings);
         TownFactory.loadTowns(data, chunkmap, registry, TownFactory.getWorldManager());
     }
     

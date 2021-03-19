@@ -9,9 +9,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import com.sk89q.worldguard.protection.flags.Flag;
-
 import de.bloodeko.towns.cmds.CmdBase;
+import de.bloodeko.towns.cmds.settings.TownSetting;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownPeople;
@@ -26,11 +25,11 @@ public class InfoCmd extends CmdBase {
     public void execute(Player player, String[] args) {
         printInfo(getTownAsPlayer(player), player);
     }
-
-    //TODO check formatting in treefarm with many people.
+    
     public void printInfo(Town town, Player player) {
         player.sendMessage("--- Town info ---");
         player.sendMessage("Name: "  + town.getSettings().getName() + "(" + town.getId() + ")");
+        player.sendMessage("Stage: " + town.getSettings().getState());
         player.sendMessage("Size: "  + town.getArea().getSize());
         
         player.sendMessage("-- People --");
@@ -44,19 +43,8 @@ public class InfoCmd extends CmdBase {
         player.sendMessage("maxZ: " + town.getArea().getSides().maxZ);
         
         player.sendMessage("-- Settings --");
-        for (Entry<Flag<?>, Object> entry : town.getSettings().getExtensions().entrySet()) {
-            player.sendMessage(entry.getKey().getName() + ": " + printValue(entry.getValue()));
-        }
-        //player.sendMessage("Warp: " + String.valueOf(town.getSettings().getWarp() != null));
-        //player.sendMessage("Building: " + town.getSettings().canBuild());
-        //player.sendMessage("Killing: " + town.getSettings().canKillAnimals());
-    }
-    
-    private String printValue(Object obj) {
-        if (obj == null) {
-            return "false";
-        } else {
-            return "true";
+        for (Entry<TownSetting, Object> entry : town.getSettings().getSettings().entrySet()) {
+            player.sendMessage(entry.getKey().getName() + ": " + entry.getValue());
         }
     }
     

@@ -7,6 +7,7 @@ import com.sk89q.worldguard.protection.flags.FlagContext;
 import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
 
 public class WarpFlag extends Flag<Location> {
+    public static final Flag<Location> VALUE = new WarpFlag("warp");
 
     protected WarpFlag(String name) {
         super(name);

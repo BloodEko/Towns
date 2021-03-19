@@ -27,11 +27,15 @@ public abstract class CmdBase {
     public List<String> completeTab(String[] args) {
         return null;
     }
+
+    public List<String> completeTab(String[] args, Player player) {
+        return null;
+    }
     
     public ChunkMap getMap() {
         return map;
     }
-
+    
     /**
      * Returns an online player for the the name. Otherwise throws 
      * an exception with a default message.

@@ -7,10 +7,10 @@ import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownRegistry;
 
-public class NameCmd extends CmdBase {
+public class RenameCmd extends CmdBase {
     private TownRegistry registry;
 
-    public NameCmd(ChunkMap map, TownRegistry registry) {
+    public RenameCmd(ChunkMap map, TownRegistry registry) {
         super(map);
         this.registry = registry;
     }
@@ -21,9 +21,14 @@ public class NameCmd extends CmdBase {
             player.sendMessage("Use /town name <newname> to set a new name.");
             return;
         }
-        Town town = getTown(player);
-        town.getSettings().rename(registry, town, args[0]);
+        rename(getTown(player), registry, args[0]);
         player.sendMessage("Renamed your town to: " + args[0]);
+    }
+    
+    public void rename(Town town, TownRegistry registry, String name) {
+        registry.rename(town, name);
+        town.getSettings().setName(name);
+        town.getSettings().updateFlags();
     }
     
 }

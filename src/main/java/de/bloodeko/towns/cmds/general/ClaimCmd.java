@@ -31,14 +31,13 @@ public class ClaimCmd extends CmdBase {
     }
     
     private void claim(Player player) {
-        Chunk chunk = Chunk.fromEntity(player);
-        Town town = getTown(getNearTowns(chunk, player));
-        town.getArea().expand(getMap(), town, chunk);
+        Town town = getTown(getNearTowns(player));
+        town.getArea().expand(getMap(), town, Chunk.fromEntity(player));
     }
     
     private void claim(Player player, String name) {
         Chunk chunk = Chunk.fromEntity(player);
-        Town town = getTown(getNearTowns(chunk, player), name);
+        Town town = getTown(getNearTowns(player), name);
         town.getArea().expand(getMap(), town, chunk);
     }
     
@@ -64,9 +63,10 @@ public class ClaimCmd extends CmdBase {
         return first;
     }
     
-    private List<Town> getNearTowns(Chunk chunk, Player player) {
+    private List<Town> getNearTowns(Player player) {
         List<Town> list = new ArrayList<>();
         for (Yaw yaw : Yaw.DIRECTIONS) {
+            Chunk chunk = Chunk.fromEntity(player);
             Town town = getMap().query(chunk.add(yaw));
             if (town != null && town.getPeople().isGovernor(player.getUniqueId())) {
                 list.add(town);
@@ -75,44 +75,18 @@ public class ClaimCmd extends CmdBase {
         return list;
     }
     
-    /*
-    Town town = getMap().getTown(getChunkBehind(player));
-    claim(Chunk.fromEntity(player), town, player);
-        
-    public void claim(Chunk chunk, Town town, Player player) {
-        if (getMap().getTown(chunk) != null) {
-            player.sendMessage("This chunk is already claimed.");
-            return;
+    @Override
+    public List<String> completeTab(String[] args, Player player) {
+        if (args.length == 0 || getMap().hasTown(Chunk.fromEntity(player))) {
+            return null;
         }
-        if (town == null) {
-            player.sendMessage("No town found behind you.");
-            return;
-        }
-        if (!town.isAllowedToClaim(player)) {
-            player.sendMessage("You are not allowed to claim for: " + town.getName());
-            return;
-        }
-        player.sendMessage("Claimed " + chunk + " for " + town);
-        town.expand(getMap(), chunk);
-    }
-    
-    private Chunk getChunkBehind(Player player) {
-        Yaw direc = Yaw.getReverseDirection(player.getLocation().getYaw());
-        return Chunk.fromEntity(player).add(direc);
-    }
-    */
-
-    
-    /*
-    private Chunk findNearTown(Chunk base, Player claimer) {
-        for (Yaw yaw : Yaw.DIRECTIONS) {
-            Chunk chunk = base.add(yaw);
-            Town town = chunks.getTown(chunk);
-            if (town != null && town.isAllowedToClaim(claimer)) {
-                return chunk;
+        List<String> list = new ArrayList<>();
+        for (Town town : getNearTowns(player)) {
+            String name = town.getSettings().getName();
+            if (name.startsWith(args[0])) {
+                list.add(name);
             }
         }
-        return null;
+        return list;
     }
-    */
 }
