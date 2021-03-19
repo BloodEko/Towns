@@ -1,4 +1,4 @@
-package de.bloodeko.towns.town;
+package de.bloodeko.towns.town.settings;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,9 +10,7 @@ import static de.bloodeko.towns.util.Serialization.asInt;
 import static de.bloodeko.towns.util.Serialization.asRoot;
 import static de.bloodeko.towns.util.Serialization.asString;
 
-import de.bloodeko.towns.cmds.settings.SettingsRegistry;
-import de.bloodeko.towns.cmds.settings.TownSetting;
-import de.bloodeko.towns.town.TownArea.ChunkRegion;
+import de.bloodeko.towns.town.area.TownArea.ChunkRegion;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.ModifyException;
 

@@ -10,7 +10,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import de.bloodeko.towns.cmds.CmdBase;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
-import de.bloodeko.towns.town.TownSettings;
+import de.bloodeko.towns.town.settings.TownSettings;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.Util;
 

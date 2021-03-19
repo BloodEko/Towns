@@ -42,7 +42,7 @@ public abstract class CmdBase {
      */
     public Player getTarget(String name) {
         Player target = Bukkit.getPlayer(name);
-        if (target == null) {
+        if (target == null || !target.getName().equals(name)) {
             throw new ModifyException("cmds.base.targetNotOnline", name);
         }
         return target;
@@ -55,7 +55,7 @@ public abstract class CmdBase {
     @SuppressWarnings("deprecation")
     public OfflinePlayer getOfflineTarget(String name) {
         OfflinePlayer target = Bukkit.getOfflinePlayer(name);
-        if (target == null) {
+        if (target == null || !target.getName().equals(name)) {
             throw new ModifyException("cmds.base.targetNotFound", name);
         }
         return target;

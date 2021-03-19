@@ -6,7 +6,8 @@ import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
 import de.bloodeko.towns.cmds.CmdBase;
 import de.bloodeko.towns.town.ChunkMap;
-import de.bloodeko.towns.town.TownSettings;
+import de.bloodeko.towns.town.settings.Settings;
+import de.bloodeko.towns.town.settings.TownSettings;
 import de.bloodeko.towns.util.Messages;
 
 /**
@@ -26,7 +27,7 @@ public class SettingsCmds {
         
         @Override
         public void setValue(TownSettings settings, State value) {
-            settings.writeSetting(SettingsRegistry.DAMAGE_ANIMALS, value);
+            settings.writeSetting(Settings.DAMAGE_ANIMALS, value);
         }
     }
     
@@ -41,7 +42,7 @@ public class SettingsCmds {
         
         @Override
         public void setValue(TownSettings settings, State value) {
-            settings.writeSetting(SettingsRegistry.PVP, value);
+            settings.writeSetting(Settings.PVP, value);
         }
     }
     
@@ -57,10 +58,10 @@ public class SettingsCmds {
         @Override
         public void execute(Player player, String[] args) {
             if (args.length == 0) {
-                getTown(player).getSettings().writeSetting(SettingsRegistry.WARP, player.getLocation());
+                getTown(player).getSettings().writeSetting(Settings.WARP, player.getLocation());
                 Messages.say(player, "settings.warp.set");
             } else {
-                getTown(player).getSettings().writeSetting(SettingsRegistry.WARP, null);
+                getTown(player).getSettings().writeSetting(Settings.WARP, null);
                 Messages.say(player, "settings.warp.disabled");
             }
         }

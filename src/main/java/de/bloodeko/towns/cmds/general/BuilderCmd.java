@@ -22,12 +22,12 @@ public class BuilderCmd extends CmdBase {
         if (hasArg(1, args)) {
             OfflinePlayer target = getOfflineTarget(name);
             town.getPeople().removeBuilder(player.getUniqueId(), target.getUniqueId());
-            Messages.say(player, "cmds.builder.removedPlayer");
+            Messages.say(player, "cmds.builder.removedPlayer", target.getName());
         }
         else {
             Player target = getTarget(name);
             town.getPeople().addBuilder(player.getUniqueId(), target.getUniqueId());
-            Messages.say(player, "cmds.builder.addedPlayer");
+            Messages.say(player, "cmds.builder.addedPlayer", target.getName());
             Messages.say(target, "cmds.builder.gainedRank", town.getSettings().getName());
         }
     }

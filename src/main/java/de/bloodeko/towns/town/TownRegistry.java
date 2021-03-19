@@ -11,7 +11,6 @@ import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.Util;
 
-//todo save id in file.
 public class TownRegistry {
     private Map<String, Town> towns;
     private ChunkMap map;

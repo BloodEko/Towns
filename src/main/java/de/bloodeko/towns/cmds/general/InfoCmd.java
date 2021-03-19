@@ -9,10 +9,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import de.bloodeko.towns.cmds.CmdBase;
-import de.bloodeko.towns.cmds.settings.TownSetting;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
-import de.bloodeko.towns.town.TownPeople;
+import de.bloodeko.towns.town.people.TownPeople;
+import de.bloodeko.towns.town.settings.TownSetting;
 import de.bloodeko.towns.util.Messages;
 
 public class InfoCmd extends CmdBase {

@@ -5,10 +5,10 @@ import java.util.List;
 import org.bukkit.entity.Player;
 
 import de.bloodeko.towns.cmds.CmdBase;
-import de.bloodeko.towns.cmds.settings.SettingsRegistry;
-import de.bloodeko.towns.cmds.settings.TownSetting;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
+import de.bloodeko.towns.town.settings.SettingsRegistry;
+import de.bloodeko.towns.town.settings.TownSetting;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.Util;

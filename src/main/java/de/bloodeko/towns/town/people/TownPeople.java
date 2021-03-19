@@ -1,4 +1,4 @@
-package de.bloodeko.towns.town;
+package de.bloodeko.towns.town.people;
 
 import static de.bloodeko.towns.util.Serialization.asUUID;
 import static de.bloodeko.towns.util.Serialization.asUUIDSet;
@@ -9,7 +9,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import de.bloodeko.towns.town.TownArea.ChunkRegion;
+import com.google.common.base.Objects;
+
+import de.bloodeko.towns.town.area.TownArea.ChunkRegion;
 import de.bloodeko.towns.util.ModifyException;
 
 public class TownPeople {
@@ -53,7 +55,7 @@ public class TownPeople {
     }
     
     public void setOwner(UUID to) {
-        region.getOwners().getPlayerDomain().addPlayer(to);
+        region.getOwners().addPlayer(to);
         governors.add(to);
         owner = to;
     }
@@ -65,18 +67,21 @@ public class TownPeople {
         if (isGovernor(to)) {
             throw new ModifyException("town.townpeople.targetIsAlreadyGovernor");
         }
-        region.getOwners().getPlayerDomain().addPlayer(to);
+        region.getOwners().addPlayer(to);
         governors.add(to);
     }
     
     public void removeGovenor(UUID from, UUID to) {
+        if (Objects.equal(from, to)) {
+            throw new ModifyException("town.townpeople.cantRemoveYourself");
+        }
         if (!isOwner(from)) {
             throw new ModifyException("town.townpeople.youAreNotOwner");
         }
         if (!isGovernor(to)) {
             throw new ModifyException("town.townpeople.targetIsNoGovernor");
         }
-        region.getOwners().getPlayerDomain().removePlayer(to);
+        region.getOwners().removePlayer(to);
         governors.remove(to);
     }
     
@@ -84,10 +89,13 @@ public class TownPeople {
         if (!isGovernor(from)) {
             throw new ModifyException("town.townpeople.youAreNoGovernor");
         }
+        if (isGovernor(to)) {
+            throw new ModifyException("town.townpeople.targetIsAlreadyGovernor");
+        }
         if (isBuilder(to)) {
             throw new ModifyException("town.townpeople.targetIsAlreadyBuilder");
         }
-        region.getMembers().getPlayerDomain().addPlayer(to);
+        region.getMembers().addPlayer(to);
         builders.add(to);
     }
     
@@ -95,10 +103,10 @@ public class TownPeople {
         if (!isGovernor(from)) {
             throw new ModifyException("town.townpeople.youAreNoGovernor");
         }
-        if (!isBuilder(to)) {
+        if (!isBuilder(to) || isGovernor(to)) {
             throw new ModifyException("town.townpeople.targetIsNoBuilder");
         }
-        region.getMembers().getPlayerDomain().removePlayer(to);
+        region.getMembers().removePlayer(to);
         builders.remove(to);
     }
     
@@ -111,7 +119,14 @@ public class TownPeople {
     }
     
     public static TownPeople deserialize(Map<String, Object> root, ChunkRegion region) {
-        return new TownPeople(asUUID(root.get("owner")), asUUIDSet(root.get("governors")),
-          asUUIDSet(root.get("builders")), region);
+        Set<UUID> governors = asUUIDSet(root.get("governors"));
+        Set<UUID> builders = asUUIDSet(root.get("builders"));
+        for (UUID uuid : governors) {
+            region.getMembers().addPlayer(uuid);
+        }
+        for (UUID uuid : builders) {
+            region.getMembers().addPlayer(uuid);
+        }
+        return new TownPeople(asUUID(root.get("owner")), governors, builders, region);
     }
 }

@@ -1,10 +1,12 @@
-package de.bloodeko.towns.town;
+package de.bloodeko.towns.town.area;
 
-import de.bloodeko.towns.town.TownArea.TownSides;
+import de.bloodeko.towns.town.ChunkMap;
+import de.bloodeko.towns.town.Town;
+import de.bloodeko.towns.town.area.TownArea.TownSides;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.ModifyException;
 
-public class ChunkRules {
+public class ClaimRules {
     private final double AREA_PERCENTAGE = 0.55;
     private final int NEAR_RANGE = 2;
     private final int MIN_COUNT_NEAR = 6;

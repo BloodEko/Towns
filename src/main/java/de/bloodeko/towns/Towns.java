@@ -9,12 +9,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.bloodeko.towns.cmds.CmdFactory;
-import de.bloodeko.towns.cmds.settings.SettingsRegistry;
 import de.bloodeko.towns.listeners.ListenerFactory;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownFactory;
 import de.bloodeko.towns.town.TownRegistry;
+import de.bloodeko.towns.town.settings.SettingsRegistry;
 import de.bloodeko.towns.util.BukkitFactory;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.Util;
@@ -31,15 +31,20 @@ import de.bloodeko.towns.util.YamlSerializer;
  * > chunkmap. towns. claiming. map. info. commands. util.
  * > one package per command. features that are used by multiple commands, get an own package.
  * 
- * +FoundCMD, +AnimalProtect, +PVP, +Serialiable Settings objects.
- * Plots, PlotManager. WorldMap, ChunkMap, ChunkToTownWrapper.
- * Config. +Messages/Claimingvariables. Location/Chunk/Region hooks. (for unclaim)
- * StufenAufstiege. Chatsystem. PlayerCache. file. per line UUID:name. onJoin/Quit is set. 
- * onEnable/Disable to/from file. Where to save nextId when no indent?
+ * +FoundCMD, 
+ * +AnimalProtect, +PVP, +Serialiable Settings objects.
+ * +Messages
+ * +Chunkrules
+ * +registryIdFile
+ * -PlayerCache. onEnable/onDisable/onJoin/Quit is set.
  * 
- * town.nodifymod notifies for townupgrades on join.
- * town.mod allows cmds.
- * town.admin allows cmds.
+ * ?MoreSettings/+SettingsUpgrade
+ * ?Plots, PlotManager. WorldMap, ChunkMap, ChunkToTownWrapper.
+ * ?Location/Chunk/Region hooks. (for unclaim)
+ * ?StufenAufstiege. 
+ * ?Config.
+ * ?Chatsystem. 
+ * ?Permissions town.mod/admin/notifyTownUpgrade
  */
 public class Towns extends JavaPlugin {
     private ChunkMap chunkmap;

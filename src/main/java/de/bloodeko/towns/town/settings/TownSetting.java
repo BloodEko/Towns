@@ -1,4 +1,4 @@
-package de.bloodeko.towns.cmds.settings;
+package de.bloodeko.towns.town.settings;
 
 import static de.bloodeko.towns.util.Util.trimDouble;
 
@@ -10,8 +10,6 @@ import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
 import de.bloodeko.towns.town.Town;
 
-//name and display need to be separated
-//already lead to errors.
 public abstract class TownSetting {
     private Flag<?> flag;
     private String id;
@@ -125,7 +123,7 @@ public abstract class TownSetting {
      */
     public Location deserializeLocation(String loc) {
         String[] args = loc.split(",");
-        return new Location(Bukkit.getWorld(args[5]), Double.valueOf(args[0]), 
+        return new Location(Bukkit.getWorld(args[5]), Double.valueOf(args[0]),
           Double.valueOf(args[1]), Double.valueOf(args[2]),
           Float.valueOf(args[3]), Float.valueOf(args[4]));
     }

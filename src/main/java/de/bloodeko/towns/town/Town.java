@@ -9,8 +9,11 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 
 import static de.bloodeko.towns.util.Serialization.asRoot;
 
-import de.bloodeko.towns.cmds.settings.SettingsRegistry;
-import de.bloodeko.towns.town.TownArea.ChunkRegion;
+import de.bloodeko.towns.town.area.TownArea;
+import de.bloodeko.towns.town.area.TownArea.ChunkRegion;
+import de.bloodeko.towns.town.people.TownPeople;
+import de.bloodeko.towns.town.settings.SettingsRegistry;
+import de.bloodeko.towns.town.settings.TownSettings;
 import de.bloodeko.towns.util.Chunk;
 
 /**

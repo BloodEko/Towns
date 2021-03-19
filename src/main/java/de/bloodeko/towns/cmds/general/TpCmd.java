@@ -6,10 +6,10 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import de.bloodeko.towns.cmds.CmdBase;
-import de.bloodeko.towns.cmds.settings.SettingsRegistry;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownRegistry;
+import de.bloodeko.towns.town.settings.Settings;
 import de.bloodeko.towns.util.Messages;
 
 public class TpCmd extends CmdBase {
@@ -27,7 +27,7 @@ public class TpCmd extends CmdBase {
             return;
         }
         Town town = registry.get(args[0]);
-        Location loc = (Location) town.getSettings().readSetting(SettingsRegistry.WARP);
+        Location loc = (Location) town.getSettings().readSetting(Settings.WARP);
         if (loc == null) {
             Messages.say(player, "cmds.tp.warpNotSet");
         } else {

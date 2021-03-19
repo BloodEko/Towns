@@ -1,4 +1,4 @@
-package de.bloodeko.towns.town;
+package de.bloodeko.towns.town.area;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,16 +11,19 @@ import com.sk89q.worldguard.commands.task.RegionAdder;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 
+import de.bloodeko.towns.town.ChunkMap;
+import de.bloodeko.towns.town.Town;
+import de.bloodeko.towns.town.TownFactory;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.ModifyException;
 
 public class TownArea {
     private Set<Chunk> chunks;
     private TownSides sides;
-    private ChunkRules rules;
+    private ClaimRules rules;
     private ChunkRegion region;
     
-    public TownArea(Set<Chunk> chunks, TownSides sides, ChunkRules rules, ChunkRegion region) {
+    public TownArea(Set<Chunk> chunks, TownSides sides, ClaimRules rules, ChunkRegion region) {
         this.chunks = chunks;
         this.sides = sides;
         this.rules = rules;

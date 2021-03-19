@@ -13,8 +13,8 @@ import de.bloodeko.towns.cmds.general.FoundCmd;
 import de.bloodeko.towns.cmds.general.GovenorCmd;
 import de.bloodeko.towns.cmds.general.InfoCmd;
 import de.bloodeko.towns.cmds.general.MapCmd;
-import de.bloodeko.towns.cmds.general.PlotCmd;
 import de.bloodeko.towns.cmds.general.MapCmd.MapClickHandler;
+import de.bloodeko.towns.cmds.general.PlotCmd;
 import de.bloodeko.towns.cmds.general.RenameCmd;
 import de.bloodeko.towns.cmds.general.StageCmd;
 import de.bloodeko.towns.cmds.general.TpCmd;
@@ -22,18 +22,20 @@ import de.bloodeko.towns.cmds.general.UnclaimCmd;
 import de.bloodeko.towns.cmds.settings.SettingsCmds.DamageAnimalsCmd;
 import de.bloodeko.towns.cmds.settings.SettingsCmds.PvpCmd;
 import de.bloodeko.towns.cmds.settings.SettingsCmds.WarpCmd;
-import de.bloodeko.towns.cmds.settings.SettingsRegistry;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.TownCmd;
 import de.bloodeko.towns.town.TownRegistry;
+import de.bloodeko.towns.town.settings.Settings;
+import de.bloodeko.towns.town.settings.SettingsRegistry;
+import de.bloodeko.towns.util.Messages;
 
 public class CmdFactory {
     
     public static void init(Towns plugin) {
         CmdHandler handler = newCmdHandler(plugin);
-        TownCmd listener = new TownCmd(handler);
-        plugin.getCommand("town").setExecutor(listener);
-        plugin.getCommand("town").setTabCompleter(listener);
+        TownCmd cmd = new TownCmd(handler);
+        plugin.getCommand("town").setExecutor(cmd);
+        plugin.getCommand("town").setTabCompleter(cmd);
     }
     
     public static CmdHandler newCmdHandler(Towns plugin) {
@@ -41,36 +43,40 @@ public class CmdFactory {
         ChunkMap map = plugin.getChunkMap();
         TownRegistry registry = plugin.getTownRegistry();
         
-        cmds.put("map", new MapCmd(map, newClickHandler(plugin)));
-        cmds.put("info", new InfoCmd(map));
-        cmds.put("tp", new TpCmd(map, registry));
+        put(cmds, "map", new MapCmd(map, newClickHandler(plugin)));
+        put(cmds, "info", new InfoCmd(map));
+        put(cmds, "tp", new TpCmd(map, registry));
         
-        cmds.put("claim", new ClaimCmd(map));
-        cmds.put("unclaim", new UnclaimCmd(map));
-        cmds.put("rename", new RenameCmd(map, registry));
+        put(cmds, "claim", new ClaimCmd(map));
+        put(cmds, "unclaim", new UnclaimCmd(map));
+        put(cmds, "rename", new RenameCmd(map, registry));
         
-        cmds.put("builder", new BuilderCmd(map));
-        cmds.put("governor", new GovenorCmd(map));
-        cmds.put("found", new FoundCmd(map, registry));
-        cmds.put("delete", new DeleteCmd(map, registry));
+        put(cmds, "builder", new BuilderCmd(map));
+        put(cmds, "governor", new GovenorCmd(map));
+        put(cmds, "found", new FoundCmd(map, registry));
+        put(cmds, "delete", new DeleteCmd(map, registry));
         
-        cmds.put("stage", new StageCmd(map));
-        cmds.put("setWarp", new WarpCmd(map));
-        cmds.put("pvp", new PvpCmd(map, "PvP"));
-        cmds.put("damageAnimals", new DamageAnimalsCmd(map, "DamageAnimals"));
+        put(cmds, "stage", new StageCmd(map));
+        put(cmds, "warp", new WarpCmd(map));
+        put(cmds, "pvp", new PvpCmd(map, "PvP"));
+        put(cmds, "damageAnimals", new DamageAnimalsCmd(map, "DamageAnimals"));
         
-        cmds.put("extensions", new ExtensionsCmd(map, newSettingsRegistry()));
-        cmds.put("extension", new ExtensionCmd(map, newSettingsRegistry()));
-        cmds.put("plot", new PlotCmd(map));
+        put(cmds, "extensions", new ExtensionsCmd(map, newSettingsRegistry()));
+        put(cmds, "extension", new ExtensionCmd(map, newSettingsRegistry()));
+        put(cmds, "plot", new PlotCmd(map));
         
         return new CmdHandler(cmds);
     }
     
+    public static void put(Map<String, CmdBase> cmds, String id, CmdBase base) {
+        cmds.put(Messages.get("cmds." + id), base);
+    }
+    
     public static SettingsRegistry newSettingsRegistry() {
         SettingsRegistry registry = new SettingsRegistry();
-        registry.register(SettingsRegistry.DAMAGE_ANIMALS);
-        registry.register(SettingsRegistry.PVP);
-        registry.register(SettingsRegistry.WARP);
+        registry.register(Settings.DAMAGE_ANIMALS);
+        registry.register(Settings.PVP);
+        registry.register(Settings.WARP);
         return registry;
     }
     

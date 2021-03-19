@@ -18,9 +18,13 @@ import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 
-import de.bloodeko.towns.cmds.settings.SettingsRegistry;
-import de.bloodeko.towns.town.TownArea.ChunkRegion;
-import de.bloodeko.towns.town.TownArea.TownSides;
+import de.bloodeko.towns.town.area.ClaimRules;
+import de.bloodeko.towns.town.area.TownArea;
+import de.bloodeko.towns.town.area.TownArea.ChunkRegion;
+import de.bloodeko.towns.town.area.TownArea.TownSides;
+import de.bloodeko.towns.town.people.TownPeople;
+import de.bloodeko.towns.town.settings.SettingsRegistry;
+import de.bloodeko.towns.town.settings.TownSettings;
 import de.bloodeko.towns.util.Chunk;
 
 public class TownFactory {
@@ -55,7 +59,7 @@ public class TownFactory {
      */
     public static TownArea newArea(Set<Chunk> chunks, ChunkRegion region) {
         TownArea area = new TownArea(chunks, new TownSides(0, 0, 0, 0), 
-          new ChunkRules(), region);
+          new ClaimRules(), region);
         area.updateShape();
         return area;
     }
@@ -104,24 +108,6 @@ public class TownFactory {
             registerTown(town, map, registry, manager);
         }
     }
-    
-    /**
-     * Creates a town from TownData. The RegionManager will be fed to the
-     * ChunkRegion and used for later resizing calls.
-     */
-    /*
-    public static Town newTown(TownData data, RegionManager manager) {
-        Set<Chunk> chunks = data.area.chunks;
-        ChunkRegion region = newChunkRegion(chunks, data.id, manager);
-        
-        TownArea area = newArea(chunks, region);
-        TownPeople people = newTownPeople(data.people.owner, region);
-        TownSettings settings = new TownSettings(region, data.settings.name, 
-          data.settings.stage, data.settings.flags);
-        settings.updateFlags();
-        
-        return new Town(data.id, settings, area, people);
-    }*/
     
     /**
      * Registers the town to all used services.
