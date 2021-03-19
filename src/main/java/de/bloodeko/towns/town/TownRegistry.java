@@ -121,7 +121,7 @@ public class TownRegistry {
     /**
      * Returns towns that start with this name.
      */
-    public List<String> getTabCompletion(String name) {
+    public List<String> getMatches(String name) {
         name = name.toLowerCase();
         List<String> list = new ArrayList<>();
         for (String town : towns.keySet()) {

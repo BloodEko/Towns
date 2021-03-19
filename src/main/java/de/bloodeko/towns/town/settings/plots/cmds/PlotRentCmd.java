@@ -35,6 +35,7 @@ public class PlotRentCmd extends PlotBaseCmd {
         payRentToTown(economy, player, plot.rent, getTownAsPlayer(player));
         plot.rentable = false;
         plot.renter = player.getUniqueId();
+        plot.region.getMembers().clear();
         plot.region.getMembers().addPlayer(player.getUniqueId());
         Messages.say(player, "settings.plot.rentcmd.rented");
     }

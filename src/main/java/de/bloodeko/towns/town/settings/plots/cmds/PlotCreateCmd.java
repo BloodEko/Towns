@@ -1,5 +1,7 @@
 package de.bloodeko.towns.town.settings.plots.cmds;
 
+import java.util.UUID;
+
 import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.math.BlockVector3;
@@ -8,6 +10,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
+import de.bloodeko.towns.town.settings.plots.PlotData;
 import de.bloodeko.towns.town.settings.plots.PlotHandler;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.Messages;
@@ -56,7 +59,11 @@ public class PlotCreateCmd extends PlotBaseCmd {
         if (size == max) {
             throw new ModifyException("settings.plot.createcmd.maxPlots", size, max);
         }
-        getPlotHandler(ta).addPlot(ta.getId(), pos1, pos2, getRegionManager());
+        PlotData plot = getPlotHandler(ta).addPlot(ta.getId(), pos1, pos2, getRegionManager());
+        for (UUID uuid : ta.getPeople().getGovernors()) {
+            plot.region.getMembers().addPlayer(uuid);
+        }
+        
         Messages.say(player, "settings.plot.createcmd.created");
     }
     

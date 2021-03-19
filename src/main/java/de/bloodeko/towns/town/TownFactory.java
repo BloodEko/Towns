@@ -18,6 +18,7 @@ import de.bloodeko.towns.town.area.TownArea;
 import de.bloodeko.towns.town.area.TownArea.ChunkRegion;
 import de.bloodeko.towns.town.area.TownArea.TownSides;
 import de.bloodeko.towns.town.people.TownPeople;
+import de.bloodeko.towns.town.settings.Settings;
 import de.bloodeko.towns.town.settings.SettingsRegistry;
 import de.bloodeko.towns.town.settings.TownSettings;
 import de.bloodeko.towns.util.Chunk;
@@ -82,9 +83,10 @@ public class TownFactory {
      * Creates default settings, which also update the ChunkRegion flags.
      */
     public static TownSettings newSettings(ChunkRegion region, String name, int stage) {
-        TownSettings settings = new TownSettings(region, name, stage, new HashMap<>());
-        settings.updateFlags();
-        return settings;
+        TownSettings settings = TownSettings.fromFlagMap(new HashSet<>(), region.getFlags());
+        Settings.NAME.set(settings.getFlags(), name);
+        Settings.STAGE.set(settings.getFlags(), stage);
+        return settings.updateFlags();
     }
 
     /**

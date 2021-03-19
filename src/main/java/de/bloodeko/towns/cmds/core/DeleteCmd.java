@@ -1,4 +1,4 @@
-package de.bloodeko.towns.cmds.general;
+package de.bloodeko.towns.cmds.core;
 
 import org.bukkit.entity.Player;
 

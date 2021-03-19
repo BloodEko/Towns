@@ -13,7 +13,7 @@ import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownFactory;
 import de.bloodeko.towns.town.TownRegistry;
-import de.bloodeko.towns.town.settings.SettingsFactory;
+import de.bloodeko.towns.town.settings.Settings;
 import de.bloodeko.towns.town.settings.SettingsRegistry;
 import de.bloodeko.towns.town.settings.plots.RentService;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotCmd;
@@ -99,7 +99,7 @@ public class Towns extends JavaPlugin {
     }
     
     private void loadSettings() {
-        settings = SettingsFactory.newSettingsRegistry();
+        settings = Settings.newRegistry();
     }
     
     private void loadNames() {

@@ -6,38 +6,36 @@ import java.util.List;
 import java.util.Map;
 
 import de.bloodeko.towns.town.Town;
-import de.bloodeko.towns.town.settings.SettingsFactory.DisplayHandler;
-import de.bloodeko.towns.util.Messages;
 
 public class SettingsRegistry {
-    private Map<String, RegisteredSetting> byInternal;
-    private Map<String, RegisteredSetting> byDisplay;
+    private Map<String, AdvancedSetting> byInternal;
+    private Map<String, AdvancedSetting> byDisplay;
     
     public SettingsRegistry() {
         byDisplay = new HashMap<>();
         byInternal = new HashMap<>();
     }
 
-    public void register(RegisteredSetting setting) {
-        byInternal.put(setting.value.getId(), setting);
-        byDisplay.put(setting.display, setting);
+    public void register(AdvancedSetting setting) {
+        byInternal.put(setting.settingKey.getId(), setting);
+        byDisplay.put(setting.names.getName(), setting);
     }
 
-    public RegisteredSetting fromDisplay(String key) {
+    public AdvancedSetting fromDisplay(String key) {
         return byDisplay.get(key);
     }
     
-    public RegisteredSetting fromId(String key) {
+    public AdvancedSetting fromId(String key) {
         return byInternal.get(key);
     }
     
     /**
      * Returns values which can be bought for this town.
      */
-    public List<RegisteredSetting> getPossibleSettings(Town town) {
-        List<RegisteredSetting> list = new ArrayList<>();
-        for (RegisteredSetting setting : byDisplay.values()) {
-            if (setting.accepts(town) && !town.getSettings().hasSetting(setting.value)) {
+    public List<AdvancedSetting> getMatches(Town town) {
+        List<AdvancedSetting> list = new ArrayList<>();
+        for (AdvancedSetting setting : byDisplay.values()) {
+            if (setting.matches(town) && !town.getSettings().has(setting.settingKey)) {
                 list.add(setting);
             }
         }
@@ -48,71 +46,11 @@ public class SettingsRegistry {
      * Returns the names of values which can be bought for 
      * this town.
      */
-    public List<String> getPossibleNames(Town town) {
+    public List<String> getMachesNames(Town town) {
         List<String> list = new ArrayList<>();
-        for (RegisteredSetting setting : getPossibleSettings(town)) {
-            list.add(setting.display);
+        for (AdvancedSetting setting : getMatches(town)) {
+            list.add(setting.names.getName());
         }
         return list;
     }
-    
-    //events for create,load,delete.
-    public static class RegisteredSetting {
-        public final Setting value;
-        public final int minStage;
-        public final int price;
-        public final String display;
-        public final boolean hidden;
-        public DisplayHandler displayHandler;
-        
-        public RegisteredSetting(Setting setting, int minStage, int price, String display, boolean hidden) {
-            this.value = setting;
-            this.minStage = minStage;
-            this.price = price;
-            this.display = display;
-            this.hidden = hidden;
-        }
-        
-        /**
-         * Returns true if the setting can be bought for this town.
-         * Per default only checks on the stage.
-         */
-        public boolean accepts(Town town) {
-            return matchesStage(town.getSettings().getStage());
-        }
-        
-        /**
-         * Returns true if the town has this stage at least.
-         */
-        public boolean matchesStage(int stage) {
-            return stage >= minStage;
-        }
-        
-        /**
-         * Formats the value to be used for an display. If the object
-         * or the result value is null, displays an empty value.
-         */
-        public String display(Town town, Object obj) {
-            if (obj == null)  {
-                return Messages.get("cmds.info.nullValue");
-            }
-            if (displayHandler == null) {
-                Object result = value.serialize(obj);
-                if (result == null) {
-                    return Messages.get("cmds.info.nullValue");
-                }
-                return result.toString();
-            }
-            return displayHandler.display(town, obj);
-        }
-        
-        /**
-         * Sets the DisplayHandler for this setting, which formats
-         * the settings value in UIs.
-         */
-        public void addDisplayHandler(DisplayHandler displayHandler) {
-            this.displayHandler = displayHandler;
-        }
-    }
-    
 }

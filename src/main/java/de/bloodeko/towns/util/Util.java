@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
+import com.sk89q.worldguard.protection.flags.StateFlag.State;
+
 public class Util {
     
     /**
@@ -142,5 +144,13 @@ public class Util {
             ex.printStackTrace();
         }
         return list;
+    }
+    
+    public static boolean toBoolean(State state) {
+        return state == State.ALLOW ? true : false;
+    }
+    
+    public static State toState(boolean bool) {
+        return bool ? State.ALLOW : State.DENY;
     }
 }

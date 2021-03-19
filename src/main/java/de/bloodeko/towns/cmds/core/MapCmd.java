@@ -1,4 +1,4 @@
-package de.bloodeko.towns.cmds.general;
+package de.bloodeko.towns.cmds.core;
 
 import java.util.Map;
 import java.util.UUID;
@@ -81,6 +81,7 @@ public class MapCmd extends CmdBase {
                     render();
                 }
             }
+            new Integer(10).hashCode();
         }
         
         public void open() {

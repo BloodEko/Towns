@@ -49,6 +49,7 @@ public class PlotData {
         BlockVector3 p1 = plot.getVector("p1");
         BlockVector3 p2 = plot.getVector("p2");
         data.region = new ProtectedCuboidRegion(name, true, p1, p2);
+        data.region.setPriority(1);
         
         for (UUID uuid : plot.getUUIDSet("builders")) {
             data.region.getMembers().addPlayer(uuid);

@@ -70,25 +70,4 @@ public class Town {
         
         return new Town(id, settings, area, people);
     }
-    
-    /*
-    public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("settings", settings.serialize());
-        map.put("area", area.serialize());
-        map.put("people", people.serialize());
-        return map;
-    }
-    
-    public static Town deserialize(Map<String, Object> root, int id, SettingsRegistry registry, RegionManager manager) {
-        Set<Chunk> set = new HashSet<>();
-        ChunkRegion region = TownFactory.newChunkRegion(set, id, manager);
-        
-        TownSettings settings = TownSettings.deserialize(asRoot(root.get("settings")), region, registry);
-        TownArea area = TownArea.deserialize(asRoot(root.get("area")), set, region);
-        TownPeople people = TownPeople.deserialize(asRoot(root.get("people")), region);
-        
-        return new Town(id, settings, area, people);
-    }
-    */
 }

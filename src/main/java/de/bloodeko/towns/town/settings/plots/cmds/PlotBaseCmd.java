@@ -33,7 +33,7 @@ public abstract class PlotBaseCmd extends CmdBase {
     }
     
     public PlotHandler getPlotHandler(Town town) {
-        PlotHandler handler = (PlotHandler) town.getSettings().readSetting(Settings.PLOTS);
+        PlotHandler handler = (PlotHandler) town.getSettings().get(Settings.PLOTS);
         if (handler == null) {
             throw new ModifyException("settings.plot.basecmd.settingNotBought");
         }
@@ -50,7 +50,7 @@ public abstract class PlotBaseCmd extends CmdBase {
         if (plotId == null) {
             throw new ModifyException("settings.plot.basecmd.noPlotAtLocation");
         }
-        PlotHandler handler = (PlotHandler) town.getSettings().readSetting(Settings.PLOTS);
+        PlotHandler handler = (PlotHandler) town.getSettings().get(Settings.PLOTS);
         return handler.getPlot(Integer.valueOf(plotId));
     }
     

@@ -2,63 +2,41 @@ package de.bloodeko.towns.town.settings;
 
 import static de.bloodeko.towns.util.Util.trimDouble;
 
+import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
 public abstract class Setting {
-    private Flag<?> flag;
-    private String id;
-    private Object defaultValue;
+    public abstract String getId();
+    //public abstract Flag<?> getFlag();
     
-    public Setting(Flag<?> flag, String id, Object defaultValue) {
-        this.flag = flag;
-        this.id = id;
-        this.defaultValue = defaultValue;
-    }
+    public abstract Object read(Map<Object, Object> map);
+    public abstract void set(Map<Object, Object> map, Object obj);
+    public abstract void init(Map<Object, Object> map);
     
-    /**
-     * Returns the internal name used for
-     * identification in serialization.
-     */
-    public String getId() {
-        return id;
-    }
-    
-    /**
-     * Gets the wg flag for this setting or null.
-     */
-    public Flag<?> getFlag() {
-        return flag;
-    }
-    
-    /**
-     * Gets the value which will be used on first initialization
-     * of the setting.
-     */
-    public Object getDefault() {
-        return defaultValue;
-    }
-    
-    public abstract Object serialize(Object obj);
-    public abstract Object deserialize(Object obj);
+    public abstract Object serialize(Map<Object, Object> map);
+    public abstract void deserialize(Map<Object, Object> map, Object obj);
     
     /**
      * Converts a State to a String.
      * The result will be "true" or "false".
      */
-    public String serializeBoolean(Object obj) {
-        return obj == State.ALLOW ? "true" : "false";
+    public String serializeState(Object obj) {
+        if (obj instanceof Boolean) {
+            return (boolean) obj ? "allow" : "deny";
+        }
+        return obj == State.ALLOW ? "allow" : "deny";
     }
     
     /**
      * Converts String back to a State.
      * Reads for the format "true" or "false".
      */
-    public State deserializeBoolean(Object obj) {
-        return "true".equals(obj) ? State.ALLOW : State.DENY;
+    public State deserializeState(Object obj) {
+        return "allow".equals(obj) ? State.ALLOW : State.DENY;
     }
     
     /**

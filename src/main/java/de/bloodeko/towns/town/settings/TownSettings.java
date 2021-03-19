@@ -1,9 +1,10 @@
 package de.bloodeko.towns.town.settings;
 
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
 
+import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.Flags;
 
 import de.bloodeko.towns.town.area.TownArea.ChunkRegion;
@@ -13,79 +14,56 @@ import de.bloodeko.towns.util.Node;
 import de.bloodeko.towns.util.Node.Pair;
 
 public class TownSettings {
-    private ChunkRegion region;
-    private String name;
-    private int stage;
-    private Map<Setting, Object> extensions;
+    private Set<Setting> settings;
+    private Map<Object, Object> flags;
     
-    public TownSettings(ChunkRegion region, String name, int stage, Map<Setting, Object> extensions) {
-        this.region = region;
-        this.name = name;
-        this.stage = stage;
-        this.extensions = extensions;
+    public TownSettings(Set<Setting> settings, Map<Object, Object> flags) {
+        this.settings = settings;
+        this.flags = flags;
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static TownSettings fromFlagMap(Set<Setting> settings, Map<Flag<?>, Object> flags) {
+        return new TownSettings(settings, (Map<Object, Object>) (Map) flags);
     }
     
-    public int getStage() {
-        return stage;
-    }
-    
-    public void setStage(int stage) {
-        if (stage < 0) {
-            throw new ModifyException("town.townsettings.negativeStage");
-        }
-        this.stage = stage;
+    public Set<Setting> settings() {
+        return settings;
     }
 
     public String getName() {
-        return name;
+        return flags.get(Settings.NAME).toString();
     }
     
-    public void setName(String name) {
-        this.name = name;
+    public int getStage() {
+        return (int) flags.get(Settings.STAGE);
+    }
+    
+    public Map<Object, Object> getFlags() {
+        return flags;
+    }
+    
+    public Object get(Setting setting) {
+        return setting.read(flags);
     }
 
-    public void addExtension(Setting setting) {
-        if (extensions.containsKey(setting)) {
+    public boolean has(Setting setting) {
+        return settings.contains(setting);
+    }
+    
+    public void addSetting(Setting setting) {
+        if (settings.contains(setting)) {
             throw new ModifyException("town.townsettings.alreadyBought");
         }
-        extensions.put(setting, setting.getDefault());
-        if (setting.getFlag() != null) {
-            region.getFlags().put(setting.getFlag(), setting.getDefault());
-        }
+        settings.add(setting);
+        setting.init(flags);
     }
     
-    /**
-     * Gets the value for a generic setting.
-     */
-    public Object readSetting(Setting setting) {
-        return extensions.get(setting);
-    }
-
-    public boolean hasSetting(Setting setting) {
-        return extensions.containsKey(setting);
-    }
-    
-    public Map<Setting, Object> getSettings() {
-        return extensions;
-    }
-    
-    /**
-     * Sets a genetic setting and updates the wg region.
-     * Throws an exception otherwise.
-     */
-    public void writeSetting(Setting setting, Object value) {
-        if (!extensions.containsKey(setting)) {
+    public void setSetting(Setting setting, Object value) {
+        if (!settings.contains(setting)) {
             throw new ModifyException("town.townsettings.notBought");
         }
-        extensions.put(setting, value);
-        if (setting.getFlag() == null) {
-            return;
-        }
-        if (value == null) {
-            region.getFlags().remove(setting.getFlag());
-        } else {
-            region.getFlags().put(setting.getFlag(), value);
-        }
+        setting.set(flags, value);
     }
 
     /**
@@ -94,14 +72,8 @@ public class TownSettings {
      */
     @SuppressWarnings("deprecation")
     public TownSettings updateFlags() {
-        region.setFlag(Flags.GREET_MESSAGE, Messages.get("town.townsettings.enterRegion", name));
-        region.setFlag(Flags.FAREWELL_MESSAGE, Messages.get("town.townsettings.leaveRegion"));
-        
-        for (Entry<Setting, Object> entry : extensions.entrySet()) {
-            if (entry.getKey().getFlag() != null && entry.getValue() != null) {
-                region.getFlags().put(entry.getKey().getFlag(), entry.getValue());
-            }
-        }
+        flags.put(Flags.GREET_MESSAGE, Messages.get("town.townsettings.enterRegion", getName()));
+        flags.put(Flags.FAREWELL_MESSAGE, Messages.get("town.townsettings.leaveRegion"));
         return this;
     }
     
@@ -111,12 +83,8 @@ public class TownSettings {
      */
     public Node serialize() {
         Node node = new Node();
-        node.set("name", name);
-        node.set("stage", stage);
-        
-        Node settings = node.newNode("settings");
-        for (Entry<Setting, Object> entry : extensions.entrySet()) {
-            settings.set(entry.getKey().getId(), entry.getKey().serialize(entry.getValue()));
+        for (Setting setting : settings) {
+            node.set(setting.getId(), setting.serialize(flags));
         }
         return node;
     }
@@ -125,41 +93,19 @@ public class TownSettings {
      * Creates TownSettings and writes them to a region from a Node 
      * with keys that represent the settings of a town.
      */
-    public static TownSettings deserialize(Node townSettings, ChunkRegion region, SettingsRegistry registry) {
-        Map<Setting, Object> flags = new HashMap<>();
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static TownSettings deserialize(Node settings, ChunkRegion region, SettingsRegistry registry) {
+        Map<Object, Object> map = (Map) region.getFlags();
+        Set<Setting> set = new HashSet<>();
         
-        for (Pair pair : townSettings.getNode("settings").entries()) {
-            Setting setting = registry.fromId(pair.key).value;
-            flags.put(setting, setting.deserialize(pair.value));
+        for (Pair pair : settings.entries()) {
+            AdvancedSetting advanced = registry.fromId(pair.key);
+            Setting setting = advanced.settingKey;
+            
+            set.add(setting);
+            setting.deserialize(map, pair.value);
         }
-        
-        return new TownSettings(region, townSettings.getString("name"), 
-          townSettings.getInt("stage"), flags).updateFlags();
+        return new TownSettings(set, map).updateFlags();
     }
 
-    /*
-    public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("name", name);
-        map.put("stage", stage);
-        Map<String, Object> settings = new HashMap<>();
-        for (Entry<Setting, Object> entry : extensions.entrySet()) {
-            settings.put(entry.getKey().getId(), entry.getKey().serialize(entry.getValue()));
-        }
-        map.put("settings", settings);
-        return map;
-    }
-    
-    public static TownSettings deserialize(Map<String, Object> root, ChunkRegion region, SettingsRegistry registry) {
-        Map<Setting, Object> map = new HashMap<>();
-        for (Entry<String, Object> entry : asRoot(root.get("settings")).entrySet()) {
-            Setting setting = registry.fromId(entry.getKey()).value;
-            Object value = setting.deserialize(entry.getValue());
-            map.put(setting, value);
-        }
-        TownSettings settings = new TownSettings(region, asString(root.get("name")),
-          asInt(root.get("stage")), map);
-        settings.updateFlags();
-        return settings;
-    } */
 }

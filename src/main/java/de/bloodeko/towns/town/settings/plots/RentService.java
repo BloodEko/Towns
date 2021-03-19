@@ -48,12 +48,12 @@ public class RentService implements Listener {
     }
     
     private boolean hasPlots(Town town) {
-        return town.getSettings().hasSetting(Settings.PLOTS);
+        return town.getSettings().has(Settings.PLOTS);
     }
     
     public Collection<PlotData> getPlots(Town town) {
         if (hasPlots(town)) {
-            PlotHandler plots = (PlotHandler) town.getSettings().readSetting(Settings.PLOTS);
+            PlotHandler plots = (PlotHandler) town.getSettings().get(Settings.PLOTS);
             return plots.getPlots();
         }
         return Collections.emptyList();

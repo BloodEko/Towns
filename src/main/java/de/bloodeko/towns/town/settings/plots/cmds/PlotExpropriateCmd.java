@@ -21,6 +21,10 @@ public class PlotExpropriateCmd extends PlotBaseCmd {
             Messages.say(player, "settings.plot.expropriatecmd.hasNoRenter");
             return;
         }
+        if (getMinDebt(plot) < plot.debt) {
+            Messages.say(player, "settings.plot.expropriatecmd.notEnoughDebt");
+            return;
+        }
         
         plot.debt = 0;
         plot.rentable = true;
@@ -31,5 +35,9 @@ public class PlotExpropriateCmd extends PlotBaseCmd {
         }
         
         Messages.say(player, "settings.plot.expropriatecmd.expropriated");
+    }
+    
+    private int getMinDebt(PlotData plot) {
+        return plot.rent * 5;
     }
 }

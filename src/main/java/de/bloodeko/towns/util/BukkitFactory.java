@@ -11,8 +11,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import de.bloodeko.towns.Towns;
-import de.bloodeko.towns.cmds.general.MapCmd.ChunkMapView;
-import de.bloodeko.towns.cmds.general.MapCmd.MapRotation;
+import de.bloodeko.towns.cmds.core.MapCmd.ChunkMapView;
+import de.bloodeko.towns.cmds.core.MapCmd.MapRotation;
 import de.bloodeko.towns.town.ChunkMap;
 
 public class BukkitFactory {

@@ -4,28 +4,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.bloodeko.towns.Towns;
-import de.bloodeko.towns.cmds.general.BuilderCmd;
-import de.bloodeko.towns.cmds.general.ClaimCmd;
-import de.bloodeko.towns.cmds.general.DeleteCmd;
-import de.bloodeko.towns.cmds.general.ExtensionCmd;
-import de.bloodeko.towns.cmds.general.ExtensionsCmd;
-import de.bloodeko.towns.cmds.general.FoundCmd;
-import de.bloodeko.towns.cmds.general.GovenorCmd;
-import de.bloodeko.towns.cmds.general.InfoCmd;
-import de.bloodeko.towns.cmds.general.MapCmd;
-import de.bloodeko.towns.cmds.general.MapCmd.MapClickHandler;
-import de.bloodeko.towns.cmds.general.RenameCmd;
-import de.bloodeko.towns.cmds.general.StageCmd;
-import de.bloodeko.towns.cmds.general.TestCmd;
-import de.bloodeko.towns.cmds.general.TpCmd;
-import de.bloodeko.towns.cmds.general.UnclaimCmd;
-import de.bloodeko.towns.cmds.settings.SettingsCmds.AnimalProtectCmd;
-import de.bloodeko.towns.cmds.settings.SettingsCmds.PvpProtectCmd;
-import de.bloodeko.towns.cmds.settings.SettingsCmds.WarpCmd;
+import de.bloodeko.towns.cmds.core.BuilderCmd;
+import de.bloodeko.towns.cmds.core.ClaimCmd;
+import de.bloodeko.towns.cmds.core.DeleteCmd;
+import de.bloodeko.towns.cmds.core.FoundCmd;
+import de.bloodeko.towns.cmds.core.GovenorCmd;
+import de.bloodeko.towns.cmds.core.InfoCmd;
+import de.bloodeko.towns.cmds.core.MapCmd;
+import de.bloodeko.towns.cmds.core.MapCmd.MapClickHandler;
+import de.bloodeko.towns.cmds.core.TestCmd;
+import de.bloodeko.towns.cmds.core.UnclaimCmd;
+import de.bloodeko.towns.cmds.settings.ExtensionCmd;
+import de.bloodeko.towns.cmds.settings.ExtensionsCmd;
+import de.bloodeko.towns.cmds.settings.RenameCmd;
+import de.bloodeko.towns.cmds.settings.StageCmd;
+import de.bloodeko.towns.cmds.settings.TpCmd;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.TownCmd;
 import de.bloodeko.towns.town.TownRegistry;
 import de.bloodeko.towns.town.settings.SettingsRegistry;
+import de.bloodeko.towns.town.settings.general.DamageAnimalsSetting.AnimalProtectCmd;
+import de.bloodeko.towns.town.settings.general.PearlSetting.PearlCmd;
+import de.bloodeko.towns.town.settings.general.PvpSetting.PvpProtectCmd;
+import de.bloodeko.towns.town.settings.general.SlimeSetting.SlimeCmd;
+import de.bloodeko.towns.town.settings.general.WarpSetting.WarpCmd;
+import de.bloodeko.towns.town.settings.general.ZombieSetting.ZombieCmd;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotBuilderCmd;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotCmd;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotCreateCmd;
@@ -76,12 +79,15 @@ public class CmdFactory {
         
         put(cmds, "stage", new StageCmd(map));
         put(cmds, "warp", new WarpCmd(map));
-        put(cmds, "pvp", new PvpProtectCmd(map, "PvP"));
-        put(cmds, "damageAnimals", new AnimalProtectCmd(map, "DamageAnimals"));
+        put(cmds, "pvp", new PvpProtectCmd(map, Messages.get("settings.pvp")));
+        put(cmds, "damageAnimals", new AnimalProtectCmd(map, Messages.get("settings.damageAnimals")));
+        put(cmds, "warp", new WarpCmd(map));
+        put(cmds, "pearl", new PearlCmd(map, Messages.get("settings.pearl")));
+        put(cmds, "slime", new SlimeCmd(map, Messages.get("settings.slime")));
+        put(cmds, "zombie", new ZombieCmd(map, Messages.get("settings.zombie")));
         
         put(cmds, "extensions", new ExtensionsCmd(map, settings));
         put(cmds, "extension", new ExtensionCmd(map, settings));
-        //put(cmds, "plot", newPlotCmd(map, plugin.getEconomy()));
         
         return new CmdHandler(cmds);
     }

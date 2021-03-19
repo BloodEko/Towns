@@ -29,10 +29,12 @@ public class PlotHandler {
         return plots.values();
     }
 
-    public void addPlot(int id, BlockVector3 pos1, BlockVector3 pos2, RegionManager manager) {
+    public PlotData addPlot(int id, BlockVector3 pos1, BlockVector3 pos2, RegionManager manager) {
         ProtectedRegion region = new ProtectedCuboidRegion("plot_" + id + "_" + nextId, true, pos1, pos2);
         manager.addRegion(region);
-        plots.put(nextId, PlotData.from(nextId++, region));
+        PlotData plot = PlotData.from(nextId, region);
+        plots.put(nextId++, plot);
+        return plot;
     }
 
     public void removePlot(int id, RegionManager manager) {

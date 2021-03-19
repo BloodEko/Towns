@@ -1,4 +1,4 @@
-package de.bloodeko.towns.cmds.general;
+package de.bloodeko.towns.cmds.settings;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class TpCmd extends CmdBase {
             return;
         }
         Town town = registry.get(args[0]);
-        Location loc = (Location) town.getSettings().readSetting(Settings.WARP);
+        Location loc = (Location) town.getSettings().get(Settings.WARP);
         if (loc == null) {
             Messages.say(player, "cmds.tp.warpNotSet");
         } else {
@@ -39,7 +39,7 @@ public class TpCmd extends CmdBase {
     @Override
     public List<String> completeTab(String[] args) {
         String name = args.length == 0 ? "" : args[0];
-        return registry.getTabCompletion(name);
+        return registry.getMatches(name);
     }
 
 }

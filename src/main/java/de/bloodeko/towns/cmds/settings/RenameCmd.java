@@ -1,4 +1,4 @@
-package de.bloodeko.towns.cmds.general;
+package de.bloodeko.towns.cmds.settings;
 
 import org.bukkit.entity.Player;
 
@@ -6,6 +6,7 @@ import de.bloodeko.towns.cmds.CmdBase;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownRegistry;
+import de.bloodeko.towns.town.settings.Settings;
 import de.bloodeko.towns.util.Messages;
 
 public class RenameCmd extends CmdBase {
@@ -28,7 +29,7 @@ public class RenameCmd extends CmdBase {
     
     public void rename(Town town, TownRegistry registry, String name) {
         registry.rename(town, name);
-        town.getSettings().setName(name);
+        Settings.NAME.set(town.getSettings().getFlags(), name);
         town.getSettings().updateFlags();
     }
     

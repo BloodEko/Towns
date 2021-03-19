@@ -1,6 +1,9 @@
-package de.bloodeko.towns.cmds.general;
+package de.bloodeko.towns.cmds.core;
 
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
@@ -13,9 +16,9 @@ import de.bloodeko.towns.cmds.CmdBase;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.people.TownPeople;
+import de.bloodeko.towns.town.settings.AdvancedSetting;
 import de.bloodeko.towns.town.settings.Setting;
 import de.bloodeko.towns.town.settings.SettingsRegistry;
-import de.bloodeko.towns.town.settings.SettingsRegistry.RegisteredSetting;
 import de.bloodeko.towns.util.Messages;
 
 public class InfoCmd extends CmdBase {
@@ -52,23 +55,34 @@ public class InfoCmd extends CmdBase {
         Messages.say(player, "cmds.info.maxZ", town.getArea().getSides().maxZ);
 
         Messages.say(player, "cmds.info.settingsHeader");
-        for (Entry<Setting, Object> entry : town.getSettings().getSettings().entrySet()) {
-            printFullInfo(player, town, entry.getKey(), entry.getValue());
+        for (AdvancedSetting setting : getSettings(town)) {
+            printInfo(player, town, setting);
         }
     }
     
-    private void printFullInfo(Player player, Town town, Setting setting, Object obj) {
-        RegisteredSetting ui = registry.fromId(setting.getId());
-        String name;
-        Object val;
-        if (ui == null) {
-            name = setting.getId();
-            val = obj;
-        } else {
-            name = ui.display;
-            val = ui.display(town, obj);
+    private List<AdvancedSetting> getSettings(Town town) {
+        List<AdvancedSetting> list = new ArrayList<>();
+        
+        for (Setting setting : town.getSettings().settings()) {
+            AdvancedSetting advancedSetting = registry.fromId(setting.getId());
+            if (advancedSetting == null) 
+                continue;
+            if (advancedSetting.names.isHidden()) 
+                continue;
+            
+            list.add(advancedSetting);
         }
-        Messages.say(player, "cmds.info.setting", name, val);
+        Collections.sort(list, Comparator.comparing(this::getPriority).reversed());
+        return list;
+    }
+    
+    private int getPriority(AdvancedSetting setting) {
+        return setting.names.getPriority();
+    }
+    
+    private void printInfo(Player player, Town town, AdvancedSetting setting) {
+        Messages.say(player, "cmds.info.setting", setting.names.getName(),
+          setting.names.display(town));
     }
     
     public static String getGovernors(TownPeople people) {

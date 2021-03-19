@@ -1,4 +1,4 @@
-package de.bloodeko.towns.cmds.general;
+package de.bloodeko.towns.cmds.settings;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class ExtensionsCmd extends CmdBase {
 
     @Override
     public void execute(Player player, String[] args) {
-        List<String> list = registry.getPossibleNames(getTown(player));
+        List<String> list = registry.getMachesNames(getTown(player));
         Messages.say(player, "cmds.extensions.list", Util.join(list, ", "));
     }
 }

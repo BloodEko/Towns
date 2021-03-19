@@ -1,4 +1,4 @@
-package de.bloodeko.towns.cmds.general;
+package de.bloodeko.towns.cmds.core;
 
 import java.util.ArrayList;
 import java.util.List;

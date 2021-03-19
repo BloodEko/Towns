@@ -1,4 +1,4 @@
-package de.bloodeko.towns.cmds.general;
+package de.bloodeko.towns.cmds.settings;
 
 import java.util.List;
 
@@ -7,8 +7,8 @@ import org.bukkit.entity.Player;
 import de.bloodeko.towns.cmds.CmdBase;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
+import de.bloodeko.towns.town.settings.AdvancedSetting;
 import de.bloodeko.towns.town.settings.SettingsRegistry;
-import de.bloodeko.towns.town.settings.SettingsRegistry.RegisteredSetting;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.Util;
@@ -23,13 +23,13 @@ public class ExtensionCmd extends CmdBase {
 
     @Override
     public void execute(Player player, String[] args) {
-        RegisteredSetting setting = registry.fromDisplay(getArg(0, args));
+        AdvancedSetting setting = registry.fromDisplay(getArg(0, args));
         if (setting == null) {
             Messages.say(player, "cmds.extension.notFound");
             return;
         }
-        getTown(player).getSettings().addExtension(setting.value);
-        Messages.say(player, "cmds.extension.bought", setting.display);
+        getTown(player).getSettings().addSetting(setting.settingKey);
+        Messages.say(player, "cmds.extension.bought", setting.names.getName());
     }
     
     @Override
@@ -38,6 +38,6 @@ public class ExtensionCmd extends CmdBase {
         if (town == null || !town.getPeople().isGovernor(player.getUniqueId())) {
             return null;
         }
-        return Util.filterLowerList(registry.getPossibleNames(getTown(player)), args[0]);
+        return Util.filterLowerList(registry.getMachesNames(getTown(player)), args[0]);
     }
 }
