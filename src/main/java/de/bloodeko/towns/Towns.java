@@ -2,7 +2,8 @@ package de.bloodeko.towns;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -11,12 +12,12 @@ import de.bloodeko.towns.cmds.CmdFactory;
 import de.bloodeko.towns.cmds.settings.SettingsRegistry;
 import de.bloodeko.towns.listeners.ListenerFactory;
 import de.bloodeko.towns.town.ChunkMap;
-import de.bloodeko.towns.town.Town.TownData;
-import de.bloodeko.towns.town.TownDeserializer;
+import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownFactory;
 import de.bloodeko.towns.town.TownRegistry;
-import de.bloodeko.towns.town.TownSerializer;
 import de.bloodeko.towns.util.BukkitFactory;
+import de.bloodeko.towns.util.YamlDeserializer;
+import de.bloodeko.towns.util.YamlSerializer;
 
 /**
  * TownCommand (handler system with tab completion)
@@ -53,7 +54,7 @@ public class Towns extends JavaPlugin {
         loadTowns();
         
         //load class.
-        new TownSerializer(null, null);
+        //new TownSerializer(null, null);
     }
     
     @Override
@@ -90,13 +91,19 @@ public class Towns extends JavaPlugin {
     public void loadTowns() {
         File file = new File(getDataFolder() + "/towns.yml");
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        List<TownData> data = TownDeserializer.deserializeTowns(config, settings);
-        TownFactory.loadTowns(data, chunkmap, registry, TownFactory.getWorldManager());
+        YamlDeserializer deserializer = new YamlDeserializer(config, new HashMap<>());
+        TownFactory.loadTowns(deserializer.getResult().values(), chunkmap, settings, registry,
+          TownFactory.getWorldManager());
     }
     
     public void saveTowns() {
         try {
-            YamlConfiguration config = TownSerializer.serialize(registry);
+            Map<String, Object> towns = new HashMap<>();
+            for (Town town : registry.getTowns()) {
+                towns.put("" + town.getId(), town.serialize());
+            }
+            YamlSerializer serializer = new YamlSerializer(new YamlConfiguration(), towns);
+            YamlConfiguration config = serializer.getResult();
             config.save(getDataFolder() + "/towns.yml");
         } catch (IOException ex) {
             ex.printStackTrace();

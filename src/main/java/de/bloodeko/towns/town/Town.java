@@ -1,8 +1,16 @@
 package de.bloodeko.towns.town;
 
-import de.bloodeko.towns.town.TownArea.TownAreaData;
-import de.bloodeko.towns.town.TownPeople.TownPeopleData;
-import de.bloodeko.towns.town.TownSettings.TownSettingsData;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import com.sk89q.worldguard.protection.managers.RegionManager;
+
+import de.bloodeko.towns.cmds.settings.SettingsRegistry;
+import de.bloodeko.towns.town.TownArea.ChunkRegion;
+import de.bloodeko.towns.util.Chunk;
 
 /**
  * TownMembers, TownSerializer, TownArea,
@@ -37,24 +45,27 @@ public class Town {
         return people;
     }
     
-    public TownData getData() {
-        return new TownData(id, settings.getData(), area.getData(), people.getData());
+    public Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("settings", settings.serialize());
+        map.put("area", area.serialize());
+        map.put("people", people.serialize());
+        return map;
     }
     
-    /**
-     * Data for serialization.
-     */
-    public static class TownData {
-        public int id;
-        public TownSettingsData settings;
-        public TownAreaData area;
-        public TownPeopleData people;
+    @SuppressWarnings("unchecked")
+    public static Town deserialize(Map<Object, Object> map, SettingsRegistry registry, RegionManager manager) {
+        Entry<Object, Object> root = map.entrySet().iterator().next();
+        int id = (int) root.getKey();
         
-        public TownData(int id, TownSettingsData settings, TownAreaData area, TownPeopleData people) {
-            this.id = id;
-            this.settings = settings;
-            this.area = area;
-            this.people = people;
-        }
+        Set<Chunk> chunks = new HashSet<>();
+        ChunkRegion region = TownFactory.newChunkRegion(chunks, id, manager);
+        
+        Map<String, Object> submap = (Map<String, Object>) root.getValue();
+        TownSettings settings = TownSettings.deserialize((Map<String, Object>) submap.get("settings"), region, registry);
+        TownArea area = TownArea.deserialize((Map<String, Object>) submap.get("area"), chunks, region);
+        TownPeople people = TownPeople.deserialize((Map<String, Object>) submap.get("people"), region);
+        
+        return new Town(id, settings, area, people);
     }
 }

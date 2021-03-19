@@ -1,31 +1,25 @@
 package de.bloodeko.towns.town;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 import de.bloodeko.towns.town.TownArea.ChunkRegion;
 import de.bloodeko.towns.util.ModifyException;
 
-
-// TODO own object which also has the ProtectedRegion as dependency.
-//  town has the object has dependency.
-//  town has getter for the object.
-//  object provides stuff to info command
-//  town gets permit/kick commands
-//  town gets found command.
 public class TownPeople {
     private UUID owner;
     private Set<UUID> governors;
     private Set<UUID> builders;
-    //private Set<UUID> citizens;
     private ChunkRegion region;
     
-    public TownPeople(UUID owner, Set<UUID> governors, Set<UUID> builders, Set<UUID> citizens, ChunkRegion region) {
+    public TownPeople(UUID owner, Set<UUID> governors, Set<UUID> builders, ChunkRegion region) {
         this.owner = owner;
         this.governors = governors;
         this.builders = builders;
-        //this.citizens = citizens;
         this.region = region;
     }
     
@@ -106,21 +100,31 @@ public class TownPeople {
         builders.remove(to);
     }
     
-    public TownPeopleData getData() {
-        return new TownPeopleData(owner, governors, builders, region);
+    public Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("owner", owner.toString());
+        map.put("governors", governors);
+        map.put("builders", builders);
+        return map;
     }
     
-    public static class TownPeopleData {
-        public UUID owner;
-        public Set<UUID> governors;
-        public Set<UUID> builders;
-        public ChunkRegion region;
-        
-        public TownPeopleData(UUID owner, Set<UUID> governors, Set<UUID> builders, ChunkRegion region) {
-            this.owner = owner;
-            this.governors = governors;
-            this.builders = builders;
-            this.region = region;
+    public static TownPeople deserialize(Map<String, Object> root, ChunkRegion region) {
+        UUID owner = getUUID(root.get("uuid"));
+        Set<UUID> governors =  getUUIDSet(root.get("governors"));
+        Set<UUID> builders =  getUUIDSet(root.get("builders"));
+        return new TownPeople(owner, governors, builders, region);
+    }
+    
+    public static UUID getUUID(Object obj) {
+        return UUID.fromString(obj.toString());
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static Set<UUID> getUUIDSet(Object obj) {
+        Set<UUID> set = new HashSet<>();
+        for (String uuid : (List<String>) obj) {
+            set.add(UUID.fromString(uuid));
         }
+        return set;
     }
 }

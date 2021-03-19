@@ -1,26 +1,8 @@
 package de.bloodeko.towns.town;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import de.bloodeko.towns.cmds.settings.SettingsRegistry;
-import de.bloodeko.towns.cmds.settings.TownSetting;
-import de.bloodeko.towns.town.Town.TownData;
-import de.bloodeko.towns.town.TownArea.TownAreaData;
-import de.bloodeko.towns.town.TownPeople.TownPeopleData;
-import de.bloodeko.towns.town.TownSettings.TownSettingsData;
-import de.bloodeko.towns.util.Chunk;
-
 public class TownDeserializer {
     
+    /*
     public static List<TownData> deserializeTowns(YamlConfiguration config, SettingsRegistry registry) {
         List<TownData> list = new ArrayList<>();
         for (String id : config.getKeys(false)) {
@@ -86,4 +68,5 @@ public class TownDeserializer {
         
         return new TownPeopleData(owner, governors, builders, null);
     }
+    */
 }

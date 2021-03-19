@@ -1,10 +1,12 @@
 package de.bloodeko.towns.town;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import com.sk89q.worldguard.protection.flags.Flags;
 
+import de.bloodeko.towns.cmds.settings.SettingsRegistry;
 import de.bloodeko.towns.cmds.settings.TownSetting;
 import de.bloodeko.towns.town.TownArea.ChunkRegion;
 import de.bloodeko.towns.util.ModifyException;
@@ -99,24 +101,32 @@ public class TownSettings {
             }
         }
     }
-    
-    
-    /**
-     * Get Data for serialization.
-     */
-    public TownSettingsData getData() {
-        return new TownSettingsData(name, stage, flags);
+
+    public Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", name);
+        map.put("stage", stage);
+        Map<String, Object> settings = new HashMap<>();
+        for (Entry<TownSetting, Object> entry : this.flags.entrySet()) {
+            settings.put(entry.getKey().getName(), entry.getKey().serialize(entry.getValue()));
+        }
+        map.put("settings", settings);
+        return map;
     }
     
-    public static class TownSettingsData {
-        public String name;
-        public Map<TownSetting, Object> flags;
-        public int stage;
+    @SuppressWarnings("unchecked")
+    public static TownSettings deserialize(Map<String, Object> root, ChunkRegion region, SettingsRegistry registry) {
+        String name = (String) root.get("name");
+        int stage = (int) root.get("stage");
+        Map<String, Object> settingsRoot = (Map<String, Object>) root.get("settings");
         
-        public TownSettingsData(String name, int stage, Map<TownSetting, Object> flags) {
-            this.name = name;
-            this.stage = stage;
-            this.flags = flags;
+        Map<TownSetting, Object> settings = new HashMap<>();
+        for (Entry<String, Object> entry : settingsRoot.entrySet()) {
+            TownSetting setting = registry.get(entry.getKey());
+            Object value = setting.deserialize(entry.getValue());
+            settings.put(setting, value);
         }
+        
+        return new TownSettings(region, name, stage, settings);
     }
 }

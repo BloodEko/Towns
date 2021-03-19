@@ -1,8 +1,9 @@
 package de.bloodeko.towns.town;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -14,7 +15,7 @@ import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 
-import de.bloodeko.towns.town.Town.TownData;
+import de.bloodeko.towns.cmds.settings.SettingsRegistry;
 import de.bloodeko.towns.town.TownArea.ChunkRegion;
 import de.bloodeko.towns.town.TownArea.TownSides;
 import de.bloodeko.towns.util.Chunk;
@@ -42,7 +43,7 @@ public class TownFactory {
     public static TownPeople newTownPeople(UUID owner, ChunkRegion region) {
         Set<UUID> governors = new HashSet<>();
         governors.add(owner);
-        return new TownPeople(owner, governors, new HashSet<>(), new HashSet<>(), region);
+        return new TownPeople(owner, governors, new HashSet<>(), region);
     }
     
     /**
@@ -92,11 +93,11 @@ public class TownFactory {
     /**
      * Creates and registers towns from the TownData provided.
      */
-    public static void loadTowns(List<TownData> towns, ChunkMap map, TownRegistry registry, RegionManager manager) {
-        for (TownData data : towns) {
-            Town town = newTown(data, manager);
+    @SuppressWarnings("unchecked")
+    public static void loadTowns(Collection<Object> townmaps, ChunkMap map, SettingsRegistry settings, TownRegistry registry, RegionManager manager) {
+        for (Object townmap : townmaps) {
+            Town town = Town.deserialize((Map<Object, Object>) townmap, settings, manager);
             registerTown(town, map, registry, manager);
-            
         }
     }
     
@@ -104,6 +105,7 @@ public class TownFactory {
      * Creates a town from TownData. The RegionManager will be fed to the
      * ChunkRegion and used for later resizing calls.
      */
+    /*
     public static Town newTown(TownData data, RegionManager manager) {
         Set<Chunk> chunks = data.area.chunks;
         ChunkRegion region = newChunkRegion(chunks, data.id, manager);
@@ -115,7 +117,7 @@ public class TownFactory {
         settings.updateFlags();
         
         return new Town(data.id, settings, area, people);
-    }
+    }*/
     
     /**
      * Registers the town to all used services.

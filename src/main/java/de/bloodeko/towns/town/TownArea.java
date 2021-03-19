@@ -1,6 +1,9 @@
 package de.bloodeko.towns.town;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.sk89q.worldedit.math.BlockVector3;
@@ -109,24 +112,6 @@ public class TownArea {
         region.resize(min, max);
     }
     
-    public TownAreaData getData() {
-        return new TownAreaData(chunks, sides, rules, region);
-    }
-    
-    public static class TownAreaData {
-        public Set<Chunk> chunks;
-        public TownSides sides;
-        public ChunkRules rules;
-        public ChunkRegion region;
-        
-        public TownAreaData(Set<Chunk> area, TownSides sides, ChunkRules rules, ChunkRegion region) {
-            this.chunks = area;
-            this.sides = sides;
-            this.rules = rules;
-            this.region = region;
-        }
-    }
-    
     
     public static class ChunkRegion extends ProtectedCuboidRegion {
         private RegionManager manager;
@@ -154,6 +139,20 @@ public class TownArea {
                 throw new ModifyException("Could not redefine.", ex);
             }
         }
+    }
+    
+    public Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("area", chunks);
+        return map;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static TownArea deserialize(Map<String, Object> root, Set<Chunk> chunks, ChunkRegion region) {
+        for (String chunk : (List<String>) root.get("area")) {
+            chunks.add(Chunk.fromString(chunk));
+        }
+        return TownFactory.newArea(chunks, region);
     }
     
     

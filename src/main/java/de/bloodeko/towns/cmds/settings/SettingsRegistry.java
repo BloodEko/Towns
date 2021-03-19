@@ -30,6 +30,10 @@ public class SettingsRegistry {
     public Map<String, TownSetting> settings() {
         return settings;
     }
+
+    public TownSetting get(String key) {
+        return settings.get(key);
+    }
     
     /**
      * Returns values which can be bought for this town.
