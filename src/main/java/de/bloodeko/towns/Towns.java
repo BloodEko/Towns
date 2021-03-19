@@ -2,11 +2,12 @@ package de.bloodeko.towns;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import de.bloodeko.towns.protect.AProtectFactory;
-import de.bloodeko.towns.session1.BukkitFactory;
-import de.bloodeko.towns.session1.ChunkMap;
-import de.bloodeko.towns.session1.MapCmd.MapClickHandler;
-import de.bloodeko.towns.session1.TownCommandListener;
+import de.bloodeko.towns.cmds.CmdFactory;
+import de.bloodeko.towns.listeners.ListenerFactory;
+import de.bloodeko.towns.town.ChunkMap;
+import de.bloodeko.towns.town.TownFactory;
+import de.bloodeko.towns.town.TownRegistry;
+import de.bloodeko.towns.util.BukkitFactory;
 
 /**
  * TownCommand (handler system with tab completion)
@@ -20,37 +21,27 @@ import de.bloodeko.towns.session1.TownCommandListener;
  * 
  * FoundCMD
  * Movement/LiquidFlow from/to, for enter/leave/move.
+ * 
+ * TODO: Tierschutz, PVP.
  */
 public class Towns extends JavaPlugin {
-    
-    private ChunkMap chunkHandler;
-    private TownCommandListener cmdHandler;
-    private MapClickHandler clickHandler;
+
+    private ChunkMap chunkMap;
+    private TownRegistry towns;
     
     @Override
     public void onEnable() {
-        registerEvents();
-        chunkHandler = BukkitFactory.newChunkHandler(this);
-        cmdHandler = BukkitFactory.newCmdListener(this);
-        registerCommand();
-        AProtectFactory.register(this);
-    }
-    
-    private void registerCommand() {
-        getCommand("town").setExecutor(cmdHandler);
-        getCommand("town").setTabCompleter(cmdHandler);
-    }
-    
-    private void registerEvents() {
-        clickHandler = BukkitFactory.newMapClickHandler();
-        getServer().getPluginManager().registerEvents(clickHandler, this);
+        chunkMap = BukkitFactory.newChunkHandler(this);
+        towns = TownFactory.newRegistry(chunkMap);
+        CmdFactory.init(this);
+        ListenerFactory.init(this);
     }
 
     public ChunkMap getChunkMap() {
-        return chunkHandler;
+        return chunkMap;
     }
-
-    public MapClickHandler getMapClickHandler() {
-        return clickHandler;
+    
+    public TownRegistry getTownRegistry() {
+        return towns;
     }
 }
