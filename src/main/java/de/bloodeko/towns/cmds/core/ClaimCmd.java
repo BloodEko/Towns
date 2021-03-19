@@ -26,11 +26,17 @@ public class ClaimCmd extends CmdBase {
     @Override
     public void execute(Player player, String[] args) {
         checkMoney(economy, player, price);
+        if (getMap().getTown(Chunk.fromEntity(player)) != null) {
+            Messages.say(player, "town.townarea.alreadyTaken");
+            return;
+        }
+        
         if (args.length == 0) {
             claim(player);
         } else {
             claim(player, args[0]);
         }
+        
         economy.withdrawPlayer(player, price);
         Messages.say(player, "cmds.claim.claimedChunk");
     }
@@ -52,7 +58,7 @@ public class ClaimCmd extends CmdBase {
                 return town;
             }
         }
-        throw new ModifyException("cmds.claim.townNameNotFound");
+        throw new ModifyException("cmds.claim.townNameNotNear");
     }
     
     private Town getTown(List<Town> list) {

@@ -86,6 +86,8 @@ public class TownSettings {
         for (Setting setting : settings) {
             node.set(setting.getId(), setting.serialize(flags));
         }
+        flags.put(Settings.NAME, node.get("name"));
+        flags.put(Settings.STAGE, node.get("stage"));
         return node;
     }
     

@@ -1,8 +1,5 @@
 package de.bloodeko.towns.cmds.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
@@ -17,107 +14,131 @@ import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.people.TownPeople;
 import de.bloodeko.towns.town.settings.AdvancedSetting;
-import de.bloodeko.towns.town.settings.Setting;
 import de.bloodeko.towns.town.settings.SettingsRegistry;
 import de.bloodeko.towns.util.Messages;
 
 public class InfoCmd extends CmdBase {
     private static final String separator = Messages.get("cmds.info.separator");
-    private static final String resetColor = Messages.get("cmds.info.resetColor");
     private static final String boldColor = Messages.get("cmds.info.boldColor");
     private static final String onlineColor = Messages.get("cmds.info.onlineColor");
-    private SettingsRegistry registry;
     
-    public InfoCmd(ChunkMap map, SettingsRegistry registry) {
+    private SettingsRegistry settings;
+    
+    public InfoCmd(ChunkMap map, SettingsRegistry settings) {
         super(map);
-        this.registry = registry;
+        this.settings = settings;
     }
     
     @Override
     public void execute(Player player, String[] args) {
-        printInfo(getTownAsPlayer(player), player);
+        Town town = getTownAsPlayer(player);
+        showCore(player, town);
+        showPeople(player, town.getPeople());
+        showSettings(player, town);
+        showFooter(player);
     }
     
-    public void printInfo(Town town, Player player) {
+    private void showCore(Player player, Town town) {
         Messages.say(player, "cmds.info.townHeader");
-        Messages.say(player, "cmds.info.name", town.getSettings().getName(), town.getId());
+        Messages.say(player, "cmds.info.id", town.getId());
+        Messages.say(player, "cmds.info.name", town.getSettings().getName());
         Messages.say(player, "cmds.info.stage", town.getSettings().getStage());
         Messages.say(player, "cmds.info.size", town.getArea().getSize());
-
+    }
+    
+    
+    private void showPeople(Player player, TownPeople people) {
         Messages.say(player, "cmds.info.peopleHeader");
-        Messages.say(player, "cmds.info.governors", getGovernors(town.getPeople()));
-        Messages.say(player, "cmds.info.builders", getBuilders(town.getPeople().getBuilders()));
-        
-        Messages.say(player, "cmds.info.areaHeader");
-        Messages.say(player, "cmds.info.minX", town.getArea().getSides().minX);
-        Messages.say(player, "cmds.info.minZ", town.getArea().getSides().minZ);
-        Messages.say(player, "cmds.info.maxX", town.getArea().getSides().maxX);
-        Messages.say(player, "cmds.info.maxZ", town.getArea().getSides().maxZ);
-
+        Messages.say(player, "cmds.info.governors", prefixed(people.getGovernors(), people.getOwner()));
+        Messages.say(player, "cmds.info.builders", prefixed(people.getBuilders()));
+    }
+    
+    
+    private void showSettings(Player player, Town town) {
+        List<AdvancedSetting> list = SettingsCmd.getSettings(settings, town);
+        if (list.isEmpty()) {
+            return;
+        }
         Messages.say(player, "cmds.info.settingsHeader");
-        for (AdvancedSetting setting : getSettings(town)) {
-            printInfo(player, town, setting);
-        }
-    }
-    
-    private List<AdvancedSetting> getSettings(Town town) {
-        List<AdvancedSetting> list = new ArrayList<>();
-        
-        for (Setting setting : town.getSettings().settings()) {
-            AdvancedSetting advancedSetting = registry.fromId(setting.getId());
-            if (advancedSetting == null) 
-                continue;
-            if (advancedSetting.names.isHidden()) 
-                continue;
-            
-            list.add(advancedSetting);
-        }
-        Collections.sort(list, Comparator.comparing(this::getPriority).reversed());
-        return list;
-    }
-    
-    private int getPriority(AdvancedSetting setting) {
-        return setting.names.getPriority();
-    }
-    
-    private void printInfo(Player player, Town town, AdvancedSetting setting) {
-        Messages.say(player, "cmds.info.setting", setting.names.getName(),
-          setting.names.display(town));
-    }
-    
-    public static String getGovernors(TownPeople people) {
         StringJoiner joiner = new StringJoiner(separator);
-        for (UUID uuid : people.getGovernors()) {
-            if (people.isOwner(uuid)) {
-                joiner.add(withPrefix(uuid, true));
-            } else {
-                joiner.add(withPrefix(uuid, false));
-            }
+        for (AdvancedSetting setting : list) {
+            joiner.add(setting.names.getName());
         }
-        return joiner.toString();
+        Messages.say(player, "cmds.info.settings", joiner.toString());
     }
     
-    public static String getBuilders(Set<UUID> set) {
+    
+    private void showFooter(Player player) {
+        Messages.say(player, "cmds.info.footer");
+    }
+    
+    /**
+     * Modifies the set to remove the owner. Returns the collection
+     * formatted with bold/online/offline color.
+     */
+    public static String prefixed(Set<UUID> set, UUID owner) {
+        if (set.isEmpty()) {
+            return Messages.get("cmds.info.emptyValue");
+        }
         StringJoiner joiner = new StringJoiner(separator);
+        if (owner != null) {
+            joiner.add(getBoldName(Bukkit.getOfflinePlayer(owner)));
+            set.remove(owner);
+        }
+        return prefixed(joiner, set);
+    }
+    
+    /**
+     * Returns the set players formatted with online/offline
+     * colors, separated by the default joiner.
+     */
+    public static String prefixed(Set<UUID> set) {
+        return prefixed(set, null);
+    }
+    
+    /**
+     * Returns the set players formatted with online/offline
+     * colors, separated by the joiner.
+     */
+    public static String prefixed(StringJoiner joiner, Set<UUID> set) {
         for (UUID uuid : set) {
-            joiner.add(withPrefix(uuid, false));
+            joiner.add(getOnlineName(Bukkit.getOfflinePlayer(uuid)));
         }
         return joiner.toString();
     }
     
-    public static String withPrefix(UUID uuid, boolean bold) {
-        OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-        String val = player.getName();
-        if (val == null) {
-            val = player.getUniqueId().toString();
+    /**
+     * Returns the name for this player.
+     */
+    public static String getName(OfflinePlayer player) {
+        String name = player.getName();
+        if (name == null) {
+            return player.getUniqueId().toString();
         }
-        val += resetColor;
-        if (bold) {
-            val = boldColor + val;
-        }
+        return name;
+    }
+    
+    /**
+     * Returns the name for this player with online
+     * color applied, when online.
+     */
+    public static String getOnlineName(OfflinePlayer player) {
+        String name = getName(player);
         if (player.isOnline()) {
-            val = onlineColor + val;
+            return onlineColor + name;
         }
-        return val;
+        return name;
+    }
+    
+    /**
+     * Returns the name for this player with bold color.
+     * And online color applied, when online.
+     */
+    public static String getBoldName(OfflinePlayer player) {
+        String name = getName(player);
+        if (player.isOnline()) {
+            return onlineColor + boldColor + name;
+        }
+        return boldColor + name;
     }
 }

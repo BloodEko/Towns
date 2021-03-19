@@ -7,6 +7,7 @@ import de.bloodeko.towns.town.settings.plots.PlotData;
 import de.bloodeko.towns.util.Messages;
 
 public class PlotReserveCmd extends PlotBaseCmd {
+    private final String off = "!";
 
     public PlotReserveCmd(ChunkMap map) {
         super(map);
@@ -17,7 +18,7 @@ public class PlotReserveCmd extends PlotBaseCmd {
         PlotData plot = getPlotAsGovernor(player);
         String name = getArg(0, args);
         
-        if (name.equals("!")) {
+        if (name.equals(off)) {
             plot.reversedFor = null;
             Messages.say(player, "settings.plot.reservecmd.unreserved");
         } else {

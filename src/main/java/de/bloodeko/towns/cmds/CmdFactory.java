@@ -12,6 +12,7 @@ import de.bloodeko.towns.cmds.core.GovenorCmd;
 import de.bloodeko.towns.cmds.core.InfoCmd;
 import de.bloodeko.towns.cmds.core.MapCmd;
 import de.bloodeko.towns.cmds.core.MapCmd.MapClickHandler;
+import de.bloodeko.towns.cmds.core.SettingsCmd;
 import de.bloodeko.towns.cmds.core.TestCmd;
 import de.bloodeko.towns.cmds.core.UnclaimCmd;
 import de.bloodeko.towns.cmds.settings.ExtensionCmd;
@@ -65,6 +66,7 @@ public class CmdFactory {
         
         put(cmds, "map", new MapCmd(map, newClickHandler(plugin)));
         put(cmds, "info", new InfoCmd(map, settings));
+        put(cmds, "settings", new SettingsCmd(map, settings));
         put(cmds, "test", new TestCmd(map));
         put(cmds, "tp", new TpCmd(map, towns));
         

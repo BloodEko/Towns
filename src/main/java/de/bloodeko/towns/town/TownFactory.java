@@ -1,6 +1,5 @@
 package de.bloodeko.towns.town;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -26,6 +25,7 @@ import de.bloodeko.towns.util.Node;
 import de.bloodeko.towns.util.Node.Pair;
 
 public class TownFactory {
+    public static final String WORLD = "world";
     
     /**
      * Creates a default town, without registering it to any services.
@@ -35,6 +35,8 @@ public class TownFactory {
         chunks.add(chunk);
         
         ChunkRegion region = newChunkRegion(chunks, id, getWorldManager());
+        region.getMembers().addPlayer(owner);
+        
         TownArea area = newArea(chunks, region);
         TownPeople people = newTownPeople(owner, region);
         TownSettings settings = newSettings(region, name, 0);
@@ -75,7 +77,7 @@ public class TownFactory {
      * Gets the RegionManager for the world named "world".
      */
     public static RegionManager getWorldManager() {
-        World world = BukkitAdapter.adapt(Bukkit.getWorld("world"));
+        World world = BukkitAdapter.adapt(Bukkit.getWorld(WORLD));
         return WorldGuard.getInstance().getPlatform().getRegionContainer().get(world);
     }
     
@@ -93,7 +95,7 @@ public class TownFactory {
      * Creates a new Registry.
      */
     public static TownRegistry newRegistry(ChunkMap map, int id) {
-        return new TownRegistry(new HashMap<>(), map, id);
+        return new TownRegistry(map, id);
     }
 
     /**

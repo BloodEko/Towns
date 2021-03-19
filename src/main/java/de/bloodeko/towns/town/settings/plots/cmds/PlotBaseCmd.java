@@ -92,26 +92,6 @@ public abstract class PlotBaseCmd extends CmdBase {
     }
     
     /**
-     * Gets the WE plugin.
-     */
-    public WorldEditPlugin getWorldEdit() {
-        return (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
-    }
-    
-    /**
-     * Gets the rg manager for "world".
-     */
-    public RegionManager getRegionManager() {
-        return TownFactory.getWorldManager();
-    }
-    
-    public Region getSelection(Player player) {
-        RegionSelector selector = getWorldEdit().getSession(player)
-          .getRegionSelector(BukkitAdapter.adapt(player.getWorld()));
-        return selector.getIncompleteRegion();
-    }
-    
-    /**
      * Gets the plotID at the players location or null.
      */
     public String getPlotID(Player player) {
@@ -124,18 +104,42 @@ public abstract class PlotBaseCmd extends CmdBase {
         return null;
     }
     
-    public BlockVector3 locationToVector(Location loc) {
-        return BlockVector3.at(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+    /**
+     * Gets the WE plugin.
+     */
+    public WorldEditPlugin getWorldEdit() {
+        return (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
     }
     
-    public ApplicableRegionSet getRegions(Player player, BlockVector3 pos1, BlockVector3 pos2) {
-        ProtectedCuboidRegion region = new ProtectedCuboidRegion("temp", true, pos1, pos2);
-        return getRegionManager().getApplicableRegions(region);
+    public Region getSelection(Player player) {
+        RegionSelector selector = getWorldEdit().getSession(player)
+          .getRegionSelector(BukkitAdapter.adapt(player.getWorld()));
+        return selector.getIncompleteRegion();
     }
     
     public void checkIsComplete(BlockVector3 pos1, BlockVector3 pos2) {
         if (BlockVector3.ZERO.equals(pos1) || BlockVector3.ZERO.equals(pos2)) {
             throw new ModifyException("Region is not complete!");
         }
+    }
+    
+    public BlockVector3 locationToVector(Location loc) {
+        return BlockVector3.at(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+    }
+    
+    /**
+     * Gets the rg manager for "world".
+     */
+    public static RegionManager getRegionManager() {
+        return TownFactory.getWorldManager();
+    }
+    
+    /**
+     * Returns the regions that intersect with the cuboid
+     * of pos1 and pos2.
+     */
+    public static ApplicableRegionSet getRegions(Player player, BlockVector3 pos1, BlockVector3 pos2) {
+        ProtectedCuboidRegion region = new ProtectedCuboidRegion("temp", true, pos1, pos2);
+        return getRegionManager().getApplicableRegions(region);
     }
 }

@@ -28,24 +28,18 @@ public class TownPeople {
         this.region = region;
     }
     
-    public Set<UUID> getGovernors() {
-        return new HashSet<>(governors);
-    }
-    
-    public Set<UUID> getBuilders() {
-        return new HashSet<>(builders);
-    }
-    
     public boolean isOwner(UUID uuid) {
         return owner != null && owner.equals(uuid);
     }
-    
-    public boolean isGovernor(UUID uuid) {
-        return isOwner(uuid) || governors.contains(uuid);
+
+    public UUID getOwner() {
+        return owner;
     }
     
-    public boolean isBuilder(UUID uuid) {
-        return isGovernor(uuid) || builders.contains(uuid);
+    public void setOwner(UUID to) {
+        region.getMembers().addPlayer(to);
+        governors.add(to);
+        owner = to;
     }
     
     public void setOwner(UUID from, UUID to) {
@@ -55,10 +49,11 @@ public class TownPeople {
         setOwner(to);
     }
     
-    public void setOwner(UUID to) {
-        region.getOwners().addPlayer(to);
-        governors.add(to);
-        owner = to;
+    public Set<UUID> getGovernors() {
+        return new HashSet<>(governors);
+    }
+    public boolean isGovernor(UUID uuid) {
+        return isOwner(uuid) || governors.contains(uuid);
     }
     
     public void addGovenor(UUID from, UUID to, Town town) {
@@ -69,7 +64,7 @@ public class TownPeople {
             throw new ModifyException("town.townpeople.targetIsAlreadyGovernor");
         }
         Bukkit.getPluginManager().callEvent(new AddGovernorEvent(to, town));
-        region.getOwners().addPlayer(to);
+        region.getMembers().addPlayer(to);
         governors.add(to);
     }
     
@@ -84,8 +79,16 @@ public class TownPeople {
             throw new ModifyException("town.townpeople.targetIsNoGovernor");
         }
         Bukkit.getPluginManager().callEvent(new RemoveGovernorEvent(to, town));
-        region.getOwners().removePlayer(to);
+        region.getMembers().removePlayer(to);
         governors.remove(to);
+    }
+    
+    public boolean isBuilder(UUID uuid) {
+        return isGovernor(uuid) || builders.contains(uuid);
+    }
+    
+    public Set<UUID> getBuilders() {
+        return new HashSet<>(builders);
     }
     
     public void addBuilder(UUID from, UUID to) {
@@ -112,6 +115,7 @@ public class TownPeople {
         region.getMembers().removePlayer(to);
         builders.remove(to);
     }
+    
     public Node serialize() {
         Node node = new Node();
         node.set("owner", owner);

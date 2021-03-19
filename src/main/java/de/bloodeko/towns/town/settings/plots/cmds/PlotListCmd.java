@@ -1,11 +1,16 @@
 package de.bloodeko.towns.town.settings.plots.cmds;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import com.sk89q.worldedit.math.BlockVector3;
+
+import de.bloodeko.towns.cmds.core.InfoCmd;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.settings.plots.PlotData;
 import de.bloodeko.towns.town.settings.plots.PlotHandler;
 import de.bloodeko.towns.util.Messages;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class PlotListCmd extends PlotBaseCmd {
     
@@ -23,14 +28,39 @@ public class PlotListCmd extends PlotBaseCmd {
         }
         Messages.say(player, "settings.plot.listcmd.header");
         for (PlotData data : handler.getPlots()) {
-            String suffix = "";
-            if (data.name != null) {
-                suffix = Messages.get("settings.plot.listcmd.nameSuffix", data.name);
-            }
+            BlockVector3 min = data.region.getMinimumPoint();
+            BlockVector3 max = data.region.getMaximumPoint();
             
-            Messages.say(player, "settings.plot.listcmd.plot", data.id, 
-              data.region.getMinimumPoint(), data.region.getMaximumPoint(), 
-              suffix);
+            String bounds = PlotInfoCmd.getBounds(min, max);
+            String hover = PlotInfoCmd.getHover(min, max);
+            String tp = PlotInfoCmd.getTp(min);
+            
+            String message = Messages.get("settings.plot.listcmd.line", 
+              data.id, bounds, getNote(data), getState(data));
+            
+            TextComponent comp = PlotInfoCmd.createHover(message, hover, tp);
+            player.spigot().sendMessage(comp);
+        }
+    }
+    
+    private String getNote(PlotData plot) {
+        if (plot.name == null) return "";
+        return Messages.get("settings.plot.listcmd.note", plot.name);
+    }
+    
+    private String getState(PlotData plot) {
+        if (plot.renter == null) {
+            return "";
+        }
+        String name = InfoCmd.getName(Bukkit.getOfflinePlayer(plot.renter));
+        if (plot.debt > 0) {
+            if (plot.debt >= plot.rent * 5) {
+                return Messages.get("settings.plot.listcmd.kickNote", name);
+            } else {
+                return Messages.get("settings.plot.listcmd.debtNote", name);
+            }
+        } else {
+            return Messages.get("settings.plot.listcmd.rentedNote", name);
         }
     }
 }

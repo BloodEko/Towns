@@ -1,5 +1,7 @@
 package de.bloodeko.towns.town.settings.general;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Location;
@@ -12,6 +14,7 @@ import de.bloodeko.towns.town.settings.NameProvider;
 import de.bloodeko.towns.town.settings.Setting;
 import de.bloodeko.towns.town.settings.Settings;
 import de.bloodeko.towns.util.Messages;
+import de.bloodeko.towns.util.Util;
 
 public class WarpSetting extends Setting {
 
@@ -51,7 +54,8 @@ public class WarpSetting extends Setting {
     }
     
     public static class WarpCmd extends CmdBase {
-
+        private final String off = "!";
+        
         public WarpCmd(ChunkMap map) {
             super(map);
         }
@@ -65,6 +69,11 @@ public class WarpSetting extends Setting {
                 Settings.WARP.set(getTown(player).getSettings().getFlags(), "x");
                 Messages.say(player, "settings.warp.disabled");
             }
+        }
+        
+        @Override
+        public List<String> completeTab(String[] args) {
+            return Util.filterList(Arrays.asList(off), args[0]);
         }
     }
     

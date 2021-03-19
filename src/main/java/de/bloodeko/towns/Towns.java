@@ -2,6 +2,7 @@ package de.bloodeko.towns;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -57,6 +58,7 @@ public class Towns extends JavaPlugin {
     private TownRegistry registry;
     private SettingsRegistry settings;
     private Economy economy;
+    private boolean shutdown;
 
     public ChunkMap getChunkMap() {
         return chunkmap;
@@ -79,15 +81,29 @@ public class Towns extends JavaPlugin {
     
     @Override
     public void onEnable() {
-        loadMessages();
-        loadChunkMap();
-        loadSettings();
-        loadNames();
-        loadEconomy();
-        loadCommands();
-        loadListeners();
-        loadSerializer();
-        loadTowns();
+        try {
+            checkError();
+            loadMessages();
+            loadChunkMap();
+            loadSettings();
+            loadNames();
+            loadEconomy();
+            loadCommands();
+            loadListeners();
+            loadSerializer();
+            loadTowns();
+        }
+        catch(Exception ex) {
+            shutdown = true;
+            ex.printStackTrace();
+            Bukkit.shutdown();
+        }
+    }
+    
+    private void checkError() {
+        if (getErrorFile().exists()) {
+            throw new IllegalStateException("Cannot start due to shutdown error.");
+        }
     }
     
     private void loadMessages() {
@@ -102,15 +118,12 @@ public class Towns extends JavaPlugin {
         settings = Settings.newRegistry();
     }
     
-    private void loadNames() {
+    private void loadNames() throws Exception {
         File file = new File(getDataFolder() + "/registry.yml");
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+        YamlConfiguration config = new YamlConfiguration();
+        config.load(file);
         int id = config.getInt("id", 0);
         registry = TownFactory.newRegistry(chunkmap, id);
-    }
-    
-    private void loadCommands() {
-        CmdFactory.init(this);
     }
     
     private void loadEconomy() {
@@ -119,6 +132,10 @@ public class Towns extends JavaPlugin {
             return;
         }
         economy = rsp.getProvider();
+    }
+    
+    private void loadCommands() {
+        CmdFactory.init(this);
     }
     
     private void loadListeners() {
@@ -133,41 +150,63 @@ public class Towns extends JavaPlugin {
         YamlSerializer.class.getName();
     }
     
-    private void loadTowns() {
+    
+    private void loadTowns() throws Exception {
         File file = new File(getDataFolder() + "/towns.yml");
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+        YamlConfiguration config = new YamlConfiguration();
+        config.load(file);
+        
         Node towns = new YamlDeserializer(config).getRoot();
         TownFactory.loadTowns(towns, chunkmap, registry, settings,
           TownFactory.getWorldManager());
     }
     
+    
     @Override
     public void onDisable() {
-        saveRegistry();
-        saveTowns();
+        if (shutdown) {
+            return;
+        }
+        try {
+            saveRegistry();
+            saveTowns();
+        } catch (Exception ex) {
+            createErrorFile(ex);
+        }
     }
     
-    public void saveRegistry() {
+    
+    private void createErrorFile(Exception ex) {
+        ex.printStackTrace();
         try {
-            YamlConfiguration config = new YamlConfiguration();
-            config.set("id", registry.getId());
-            config.save(getDataFolder() + "/registry.yml");
-        } catch (IOException ex) {
+            File file = getErrorFile();
+            file.createNewFile();
+            ex.printStackTrace(new PrintWriter(file));
+        } catch (IOException e) {
             ex.printStackTrace();
         }
     }
     
-    public void saveTowns() {
-        try {
-            Node towns = new Node();
-            for (Town town : registry.getTowns()) {
-                towns.set("" + town.getId(), town.serialize());
-            }
-            YamlSerializer serializer = new YamlSerializer(new YamlConfiguration(), towns);
-            YamlConfiguration config = serializer.getResult();
-            config.save(getDataFolder() + "/towns.yml");
-        } catch (IOException ex) {
-            ex.printStackTrace();
+    
+    private File getErrorFile() {
+        return new File(getDataFolder() + "/error.dat");
+    }
+    
+    
+    public void saveRegistry() throws Exception {
+        YamlConfiguration config = new YamlConfiguration();
+        config.set("id", registry.getId());
+        config.save(getDataFolder() + "/registry.yml");
+    }
+    
+    
+    public void saveTowns() throws IOException {
+        Node towns = new Node();
+        for (Town town : registry.getTowns()) {
+            towns.set("" + town.getId(), town.serialize());
         }
+        YamlSerializer serializer = new YamlSerializer(new YamlConfiguration(), towns);
+        YamlConfiguration config = serializer.getResult();
+        config.save(getDataFolder() + "/towns.yml");
     }
 }

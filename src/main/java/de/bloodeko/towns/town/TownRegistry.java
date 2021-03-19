@@ -2,6 +2,7 @@ package de.bloodeko.towns.town;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -12,12 +13,14 @@ import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.Util;
 
 public class TownRegistry {
-    private Map<String, Town> towns;
+    private Map<String, Town> byName;
+    private Map<String, Town> byId;
     private ChunkMap map;
     private int id;
     
-    public TownRegistry(Map<String, Town> towns, ChunkMap map, int nextId) {
-        this.towns = towns;
+    public TownRegistry(ChunkMap map, int nextId) {
+        this.byName = new HashMap<>();
+        this.byId = new HashMap<>();
         this.map = map;
         this.id = nextId;
     }
@@ -29,7 +32,6 @@ public class TownRegistry {
     /**
      * Creates a town as player with included safety checks, that might 
      * throw an exception. Registers the town to known services.
-     * SHOULD BE PART OF THE TOWN CLASS?
      */
     public void foundTown(Chunk chunk, String name, UUID owner) {
         validateCreation(chunk, name, owner);
@@ -56,14 +58,15 @@ public class TownRegistry {
      * taken into account for tab-completions and similar.
      */
     public void add(Town town) {
-        towns.put(town.getSettings().getName(), town);
+        byName.put(town.getSettings().getName(), town);
+        byId.put(town.getId() + "", town);
     }
 
     /**
-     * Removes the mapping for this town.
+     * Removes the mapping for this name.
      */
     public void remove(String name) {
-        towns.remove(name);
+        byName.remove(name);
     }
     
     /**
@@ -76,12 +79,13 @@ public class TownRegistry {
                 throw new ModifyException("town.townregistry.nameAlreadyTaken");
             }
         }
-        towns.remove(town.getSettings().getName());
-        towns.put(to, town);
+        byName.remove(town.getSettings().getName());
+        byName.put(to, town);
     }
     
     /**
-     * Finds the town that matches this name. Otherwise throws an exception.
+     * Finds the town that matches this name. 
+     * Otherwise throws an exception.
      */
     public Town get(String name) {
         Town town = find(name);
@@ -92,11 +96,23 @@ public class TownRegistry {
     }
     
     /**
+     * Gets the the town with this id. 
+     * Otherwise throws an exception.
+     */
+    public Town getId(String id) {
+        Town town = byId.get(id);
+        if (town == null) {
+            throw new ModifyException("town.townregistry.idNotFound");
+        }
+        return town;
+    }
+    
+    /**
      * Returns a town that matches this name or null.
      */
     public Town find(String name) {
         name = name.toLowerCase();
-        for (Entry<String, Town> entry : towns.entrySet()) {
+        for (Entry<String, Town> entry : byName.entrySet()) {
             if (entry.getKey().toLowerCase().equals(name)) {
                 return entry.getValue();
             }
@@ -115,7 +131,7 @@ public class TownRegistry {
      * Return all the registered towns.
      */
     public Collection<Town> getTowns() {
-        return towns.values();
+        return byName.values();
     }
     
     /**
@@ -124,7 +140,7 @@ public class TownRegistry {
     public List<String> getMatches(String name) {
         name = name.toLowerCase();
         List<String> list = new ArrayList<>();
-        for (String town : towns.keySet()) {
+        for (String town : byName.keySet()) {
             if (town.toLowerCase().startsWith(name)) {
                 list.add(town);
             }

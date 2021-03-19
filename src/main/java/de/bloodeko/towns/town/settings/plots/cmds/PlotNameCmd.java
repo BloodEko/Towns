@@ -1,5 +1,8 @@
 package de.bloodeko.towns.town.settings.plots.cmds;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.entity.Player;
 
 import de.bloodeko.towns.town.ChunkMap;
@@ -8,6 +11,7 @@ import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.Util;
 
 public class PlotNameCmd extends PlotBaseCmd {
+    private final String off = "!";
 
     public PlotNameCmd(ChunkMap map) {
         super(map);
@@ -18,7 +22,7 @@ public class PlotNameCmd extends PlotBaseCmd {
         PlotData plot = getPlotAsGovernor(player);
         String name = getArg(0, args);
         
-        if (name.equals("!")) {
+        if (name.equals(off)) {
             plot.name = null;
             Messages.say(player, "settings.plot.namecmd.removed", name);
         } else {
@@ -26,5 +30,10 @@ public class PlotNameCmd extends PlotBaseCmd {
             plot.name = name;
             Messages.say(player, "settings.plot.namecmd.set", name);
         }
+    }
+    
+    @Override
+    public List<String> completeTab(String[] args) {
+        return Util.filterList(Arrays.asList(off), args[0]);
     }
 }
