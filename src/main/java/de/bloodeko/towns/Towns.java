@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import de.bloodeko.towns.chat.ChatFactory;
 import de.bloodeko.towns.cmds.CmdFactory;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
@@ -144,6 +145,8 @@ public class Towns extends JavaPlugin {
         
         PlotCmd cmd = (PlotCmd) Bukkit.getPluginCommand("plot").getExecutor();
         cmd.register("payrent", new PlotPayrentCmd(chunkmap, service));
+        
+        ChatFactory.load(this);
     }
     
     private void loadSerializer() {
