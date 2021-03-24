@@ -15,11 +15,12 @@ import org.bukkit.inventory.ItemStack;
 
 import de.bloodeko.towns.cmds.CmdBase;
 import de.bloodeko.towns.town.ChunkMap;
+import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.util.BukkitFactory;
-import de.bloodeko.towns.util.BukkitFactory.Items;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.Yaw;
+import de.bloodeko.towns.util.BukkitFactory.Items;
 
 /**
  * Handles the command. /town map
@@ -100,11 +101,16 @@ public class MapCmd extends CmdBase {
         
         private void renderSlot(Chunk base, int x, int z) {
             Chunk chunk = renderChunk(base, x, z);
-            ItemStack icon = map.getIcon(chunk);
-            if (icon == null ) {
-                icon = Items.createItem(Material.BROWN_STAINED_GLASS_PANE, chunk.toString());
-            }
+            ItemStack icon = getIcon(chunk);
             inv.setItem(getSlot(x, z), icon);
+        }
+        
+        public ItemStack getIcon(Chunk chunk) {
+            Town town = map.getTown(chunk);
+            if (town != null) {
+                return Items.createItem(Material.LIME_STAINED_GLASS_PANE, town.getSettings().getName());
+            }
+            return Items.createItem(Material.BROWN_STAINED_GLASS_PANE, chunk.toString());
         }
         
         private Chunk renderChunk(Chunk base, int x, int z) {
