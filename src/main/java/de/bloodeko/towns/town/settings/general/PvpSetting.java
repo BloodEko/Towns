@@ -5,11 +5,11 @@ import java.util.Map;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
-import de.bloodeko.towns.cmds.settings.BooleanCmd;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.settings.Setting;
 import de.bloodeko.towns.town.settings.Settings;
 import de.bloodeko.towns.town.settings.TownSettings;
+import de.bloodeko.towns.town.settings.cmds.BooleanCmd;
 
 public class PvpSetting extends Setting {
 

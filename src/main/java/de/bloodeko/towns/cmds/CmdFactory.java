@@ -15,15 +15,15 @@ import de.bloodeko.towns.cmds.core.MapCmd.MapClickHandler;
 import de.bloodeko.towns.cmds.core.SettingsCmd;
 import de.bloodeko.towns.cmds.core.TestCmd;
 import de.bloodeko.towns.cmds.core.UnclaimCmd;
-import de.bloodeko.towns.cmds.settings.ExtensionCmd;
-import de.bloodeko.towns.cmds.settings.ExtensionsCmd;
-import de.bloodeko.towns.cmds.settings.RenameCmd;
-import de.bloodeko.towns.cmds.settings.StageCmd;
-import de.bloodeko.towns.cmds.settings.TpCmd;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.TownCmd;
 import de.bloodeko.towns.town.TownRegistry;
 import de.bloodeko.towns.town.settings.SettingsRegistry;
+import de.bloodeko.towns.town.settings.cmds.ExtensionCmd;
+import de.bloodeko.towns.town.settings.cmds.ExtensionsCmd;
+import de.bloodeko.towns.town.settings.cmds.RenameCmd;
+import de.bloodeko.towns.town.settings.cmds.StageCmd;
+import de.bloodeko.towns.town.settings.cmds.TpCmd;
 import de.bloodeko.towns.town.settings.general.DamageAnimalsSetting.AnimalProtectCmd;
 import de.bloodeko.towns.town.settings.general.PearlSetting.PearlCmd;
 import de.bloodeko.towns.town.settings.general.PvpSetting.PvpProtectCmd;
@@ -68,17 +68,20 @@ public class CmdFactory {
         put(cmds, "info", new InfoCmd(map, settings));
         put(cmds, "settings", new SettingsCmd(map, settings));
         put(cmds, "test", new TestCmd(map));
-        put(cmds, "tp", new TpCmd(map, towns));
         
         put(cmds, "claim", new ClaimCmd(map, plugin.getEconomy()));
         put(cmds, "unclaim", new UnclaimCmd(map));
-        put(cmds, "rename", new RenameCmd(map, towns));
         
         put(cmds, "builder", new BuilderCmd(map));
         put(cmds, "governor", new GovenorCmd(map));
         put(cmds, "found", new FoundCmd(map, towns, plugin.getEconomy()));
         put(cmds, "delete", new DeleteCmd(map, towns));
+
+        put(cmds, "extensions", new ExtensionsCmd(map, settings));
+        put(cmds, "extension", new ExtensionCmd(map, settings));
         
+        put(cmds, "tp", new TpCmd(map, towns));
+        put(cmds, "rename", new RenameCmd(map, towns));
         put(cmds, "stage", new StageCmd(map));
         put(cmds, "warp", new WarpCmd(map));
         put(cmds, "pvp", new PvpProtectCmd(map, Messages.get("settings.pvp")));
@@ -87,9 +90,6 @@ public class CmdFactory {
         put(cmds, "pearl", new PearlCmd(map, Messages.get("settings.pearl")));
         put(cmds, "slime", new SlimeCmd(map, Messages.get("settings.slime")));
         put(cmds, "zombie", new ZombieCmd(map, Messages.get("settings.zombie")));
-        
-        put(cmds, "extensions", new ExtensionsCmd(map, settings));
-        put(cmds, "extension", new ExtensionCmd(map, settings));
         
         return new CmdHandler(cmds);
     }

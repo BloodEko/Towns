@@ -1,4 +1,4 @@
-package de.bloodeko.towns.cmds.settings;
+package de.bloodeko.towns.town.settings.cmds;
 
 import java.util.List;
 
