@@ -1,20 +1,18 @@
 package de.bloodeko.towns.town.people;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
-
-import com.google.common.base.Objects;
-
-import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.area.ChunkRegion;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.Node;
 
+/**
+ * Entity that holds defined groups of people 
+ * within the town.
+ */
 public class TownPeople {
     private UUID owner;
     private Set<UUID> governors;
@@ -28,20 +26,33 @@ public class TownPeople {
         this.region = region;
     }
     
+    /**
+     * Returns true of the owner equals the id.
+     */
     public boolean isOwner(UUID uuid) {
-        return owner != null && owner.equals(uuid);
+        return Objects.equals(owner, uuid);
     }
-
+    
+    /**
+     * Returns the owner for this town or null.
+     */
     public UUID getOwner() {
         return owner;
     }
     
-    public void setOwner(UUID to) {
-        region.getMembers().addPlayer(to);
-        governors.add(to);
-        owner = to;
+    /**
+     * Sets the UUID as owner, governor and region member.
+     */
+    public void setOwner(UUID uuid) {
+        region.getMembers().addPlayer(uuid);
+        governors.add(uuid);
+        owner = uuid;
     }
     
+    /**
+     * Sets the owner. Throws an exception if from
+     * is not the owner itself.
+     */
     public void setOwner(UUID from, UUID to) {
         if (!isOwner(from)) {
             throw new ModifyException("town.townpeople.youAreNotOwner");
@@ -49,71 +60,99 @@ public class TownPeople {
         setOwner(to);
     }
     
+    /**
+     * Returns a copy of the governors.
+     */
     public Set<UUID> getGovernors() {
         return new HashSet<>(governors);
     }
+    
+    /**
+     * Returns true if the UUID is the owner or an governor.
+     */
     public boolean isGovernor(UUID uuid) {
         return isOwner(uuid) || governors.contains(uuid);
     }
     
-    public void addGovenor(UUID from, UUID to, Town town) {
+    /**
+     * Adds the target as governor and region member.
+     * Throws an exception if from is no governor or 
+     * the target is already a governor.
+     */
+    public void addGovenor(UUID from, UUID target) {
         if (!isGovernor(from)) {
             throw new ModifyException("town.townpeople.youAreNoGovernor");
         }
-        if (isGovernor(to)) {
+        if (isGovernor(target)) {
             throw new ModifyException("town.townpeople.targetIsAlreadyGovernor");
         }
-        Bukkit.getPluginManager().callEvent(new AddGovernorEvent(to, town));
-        region.getMembers().addPlayer(to);
-        governors.add(to);
+        region.getMembers().addPlayer(target);
+        governors.add(target);
     }
     
-    public void removeGovenor(UUID from, UUID to, Town town) {
-        if (Objects.equal(from, to)) {
+    /**
+     * Removes the target as governor and region member.
+     * Throws an exception if from tries to remove itself,
+     * or from is no owner, or the target is no governor.
+     */
+    public void removeGovenor(UUID from, UUID target) {
+        if (Objects.equals(from, target)) {
             throw new ModifyException("town.townpeople.cantRemoveYourself");
         }
         if (!isOwner(from)) {
             throw new ModifyException("town.townpeople.youAreNotOwner");
         }
-        if (!isGovernor(to)) {
+        if (!isGovernor(target)) {
             throw new ModifyException("town.townpeople.targetIsNoGovernor");
         }
-        Bukkit.getPluginManager().callEvent(new RemoveGovernorEvent(to, town));
-        region.getMembers().removePlayer(to);
-        governors.remove(to);
+        region.getMembers().removePlayer(target);
+        governors.remove(target);
     }
     
+    /**
+     * Returns true if the UUID is a governor or builder.
+     */
     public boolean isBuilder(UUID uuid) {
         return isGovernor(uuid) || builders.contains(uuid);
     }
     
+    /**
+     * Returns a copy of the builders.
+     */
     public Set<UUID> getBuilders() {
         return new HashSet<>(builders);
     }
     
-    public void addBuilder(UUID from, UUID to) {
+    /**
+     * Adds the target as builder and region member.
+     * Throws an exception if from is no governor or
+     * the target is already a builder.
+     */
+    public void addBuilder(UUID from, UUID target) {
         if (!isGovernor(from)) {
             throw new ModifyException("town.townpeople.youAreNoGovernor");
         }
-        if (isGovernor(to)) {
-            throw new ModifyException("town.townpeople.targetIsAlreadyGovernor");
-        }
-        if (isBuilder(to)) {
+        if (isBuilder(target)) {
             throw new ModifyException("town.townpeople.targetIsAlreadyBuilder");
         }
-        region.getMembers().addPlayer(to);
-        builders.add(to);
+        region.getMembers().addPlayer(target);
+        builders.add(target);
     }
     
-    public void removeBuilder(UUID from, UUID to) {
+    /**
+     * Removes the target as builder and region member.
+     * Throws an exception if from is no governor, or the 
+     * target is no builder, or the target is a governor.
+     */
+    public void removeBuilder(UUID from, UUID target) {
         if (!isGovernor(from)) {
             throw new ModifyException("town.townpeople.youAreNoGovernor");
         }
-        if (!isBuilder(to) || isGovernor(to)) {
+        if (!isBuilder(target) || isGovernor(target)) {
             throw new ModifyException("town.townpeople.targetIsNoBuilder");
         }
-        region.getMembers().removePlayer(to);
-        builders.remove(to);
+        region.getMembers().removePlayer(target);
+        builders.remove(target);
     }
     
     public Node serialize() {
@@ -134,58 +173,5 @@ public class TownPeople {
             region.getMembers().addPlayer(uuid);
         }
         return new TownPeople(people.getUUID("owner"), governors, builders, region);
-    }
-    
-    /*
-    public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("owner", owner.toString());
-        map.put("governors", governors);
-        map.put("builders", builders);
-        return map;
-    }
-    
-    public static TownPeople deserialize(Map<String, Object> root, ChunkRegion region) {
-        Set<UUID> governors = asUUIDSet(root.get("governors"));
-        Set<UUID> builders = asUUIDSet(root.get("builders"));
-        for (UUID uuid : governors) {
-            region.getMembers().addPlayer(uuid);
-        }
-        for (UUID uuid : builders) {
-            region.getMembers().addPlayer(uuid);
-        }
-        return new TownPeople(asUUID(root.get("owner")), governors, builders, region);
-    }*/
-    
-    public static class AddGovernorEvent extends Event {
-        private static HandlerList handlers = new HandlerList();
-        public final UUID uuid;
-        public final Town town;
-        
-        public AddGovernorEvent(UUID uuid, Town town) {
-            this.uuid = uuid;
-            this.town = town;
-        }
-
-        @Override
-        public HandlerList getHandlers() {
-            return handlers;
-        }
-    }
-    
-    public static class RemoveGovernorEvent extends Event {
-        private static HandlerList handlers = new HandlerList();
-        public final UUID uuid;
-        public final Town town;
-        
-        public RemoveGovernorEvent(UUID uuid, Town town) {
-            this.uuid = uuid;
-            this.town = town;
-        }
-
-        @Override
-        public HandlerList getHandlers() {
-            return handlers;
-        }
     }
 }
