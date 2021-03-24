@@ -2,7 +2,6 @@ package de.bloodeko.towns.town.area;
 
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
-import de.bloodeko.towns.town.area.TownArea.TownSides;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.ModifyException;
 

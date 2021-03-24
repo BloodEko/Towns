@@ -11,7 +11,7 @@ import org.bukkit.event.HandlerList;
 import com.google.common.base.Objects;
 
 import de.bloodeko.towns.town.Town;
-import de.bloodeko.towns.town.area.TownArea.ChunkRegion;
+import de.bloodeko.towns.town.area.ChunkRegion;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.Node;
 

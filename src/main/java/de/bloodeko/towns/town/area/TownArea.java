@@ -1,12 +1,8 @@
 package de.bloodeko.towns.town.area;
 
-import java.util.Arrays;
 import java.util.Set;
 
 import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldguard.commands.task.RegionAdder;
-import com.sk89q.worldguard.protection.managers.RegionManager;
-import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
@@ -116,35 +112,6 @@ public class TownArea {
         region.resize(min, max);
     }
     
-    
-    public static class ChunkRegion extends ProtectedCuboidRegion {
-        private RegionManager manager;
-        private Set<Chunk> area;
-        
-        public ChunkRegion(RegionManager manager, Set<Chunk> area, String id, boolean transientRegion, 
-          BlockVector3 p1, BlockVector3 p2) {
-            super(id, transientRegion, p1, p2);
-            this.manager = manager;
-            this.area = area;
-        }
-        
-        @Override
-        public boolean contains(BlockVector3 pt) {
-            Chunk chunk = Chunk.fromCoords(pt.getBlockX(), pt.getBlockZ());
-            return area.contains(chunk);
-        }
-        
-        public void resize(BlockVector3 min, BlockVector3 max) {
-            setMinMaxPoints(Arrays.asList(min, max));
-            RegionAdder adder = new RegionAdder(manager, this);
-            try {
-                adder.call();
-            } catch (Exception ex) {
-                throw new ModifyException("Could not redefine.", ex);
-            }
-        }
-    }
-    
     public Node serialize() {
         Node node = new Node();
         node.set("chunks", chunks);
@@ -156,81 +123,5 @@ public class TownArea {
             chunks.add(Chunk.fromString(chunk));
         }
         return TownFactory.newArea(chunks, region);
-    }
-    
-    /*
-    public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("chunks", chunks);
-        return map;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static TownArea deserialize(Map<String, Object> root, Set<Chunk> chunks, ChunkRegion region) {
-        for (String chunk : (List<String>) root.get("chunks")) {
-            chunks.add(Chunk.fromString(chunk));
-        }
-        return TownFactory.newArea(chunks, region);
-    }*/
-    
-    
-    
-    public static class TownSides {
-        public int minX;
-        public int maxX;
-        public int minZ;
-        public int maxZ;
-        
-        public TownSides(int minX, int maxX, int minZ, int maxZ) {
-            this.minX = minX;
-            this.maxX = maxX;
-            this.minZ = minZ;
-            this.maxZ = maxZ;
-        }
-        
-        public void update(Chunk chunk) {
-            if (chunk.x < minX) {
-                minX = chunk.x;
-            }
-            if (chunk.x > maxX) {
-                maxX = chunk.x;
-            }
-            if (chunk.z < minZ) {
-                minZ = chunk.z;
-            }
-            if (chunk.z > maxZ) {
-                maxZ = chunk.z;
-            }
-        }
-        
-        public int getSize() {
-            int a = maxX - minX + 1;
-            int b = maxZ - minZ + 1;
-            return a * b;
-        }
-
-        public TownSides copy() {
-            return new TownSides(minX, maxX, minZ, maxZ);
-        }
-
-        public static TownSides fromChunk(Chunk chunk) {
-            return new TownSides(chunk.x, chunk.x, chunk.z, chunk.z);
-        }
-        
-        @Override
-        public boolean equals(Object obj) {
-            if (obj instanceof TownSides) {
-                TownSides side = (TownSides) obj;
-                return side.minX == minX && side.maxX == maxX 
-                    && side.minZ == minZ && side.maxZ == maxZ;
-            }
-            return false;
-        }
-        
-        @Override
-        public String toString() {
-            return "[minX:" + minX + " maxX:" + maxX 
-              + " minZ:" + minZ + " maxZ:" + maxZ + "]";
-        }
     }
 }

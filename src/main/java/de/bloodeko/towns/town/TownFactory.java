@@ -12,10 +12,10 @@ import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 
+import de.bloodeko.towns.town.area.ChunkRegion;
 import de.bloodeko.towns.town.area.ClaimRules;
 import de.bloodeko.towns.town.area.TownArea;
-import de.bloodeko.towns.town.area.TownArea.ChunkRegion;
-import de.bloodeko.towns.town.area.TownArea.TownSides;
+import de.bloodeko.towns.town.area.TownSides;
 import de.bloodeko.towns.town.people.TownPeople;
 import de.bloodeko.towns.town.settings.Settings;
 import de.bloodeko.towns.town.settings.SettingsRegistry;

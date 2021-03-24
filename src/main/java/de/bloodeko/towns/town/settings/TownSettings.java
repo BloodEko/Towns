@@ -7,7 +7,7 @@ import java.util.Set;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.Flags;
 
-import de.bloodeko.towns.town.area.TownArea.ChunkRegion;
+import de.bloodeko.towns.town.area.ChunkRegion;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.Node;
