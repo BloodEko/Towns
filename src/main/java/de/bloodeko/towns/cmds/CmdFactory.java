@@ -10,11 +10,11 @@ import de.bloodeko.towns.cmds.core.DeleteCmd;
 import de.bloodeko.towns.cmds.core.FoundCmd;
 import de.bloodeko.towns.cmds.core.GovenorCmd;
 import de.bloodeko.towns.cmds.core.InfoCmd;
-import de.bloodeko.towns.cmds.core.MapCmd;
-import de.bloodeko.towns.cmds.core.MapCmd.MapClickHandler;
 import de.bloodeko.towns.cmds.core.SettingsCmd;
 import de.bloodeko.towns.cmds.core.TestCmd;
 import de.bloodeko.towns.cmds.core.UnclaimCmd;
+import de.bloodeko.towns.cmds.map.MapCmd;
+import de.bloodeko.towns.cmds.map.MapFactory;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.TownCmd;
 import de.bloodeko.towns.town.TownRegistry;
@@ -64,7 +64,7 @@ public class CmdFactory {
         TownRegistry towns = plugin.getTownRegistry();
         SettingsRegistry settings = plugin.getSettingsRegistry();
         
-        put(cmds, "map", new MapCmd(map, newClickHandler(plugin)));
+        put(cmds, "map", new MapCmd(map, MapFactory.newClickHandler(plugin)));
         put(cmds, "info", new InfoCmd(map, settings));
         put(cmds, "settings", new SettingsCmd(map, settings));
         put(cmds, "test", new TestCmd(map));
@@ -112,11 +112,5 @@ public class CmdFactory {
         put(cmds, "plot.rentout", new PlotRentoutCmd(map));
         put(cmds, "plot.reserve", new PlotReserveCmd(map));
         return new PlotCmd(map, new CmdHandler(cmds));
-    }
-    
-    public static MapClickHandler newClickHandler(Towns plugin) {
-        MapClickHandler handler = new MapClickHandler(new HashMap<>());
-        plugin.getServer().getPluginManager().registerEvents(handler, plugin);
-        return handler;
     }
 }

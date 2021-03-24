@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
 public class Util {
@@ -152,5 +156,17 @@ public class Util {
     
     public static State toState(boolean bool) {
         return bool ? State.ALLOW : State.DENY;
+    }
+    
+    /**
+     * Creates an Item from the material and sets
+     * the display name.
+     */
+    public static ItemStack createItem(Material mat, String name) {
+        ItemStack stack = new ItemStack(mat);
+        ItemMeta meta = stack.getItemMeta();
+        meta.setDisplayName(name);
+        stack.setItemMeta(meta);
+        return stack;
     }
 }

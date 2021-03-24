@@ -1,5 +1,6 @@
 package de.bloodeko.towns.town;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -26,6 +27,13 @@ import de.bloodeko.towns.util.Node.Pair;
 
 public class TownFactory {
     public static final String WORLD = "world";
+
+    /**
+     * Creates a new empty ChunkMap.
+     */
+    public static ChunkMap newChunkMap() {
+        return new ChunkMap(new HashMap<>());
+    }
     
     /**
      * Creates a default town, without registering it to any services.

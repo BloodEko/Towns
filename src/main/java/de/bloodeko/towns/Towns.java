@@ -20,7 +20,6 @@ import de.bloodeko.towns.town.settings.SettingsRegistry;
 import de.bloodeko.towns.town.settings.plots.RentService;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotCmd;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotPayrentCmd;
-import de.bloodeko.towns.util.BukkitFactory;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.Node;
@@ -112,7 +111,7 @@ public class Towns extends JavaPlugin {
     }
     
     private void loadChunkMap() {
-        chunkmap = BukkitFactory.newChunkHandler(this);
+        chunkmap = TownFactory.newChunkMap();
     }
     
     private void loadSettings() {
