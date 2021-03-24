@@ -13,31 +13,31 @@ public class ChatFactory {
     
     public static void load(Towns plugin) {
         Map<Character, Chat> map = new HashMap<>();
-        map.put('.', getLocalChat());
-        map.put('+', getTeamChat());
-        map.put('$', getChat("trade"));
-        map.put('!', getChat("global"));
-        map.put('?', getChat("help"));
+        map.put('.', newLocalChat());
+        map.put('+', newTeamChat());
+        map.put('$', newChat("trade"));
+        map.put('!', newChat("global"));
+        map.put('?', newChat("help"));
         
-        ChatListener listener = new ChatListener(map);
+        ChatListener listener = new ChatListener(map, map.get('!'));
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);
     }
     
-    public static Chat getLocalChat() {
+    public static Chat newLocalChat() {
         String name = Messages.get("chats.local.name");
         String prefix = Messages.get("chats.local.prefix");
         String suffix = Messages.get("chats.local.suffix");
         return new LocalChat(name, prefix, suffix, 10);
     }
     
-    public static Chat getTeamChat() {
+    public static Chat newTeamChat() {
         String name = Messages.get("chats.team.name");
         String prefix = Messages.get("chats.team.prefix");
         String suffix = Messages.get("chats.team.suffix");
         return new TeamChat(name, prefix, suffix, "team.chat");
     }
     
-    public static Chat getChat(String id) {
+    public static Chat newChat(String id) {
         String name = Messages.get("chats." + id + ".name");
         String prefix = Messages.get("chats." + id + ".prefix");
         String suffix = Messages.get("chats." + id + ".suffix");
