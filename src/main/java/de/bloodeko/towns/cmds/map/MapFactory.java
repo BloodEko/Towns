@@ -16,13 +16,33 @@ import de.bloodeko.towns.util.Yaw;
 
 public class MapFactory {
     
-    public static Inventory createMapInv() {
+    /**
+     * Returns a new MapView backed with the map data and a player,
+     * rotated based on the players yaw, with zoom set to 1, using
+     * the players position as center and with default design.
+     */
+    public static MapView newGlobalView(ChunkMap map, Player player) {
+        MapRotation rotation = getMapRotation(player.getLocation().getYaw());
+        int zoom = 1;
+        Chunk center = Chunk.fromEntity(player);
+        Inventory inv = newMapInventory();
+        return new MapView(map, rotation, player, zoom, center, inv);
+    }
+    
+    /**
+     * Returns a new inventory with the TownMap design.
+     */
+    public static Inventory newMapInventory() {
         Inventory inv = Bukkit.createInventory(null, 54, "Townmap");
-        inv.setContents(MapFactory.createMapContent());
+        inv.setContents(newMapContent());
         return inv;
     }
     
-    public static ItemStack[] createMapContent() {
+    /**
+     * Returns a new array filled with the layout
+     * and buttons for a TownMap.
+     */
+    public static ItemStack[] newMapContent() {
         ItemStack[] items = new ItemStack[54];
         ItemStack pane = Util.createItem(Material.BLACK_STAINED_GLASS_PANE, "~~~");
         items[0] = Util.createItem(Material.STONE, "center");
@@ -37,13 +57,10 @@ public class MapFactory {
         return items;
     }
     
-    public static MapView newChunkMapView(ChunkMap map, Player player) {
-        Inventory inv = MapFactory.createMapInv();
-        return new MapView(map, newMapRotation(player.getLocation().getYaw()),
-            player, 1, Chunk.fromEntity(player), inv);
-    }
-    
-    public static MapRotation newMapRotation(float yaw) {
+    /**
+     * Returns a MapRoation based based on the yaw.
+     */
+    public static MapRotation getMapRotation(float yaw) {
         Yaw direc = Yaw.getDirection(yaw);
         switch (direc) {
             case NORTH: return MapRotation.NORTH;
@@ -54,6 +71,10 @@ public class MapFactory {
         throw new RuntimeException();
     }
     
+    /**
+     * Returns a new and registered MapListener service that 
+     * listens on inventory clicks.
+     */
     public static MapListener newClickHandler(Towns plugin) {
         MapListener handler = new MapListener(new HashMap<>());
         plugin.getServer().getPluginManager().registerEvents(handler, plugin);

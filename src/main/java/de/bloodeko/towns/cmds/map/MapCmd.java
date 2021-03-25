@@ -6,21 +6,21 @@ import de.bloodeko.towns.cmds.CmdBase;
 import de.bloodeko.towns.town.ChunkMap;
 
 /**
- * Handles the command. /town map
- * Undiscovered towns? Renderdistance? Playerstorage?
+ * Handles requests to provide a view implementation and
+ * adds the player to the click listener service.
  */
 public class MapCmd extends CmdBase {
-    private MapListener clickHandler;
+    private MapListener listener;
     
-    public MapCmd(ChunkMap map, MapListener clickHandler) {
+    public MapCmd(ChunkMap map, MapListener listener) {
         super(map);
-        this.clickHandler = clickHandler;
+        this.listener = listener;
     }
     
     @Override
     public void execute(Player player, String[] args) {
-        MapView view = MapFactory.newChunkMapView(getMap(), player);
-        clickHandler.add(player.getUniqueId(), view);
+        MapView view = MapFactory.newGlobalView(getMap(), player);
+        listener.add(player.getUniqueId(), view);
         view.open();
     }
 }

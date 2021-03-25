@@ -9,8 +9,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
 /**
- * Handles incoming clicks and maps
- * them to their corresponding view.
+ * Service that maps players to views and handles incoming
+ * inventory click events, to are dispatch them to a view.
+ * Removes players, when they close their inventory.
  */
 public class MapListener implements Listener {
     private Map<UUID, MapView> views;
@@ -18,9 +19,13 @@ public class MapListener implements Listener {
     public MapListener(Map<UUID, MapView> map) {
         views = map;
     }
-
-    public void add(UUID player, MapView view) {
-        views.put(player, view);
+    
+    /**
+     * Adds a player, so his inventory clicks are
+     * tracked and delegated to the view.
+     */
+    public void add(UUID uuid, MapView view) {
+        views.put(uuid, view);
     }
     
     @EventHandler
