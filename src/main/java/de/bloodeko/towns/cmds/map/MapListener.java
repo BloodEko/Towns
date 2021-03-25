@@ -35,14 +35,7 @@ public class MapListener implements Listener {
             return;
         }
         click.setCancelled(true);
-        switch(click.getSlot()) {
-            case 0: view.toCenter(); break;
-            case 1: view.zoom(click.getClick()); break;
-            case 3: view.moveUp(); break;
-            case 4: view.moveDown(); break;
-            case 6: view.moveRight(); break;
-            case 7: view.moveLeft(); break;
-        }
+        view.clickSlot(click.getSlot(), click.getClick());
     }
     
     @EventHandler

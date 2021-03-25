@@ -11,6 +11,10 @@ import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.Util;
 
+/**
+ * View that renders towns and wilderness. 
+ * Taking zoom and rotation into account.
+ */
 public class MapView {
     private static final int BASE_X_OFF = -4;
     private static final int BASE_Z_OFF = -2;
@@ -20,12 +24,12 @@ public class MapView {
     private static final int MIN_ZOOM = 1;
     private static final int MAX_ZOOM = 4;
     
-    private ChunkMap map;
-    private MapRotation rotation;
-    private Player player;
-    private int zoom;
+    protected final ChunkMap map;
+    protected final MapRotation rotation;
+    protected final Player player;
+    protected final Inventory inv;
     private Chunk center;
-    private Inventory inv;
+    private int zoom;
     
     public MapView(ChunkMap map, MapRotation rotation, Player player, int zoom, Chunk center, Inventory inv) {
         this.map = map;
@@ -42,6 +46,21 @@ public class MapView {
     public void open() {
         renderDisplay();
         player.openInventory(inv);
+    }
+
+    /**
+     * Maps the slot to a button
+     * and performs its action.
+     */
+    public void clickSlot(int slot, ClickType click) {
+        switch(slot) {
+            case 0: toCenter(); break;
+            case 1: zoom(click); break;
+            case 3: moveUp(); break;
+            case 4: moveDown(); break;
+            case 6: moveRight(); break;
+            case 7: moveLeft(); break;
+        }
     }
 
     /**
@@ -113,7 +132,7 @@ public class MapView {
      * Renders each slot by providing the center and
      * the pixel.
      */
-    private void renderDisplay() {
+    protected void renderDisplay() {
         for (int z = 0; z < HEIGHT; z++) {
             for (int x = 0; x < WIDTH; x++) {
                 renderSlot(center, x, z);
@@ -125,7 +144,7 @@ public class MapView {
      * Renders the given pixel with the information about 
      * the center pixel and sets it to the inventory.
      */
-    private void renderSlot(Chunk center, int x, int z) {
+    protected void renderSlot(Chunk center, int x, int z) {
         Chunk chunk = renderChunk(center, x, z);
         ItemStack icon = getIcon(chunk);
         inv.setItem(getSlot(x, z), icon);
@@ -136,7 +155,7 @@ public class MapView {
      * Uses the ChunkMap to define whether to display
      * a town icon or a wilderness icon.
      */
-    private ItemStack getIcon(Chunk chunk) {
+    protected ItemStack getIcon(Chunk chunk) {
         Town town = map.getTown(chunk);
         if (town != null) {
             return Util.createItem(Material.LIME_STAINED_GLASS_PANE, town.getSettings().getName());
