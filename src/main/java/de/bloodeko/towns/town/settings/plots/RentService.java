@@ -12,9 +12,9 @@ import org.bukkit.event.Listener;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 
 import de.bloodeko.towns.town.Town;
+import de.bloodeko.towns.town.TownDeleteEvent;
 import de.bloodeko.towns.town.TownLoadEvent;
 import de.bloodeko.towns.town.TownRegistry;
-import de.bloodeko.towns.town.TownDeletedEvent;
 import de.bloodeko.towns.town.settings.Settings;
 import net.milkbowl.vault.economy.Economy;
 
@@ -33,30 +33,37 @@ public class RentService implements Listener {
     public void onTownLoad(TownLoadEvent event) {
         for (PlotData plot : getPlots(event.town)) {
             manager.addRegion(plot.region);
-            System.out.println("Loading wg region for " + plot.id);
-            System.out.println("");
         }
     }
     
     @EventHandler
-    public void onTownUnload(TownDeletedEvent event) {
-        for (PlotData plot : getPlots(event.town)) {
+    public void onTownDelete(TownDeleteEvent event) {
+        boolean rented = false;
+        for (PlotData plot : getPlots(event.getTown())) {
+            if (plot.renter != null) {
+                rented = true;
+                break;
+            }
+        }
+        if (rented) {
+            event.setCancelled("settings.plot.rentservice.cantDelete");
+            return;
+        }
+        for (PlotData plot : getPlots(event.getTown())) {
             manager.removeRegion(plot.region.getId());
-            System.out.println("Deleting wg rg region for " 
-              + plot.id + " " + plot.region.getId());
         }
     }
     
-    private boolean hasPlots(Town town) {
-        return town.getSettings().has(Settings.PLOTS);
-    }
-    
     public Collection<PlotData> getPlots(Town town) {
-        if (hasPlots(town)) {
+        if (hasSetting(town)) {
             PlotHandler plots = (PlotHandler) town.getSettings().get(Settings.PLOTS);
             return plots.getPlots();
         }
         return Collections.emptyList();
+    }
+    
+    private boolean hasSetting(Town town) {
+        return town.getSettings().has(Settings.PLOTS);
     }
     
     public void payRents() {

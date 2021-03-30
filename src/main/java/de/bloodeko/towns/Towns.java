@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -13,6 +14,7 @@ import de.bloodeko.towns.chat.ChatFactory;
 import de.bloodeko.towns.cmds.CmdFactory;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
+import de.bloodeko.towns.town.TownDeleteListener;
 import de.bloodeko.towns.town.TownFactory;
 import de.bloodeko.towns.town.TownRegistry;
 import de.bloodeko.towns.town.settings.Settings;
@@ -144,6 +146,9 @@ public class Towns extends JavaPlugin {
         
         PlotCmd cmd = (PlotCmd) Bukkit.getPluginCommand("plot").getExecutor();
         cmd.register("payrent", new PlotPayrentCmd(chunkmap, service));
+        
+        Listener onDelete = new TownDeleteListener(registry, chunkmap, TownFactory.getWorldManager());
+        Bukkit.getPluginManager().registerEvents(onDelete, this);
         
         ChatFactory.load(this);
     }

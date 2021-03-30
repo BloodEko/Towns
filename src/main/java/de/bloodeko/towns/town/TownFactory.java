@@ -127,16 +127,4 @@ public class TownFactory {
         manager.addRegion(town.getArea().getRegion());
         Bukkit.getPluginManager().callEvent(new TownLoadEvent(town));
     }
-    
-    /**
-     * Removes the town from all used services.
-     */
-    public static void unregisterTown(Town town, ChunkMap map, TownRegistry registry, RegionManager manager) {
-        for (Chunk chunk : town.getArea().getChunks()) {
-            map.removeTown(chunk);
-        }
-        registry.remove(town.getSettings().getName());
-        manager.removeRegion("town_" + town.getId());
-        Bukkit.getPluginManager().callEvent(new TownDeletedEvent(town));
-    }
 }
