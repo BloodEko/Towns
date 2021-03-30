@@ -43,21 +43,11 @@ public class TownPeople {
     /**
      * Sets the UUID as owner, governor and region member.
      */
-    public void setOwner(UUID uuid) {
-        region.getMembers().addPlayer(uuid);
-        governors.add(uuid);
-        owner = uuid;
-    }
-    
-    /**
-     * Sets the owner. Throws an exception if from
-     * is not the owner itself.
-     */
-    public void setOwner(UUID from, UUID to) {
-        if (!isOwner(from)) {
-            throw new ModifyException("town.townpeople.youAreNotOwner");
-        }
-        setOwner(to);
+    public void setOwner(UUID player) {
+        region.getMembers().addPlayer(player);
+        builders.remove(player);
+        governors.add(player);
+        owner = player;
     }
     
     /**

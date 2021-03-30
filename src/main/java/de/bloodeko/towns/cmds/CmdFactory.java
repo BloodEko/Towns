@@ -10,6 +10,7 @@ import de.bloodeko.towns.cmds.core.DeleteCmd;
 import de.bloodeko.towns.cmds.core.FoundCmd;
 import de.bloodeko.towns.cmds.core.GovenorCmd;
 import de.bloodeko.towns.cmds.core.InfoCmd;
+import de.bloodeko.towns.cmds.core.OwnerCmd;
 import de.bloodeko.towns.cmds.core.SettingsCmd;
 import de.bloodeko.towns.cmds.core.TestCmd;
 import de.bloodeko.towns.cmds.core.UnclaimCmd;
@@ -74,6 +75,7 @@ public class CmdFactory {
         
         put(cmds, "builder", new BuilderCmd(map));
         put(cmds, "governor", new GovenorCmd(map));
+        put(cmds, "owner", new OwnerCmd(map));
         put(cmds, "found", new FoundCmd(map, towns, plugin.getEconomy()));
         put(cmds, "delete", new DeleteCmd(map, towns));
 
