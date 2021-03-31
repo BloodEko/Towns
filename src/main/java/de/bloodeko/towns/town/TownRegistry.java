@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.bukkit.Bukkit;
+
 import java.util.UUID;
 
 import de.bloodeko.towns.util.Chunk;
@@ -33,10 +36,10 @@ public class TownRegistry {
      * Creates a town as player with included safety checks, that might 
      * throw an exception. Registers the town to known services.
      */
-    public void foundTown(Chunk chunk, String name, UUID owner) {
+    public void createTown(Chunk chunk, String name, UUID owner) {
         validateCreation(chunk, name, owner);
         Town town = TownFactory.newTown(map, id++, name, chunk, owner);
-        TownFactory.registerTown(town, map, this, TownFactory.getWorldManager());
+        Bukkit.getPluginManager().callEvent(new TownLoadEvent(town));
     }
     
     /**

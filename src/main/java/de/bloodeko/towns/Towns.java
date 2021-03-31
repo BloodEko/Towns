@@ -16,6 +16,7 @@ import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownDeleteListener;
 import de.bloodeko.towns.town.TownFactory;
+import de.bloodeko.towns.town.TownLoadListener;
 import de.bloodeko.towns.town.TownRegistry;
 import de.bloodeko.towns.town.settings.Settings;
 import de.bloodeko.towns.town.settings.SettingsRegistry;
@@ -141,14 +142,17 @@ public class Towns extends JavaPlugin {
     }
     
     private void loadListeners() {
+        Listener onLoad = new TownLoadListener(chunkmap, registry, TownFactory.getWorldManager());
+        Bukkit.getPluginManager().registerEvents(onLoad, this);
+        
+        Listener onDelete = new TownDeleteListener(registry, chunkmap, TownFactory.getWorldManager());
+        Bukkit.getPluginManager().registerEvents(onDelete, this);
+        
         RentService service = new RentService(TownFactory.getWorldManager(), registry, economy);
         Bukkit.getPluginManager().registerEvents(service, this);
         
         PlotCmd cmd = (PlotCmd) Bukkit.getPluginCommand("plot").getExecutor();
         cmd.register("payrent", new PlotPayrentCmd(chunkmap, service));
-        
-        Listener onDelete = new TownDeleteListener(registry, chunkmap, TownFactory.getWorldManager());
-        Bukkit.getPluginManager().registerEvents(onDelete, this);
         
         ChatFactory.load(this);
     }
@@ -164,8 +168,7 @@ public class Towns extends JavaPlugin {
         config.load(file);
         
         Node towns = new YamlDeserializer(config).getRoot();
-        TownFactory.loadTowns(towns, chunkmap, registry, settings,
-          TownFactory.getWorldManager());
+        TownFactory.loadTowns(towns, settings, TownFactory.getWorldManager());
     }
     
     

@@ -31,7 +31,7 @@ public class RentService implements Listener {
     
     @EventHandler
     public void onTownLoad(TownLoadEvent event) {
-        for (PlotData plot : getPlots(event.town)) {
+        for (PlotData plot : getPlots(event.getTown())) {
             manager.addRegion(plot.region);
         }
     }

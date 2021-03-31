@@ -4,15 +4,24 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 /**
- * Called when a Town is founded or loaded on startup.
+ * Called when a town is loaded to register it 
+ * to various services.
  */
 public class TownLoadEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
     
-    public final Town town;
+    private Town town;
     
     public TownLoadEvent(Town town) {
         this.town = town;
+    }
+    
+    /**
+     * Returns the town entity that is about 
+     * to get registered.
+     */
+    public Town getTown() {
+        return town;
     }
     
     @Override

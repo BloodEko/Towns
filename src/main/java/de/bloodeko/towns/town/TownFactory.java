@@ -109,22 +109,10 @@ public class TownFactory {
     /**
      * Creates and registers towns from the towndata provided.
      */
-    public static void loadTowns(Node towns, ChunkMap map, TownRegistry names, SettingsRegistry settings, RegionManager manager) {
+    public static void loadTowns(Node towns, SettingsRegistry settings, RegionManager manager) {
         for (Pair pair : towns.entries()) {
             Town town = Town.deserialize(Integer.valueOf(pair.key), (Node) pair.value, settings, manager);
-            registerTown(town, map, names, manager);
+            Bukkit.getPluginManager().callEvent(new TownLoadEvent(town));
         }
-    }
-    
-    /**
-     * Registers the town to all used services.
-     */
-    public static void registerTown(Town town, ChunkMap map, TownRegistry names, RegionManager manager) {
-        for (Chunk chunk : town.getArea().getChunks()) {
-            map.setTown(chunk, town);
-        }
-        names.add(town);
-        manager.addRegion(town.getArea().getRegion());
-        Bukkit.getPluginManager().callEvent(new TownLoadEvent(town));
     }
 }
