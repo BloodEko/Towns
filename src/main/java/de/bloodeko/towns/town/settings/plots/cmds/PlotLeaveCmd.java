@@ -4,20 +4,13 @@ import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
-import de.bloodeko.towns.town.ChunkMap;
+import de.bloodeko.towns.Services;
 import de.bloodeko.towns.town.settings.plots.PlotData;
 import de.bloodeko.towns.util.Messages;
-import net.milkbowl.vault.economy.Economy;
 
 public class PlotLeaveCmd extends PlotBaseCmd {
     private int maxDepthRatio = 100;
-    private Economy economy;
     
-    public PlotLeaveCmd(ChunkMap map, Economy economy) {
-        super(map);
-        this.economy = economy;
-    }
-
     @Override
     public void execute(Player player, String[] args) {
         PlotData plot = getPlotAsPlayer(player);
@@ -29,7 +22,7 @@ public class PlotLeaveCmd extends PlotBaseCmd {
         
         if (plot.debt > 0) {
             if (plot.debt < (plot.rent * maxDepthRatio)) {
-                payRentToTown(economy, player, plot.debt, getTownAsPlayer(player));
+                payRentToTown(Services.economy(), player, plot.debt, getTownAsPlayer(player));
             }
             plot.debt = 0;
         }

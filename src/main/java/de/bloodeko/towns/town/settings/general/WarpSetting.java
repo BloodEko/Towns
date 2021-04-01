@@ -8,7 +8,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import de.bloodeko.towns.cmds.CmdBase;
-import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.settings.NameProvider;
 import de.bloodeko.towns.town.settings.Setting;
@@ -55,10 +54,6 @@ public class WarpSetting extends Setting {
     
     public static class WarpCmd extends CmdBase {
         private final String off = "!";
-        
-        public WarpCmd(ChunkMap map) {
-            super(map);
-        }
 
         @Override
         public void execute(Player player, String[] args) {

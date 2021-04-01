@@ -1,45 +1,31 @@
 package de.bloodeko.towns.cmds.core;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
+import de.bloodeko.towns.Services;
 import de.bloodeko.towns.cmds.CmdBase;
-import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
-import de.bloodeko.towns.town.TownFactory;
-import de.bloodeko.towns.town.TownLoadEvent;
-import de.bloodeko.towns.town.TownRegistry;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotBaseCmd;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.ModifyException;
-import net.milkbowl.vault.economy.Economy;
 
 public class FoundCmd extends CmdBase {
     private static int price = 1000;
     private static int range = 7;
-    
-    private TownRegistry towns;
-    private Economy economy;
-    
-    public FoundCmd(ChunkMap map, TownRegistry towns, Economy economy) {
-        super(map);
-        this.towns = towns;
-        this.economy = economy;
-    }
 
     @Override
     public void execute(Player player, String[] args) {
         checkNearTowns(player, range);
-        checkMoney(economy, player, price);
+        checkMoney(Services.economy(), player, price);
         
         String name = getArg(0, args, "cmds.found.needName");
-        towns.createTown(Chunk.fromEntity(player), name, player.getUniqueId());
+        Services.towns().createTown(Chunk.fromEntity(player), name, player.getUniqueId());
         
-        economy.withdrawPlayer(player, price);
+        Services.economy().withdrawPlayer(player, price);
         Messages.say(player, "cmds.found.created", name);
     }
     
@@ -65,7 +51,7 @@ public class FoundCmd extends CmdBase {
      */
     private Town getTown(String regionId) {
         String id = regionId.split("_")[1];
-        return towns.getId(id);
+        return Services.towns().getId(id);
     }
     
     /**

@@ -5,7 +5,6 @@ import java.util.Map;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
-import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.settings.Setting;
 import de.bloodeko.towns.town.settings.Settings;
 import de.bloodeko.towns.town.settings.TownSettings;
@@ -46,8 +45,8 @@ public class PvpSetting extends Setting {
     
     public static class PvpProtectCmd extends BooleanCmd {
 
-        public PvpProtectCmd(ChunkMap map, String name) {
-            super(map, name, State.ALLOW, State.DENY);
+        public PvpProtectCmd(String name) {
+            super(name, State.ALLOW, State.DENY);
         }
         
         @Override 

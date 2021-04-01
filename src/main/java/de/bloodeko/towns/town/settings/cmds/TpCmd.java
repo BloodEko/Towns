@@ -5,20 +5,13 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import de.bloodeko.towns.Services;
 import de.bloodeko.towns.cmds.CmdBase;
-import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
-import de.bloodeko.towns.town.TownRegistry;
 import de.bloodeko.towns.town.settings.Settings;
 import de.bloodeko.towns.util.Messages;
 
 public class TpCmd extends CmdBase {
-    private TownRegistry registry;
-
-    public TpCmd(ChunkMap map, TownRegistry registry) {
-        super(map);
-        this.registry = registry;
-    }
 
     @Override
     public void execute(Player player, String[] args) {
@@ -26,7 +19,7 @@ public class TpCmd extends CmdBase {
             Messages.say(player, "cmds.tp.cmdUsage");
             return;
         }
-        Town town = registry.get(args[0]);
+        Town town = Services.towns().get(args[0]);
         Location loc = (Location) town.getSettings().get(Settings.WARP);
         if (loc == null) {
             Messages.say(player, "cmds.tp.warpNotSet");
@@ -39,7 +32,6 @@ public class TpCmd extends CmdBase {
     @Override
     public List<String> completeTab(String[] args) {
         String name = args.length == 0 ? "" : args[0];
-        return registry.getMatches(name);
+        return Services.towns().getMatches(name);
     }
-
 }

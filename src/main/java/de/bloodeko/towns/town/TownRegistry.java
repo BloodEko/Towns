@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 
 import java.util.UUID;
 
+import de.bloodeko.towns.Services;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.Util;
@@ -18,13 +19,11 @@ import de.bloodeko.towns.util.Util;
 public class TownRegistry {
     private Map<String, Town> byName;
     private Map<String, Town> byId;
-    private ChunkMap map;
     private int id;
     
-    public TownRegistry(ChunkMap map, int nextId) {
+    public TownRegistry(int nextId) {
         this.byName = new HashMap<>();
         this.byId = new HashMap<>();
-        this.map = map;
         this.id = nextId;
     }
     
@@ -38,7 +37,7 @@ public class TownRegistry {
      */
     public void createTown(Chunk chunk, String name, UUID owner) {
         validateCreation(chunk, name, owner);
-        Town town = TownFactory.newTown(map, id++, name, chunk, owner);
+        Town town = TownFactory.newTown(Services.chunkMap(), id++, name, chunk, owner);
         Bukkit.getPluginManager().callEvent(new TownLoadEvent(town));
     }
     
@@ -47,7 +46,7 @@ public class TownRegistry {
      * Otherwise throws an exception.
      */
     public void validateCreation(Chunk chunk, String name, UUID owner) {
-        if (map.hasTown(chunk)) {
+        if (Services.chunkMap().hasTown(chunk)) {
             throw new ModifyException("town.townregistry.chunkAlreadyTaken");
         }
         if (owner == null) {

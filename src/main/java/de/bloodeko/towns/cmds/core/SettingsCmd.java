@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
+import de.bloodeko.towns.Services;
 import de.bloodeko.towns.cmds.CmdBase;
-import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.settings.AdvancedSetting;
 import de.bloodeko.towns.town.settings.Setting;
@@ -16,19 +16,13 @@ import de.bloodeko.towns.town.settings.SettingsRegistry;
 import de.bloodeko.towns.util.Messages;
 
 public class SettingsCmd extends CmdBase {
-    private SettingsRegistry settings;
-    
-    public SettingsCmd(ChunkMap map, SettingsRegistry settings) {
-        super(map);
-        this.settings = settings;
-    }
 
     @Override
     public void execute(Player player, String[] args) {
         Town town = getTown(player);
         Messages.say(player, "cmds.info.settingsHeader");
         
-        for (AdvancedSetting setting : getSettings(settings, town)) {
+        for (AdvancedSetting setting : getSettings(Services.settings(), town)) {
             Messages.say(player, "cmds.info.setting", 
              setting.names.getName(), setting.names.display(town));
         }

@@ -17,7 +17,6 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 
 import de.bloodeko.towns.cmds.CmdBase;
-import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownFactory;
 import de.bloodeko.towns.town.settings.Settings;
@@ -27,10 +26,6 @@ import de.bloodeko.towns.util.ModifyException;
 import net.milkbowl.vault.economy.Economy;
 
 public abstract class PlotBaseCmd extends CmdBase {
-    
-    public PlotBaseCmd(ChunkMap map) {
-        super(map);
-    }
     
     public PlotHandler getPlotHandler(Town town) {
         PlotHandler handler = (PlotHandler) town.getSettings().get(Settings.PLOTS);

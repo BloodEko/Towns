@@ -9,25 +9,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import de.bloodeko.towns.Services;
 import de.bloodeko.towns.cmds.CmdBase;
-import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.people.TownPeople;
 import de.bloodeko.towns.town.settings.AdvancedSetting;
-import de.bloodeko.towns.town.settings.SettingsRegistry;
 import de.bloodeko.towns.util.Messages;
 
 public class InfoCmd extends CmdBase {
     private static final String separator = Messages.get("cmds.info.separator");
     private static final String boldColor = Messages.get("cmds.info.boldColor");
     private static final String onlineColor = Messages.get("cmds.info.onlineColor");
-    
-    private SettingsRegistry settings;
-    
-    public InfoCmd(ChunkMap map, SettingsRegistry settings) {
-        super(map);
-        this.settings = settings;
-    }
     
     @Override
     public void execute(Player player, String[] args) {
@@ -55,7 +47,7 @@ public class InfoCmd extends CmdBase {
     
     
     private void showSettings(Player player, Town town) {
-        List<AdvancedSetting> list = SettingsCmd.getSettings(settings, town);
+        List<AdvancedSetting> list = SettingsCmd.getSettings(Services.settings(), town);
         if (list.isEmpty()) {
             return;
         }

@@ -3,15 +3,10 @@ package de.bloodeko.towns.town.settings.plots.cmds;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.settings.plots.PlotData;
 import de.bloodeko.towns.util.Messages;
 
 public class PlotBuilderCmd extends PlotBaseCmd {
-
-    public PlotBuilderCmd(ChunkMap map) {
-        super(map);
-    }
 
     @Override
     public void execute(Player player, String[] args) {

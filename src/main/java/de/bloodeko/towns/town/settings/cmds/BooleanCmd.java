@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
 import de.bloodeko.towns.cmds.CmdBase;
-import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.settings.TownSettings;
 import de.bloodeko.towns.util.Messages;
@@ -26,8 +25,7 @@ public abstract class BooleanCmd extends CmdBase {
     private State deny;
     private String name;
     
-    public BooleanCmd(ChunkMap map, String name, State allow, State deny) {
-        super(map);
+    public BooleanCmd(String name, State allow, State deny) {
         this.name = name;
         this.allow = allow;
         this.deny = deny;

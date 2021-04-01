@@ -5,7 +5,6 @@ import java.util.Map;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
-import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.settings.Setting;
 import de.bloodeko.towns.town.settings.Settings;
 import de.bloodeko.towns.town.settings.TownSettings;
@@ -49,8 +48,8 @@ public class PearlSetting extends Setting {
     
     public static class PearlCmd extends BooleanCmd {
 
-        public PearlCmd(ChunkMap map, String name) {
-            super(map, name, State.ALLOW, State.DENY);
+        public PearlCmd(String name) {
+            super(name, State.ALLOW, State.DENY);
         }
         
         @Override 

@@ -7,7 +7,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import de.bloodeko.towns.cmds.CmdBase;
-import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.people.TownPeople;
 import de.bloodeko.towns.util.Messages;
@@ -17,10 +16,6 @@ import de.bloodeko.towns.util.ModifyException;
  * Allows the town owner to transfer ownership.
  */
 public class OwnerCmd extends CmdBase {
-    
-    public OwnerCmd(ChunkMap map) {
-        super(map);
-    }
 
     @Override
     public void execute(Player player, String[] args) {

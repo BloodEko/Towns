@@ -5,27 +5,20 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
+import de.bloodeko.towns.Services;
 import de.bloodeko.towns.cmds.CmdBase;
-import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.Yaw;
-import net.milkbowl.vault.economy.Economy;
 
 public class ClaimCmd extends CmdBase {
     private static int price = 512;
-    private Economy economy;
-    
-    public ClaimCmd(ChunkMap chunks, Economy economy) {
-        super(chunks);
-        this.economy = economy;
-    }
     
     @Override
     public void execute(Player player, String[] args) {
-        checkMoney(economy, player, price);
+        checkMoney(Services.economy(), player, price);
         if (getMap().getTown(Chunk.fromEntity(player)) != null) {
             Messages.say(player, "town.townarea.alreadyTaken");
             return;
@@ -37,7 +30,7 @@ public class ClaimCmd extends CmdBase {
             claim(player, args[0]);
         }
         
-        economy.withdrawPlayer(player, price);
+        Services.economy().withdrawPlayer(player, price);
         Messages.say(player, "cmds.claim.claimedChunk");
     }
     

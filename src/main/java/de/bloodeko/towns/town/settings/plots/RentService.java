@@ -9,30 +9,19 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import com.sk89q.worldguard.protection.managers.RegionManager;
-
+import de.bloodeko.towns.Services;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownDeleteEvent;
 import de.bloodeko.towns.town.TownLoadEvent;
-import de.bloodeko.towns.town.TownRegistry;
 import de.bloodeko.towns.town.settings.Settings;
 import net.milkbowl.vault.economy.Economy;
 
 public class RentService implements Listener {
-    private RegionManager manager;
-    private TownRegistry towns;
-    private Economy economy;
-    
-    public RentService(RegionManager manager, TownRegistry towns, Economy economy) {
-        this.manager = manager;
-        this.towns = towns;
-        this.economy = economy;
-    }
     
     @EventHandler
     public void onTownLoad(TownLoadEvent event) {
         for (PlotData plot : getPlots(event.getTown())) {
-            manager.addRegion(plot.region);
+            Services.regions().addRegion(plot.region);
         }
     }
     
@@ -50,7 +39,7 @@ public class RentService implements Listener {
             return;
         }
         for (PlotData plot : getPlots(event.getTown())) {
-            manager.removeRegion(plot.region.getId());
+            Services.regions().removeRegion(plot.region.getId());
         }
     }
     
@@ -67,7 +56,8 @@ public class RentService implements Listener {
     }
     
     public void payRents() {
-        for (Town town : towns.getTowns()) {
+        Economy economy = Services.economy();
+        for (Town town : Services.towns().getTowns()) {
             UUID ownerId = town.getPeople().getGovernors().iterator().next();
             OfflinePlayer owner = Bukkit.getPlayer(ownerId);
             

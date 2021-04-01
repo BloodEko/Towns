@@ -5,17 +5,12 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
-import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.settings.plots.PlotData;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.Util;
 
 public class PlotNameCmd extends PlotBaseCmd {
     private final String off = "!";
-
-    public PlotNameCmd(ChunkMap map) {
-        super(map);
-    }
 
     @Override
     public void execute(Player player, String[] args) {

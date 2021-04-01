@@ -19,8 +19,7 @@ public class MapCmd extends CmdBase {
     private final String localname = Messages.get("cmds.map.local");
     private MapListener listener;
     
-    public MapCmd(ChunkMap map, MapListener listener) {
-        super(map);
+    public MapCmd(MapListener listener) {
         this.listener = listener;
     }
     

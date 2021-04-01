@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import com.sk89q.worldedit.math.BlockVector3;
 
 import de.bloodeko.towns.cmds.core.InfoCmd;
-import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.settings.plots.PlotData;
 import de.bloodeko.towns.util.Messages;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -19,10 +18,6 @@ import net.md_5.bungee.api.chat.HoverEvent.Action;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public class PlotInfoCmd extends PlotBaseCmd {
-    
-    public PlotInfoCmd(ChunkMap map) {
-        super(map);
-    }
 
     @Override
     public void execute(Player player, String[] args) {

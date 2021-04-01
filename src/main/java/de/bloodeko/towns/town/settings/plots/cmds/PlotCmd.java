@@ -10,14 +10,12 @@ import org.bukkit.entity.Player;
 
 import de.bloodeko.towns.cmds.CmdBase;
 import de.bloodeko.towns.cmds.CmdHandler;
-import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.util.ModifyException;
 
 public class PlotCmd extends CmdBase implements CommandExecutor, TabCompleter {
     private CmdHandler handler;
     
-    public PlotCmd(ChunkMap map, CmdHandler handler) {
-        super(map);
+    public PlotCmd(CmdHandler handler) {
         this.handler = handler;
     }
     

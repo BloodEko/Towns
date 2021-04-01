@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import de.bloodeko.towns.Services;
 import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.util.Chunk;
@@ -17,12 +18,6 @@ import net.milkbowl.vault.economy.Economy;
  * Gives access to used dependencies.
  */
 public abstract class CmdBase {
-    private ChunkMap map;
-    
-    public CmdBase(ChunkMap map) {
-        this.map = map;
-    }
-    
     public abstract void execute(Player player, String[] args);
 
     public List<String> completeTab(String[] args) {
@@ -34,7 +29,7 @@ public abstract class CmdBase {
     }
     
     public ChunkMap getMap() {
-        return map;
+        return Services.chunkMap();
     }
     
     /**
@@ -116,7 +111,7 @@ public abstract class CmdBase {
      * Throws an exception, if no Town is found.
      */
     public Town getTownAsPlayer(Player player) {
-        Town town = map.getTown(Chunk.fromEntity(player));
+        Town town = getMap().getTown(Chunk.fromEntity(player));
         if (town == null) {
             throw new ModifyException("cmds.base.noTownAtLocation");
         }

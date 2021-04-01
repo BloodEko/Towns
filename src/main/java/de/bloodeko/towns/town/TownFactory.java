@@ -13,13 +13,13 @@ import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 
+import de.bloodeko.towns.Services;
 import de.bloodeko.towns.town.area.ChunkRegion;
 import de.bloodeko.towns.town.area.ClaimRules;
 import de.bloodeko.towns.town.area.TownArea;
 import de.bloodeko.towns.town.area.TownSides;
 import de.bloodeko.towns.town.people.TownPeople;
 import de.bloodeko.towns.town.settings.Settings;
-import de.bloodeko.towns.town.settings.SettingsRegistry;
 import de.bloodeko.towns.town.settings.TownSettings;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.Node;
@@ -102,16 +102,17 @@ public class TownFactory {
     /**
      * Creates a new Registry.
      */
-    public static TownRegistry newRegistry(ChunkMap map, int id) {
-        return new TownRegistry(map, id);
+    public static TownRegistry newRegistry(int id) {
+        return new TownRegistry(id);
     }
 
     /**
      * Creates and registers towns from the towndata provided.
      */
-    public static void loadTowns(Node towns, SettingsRegistry settings, RegionManager manager) {
+    public static void loadTowns(Node towns) {
         for (Pair pair : towns.entries()) {
-            Town town = Town.deserialize(Integer.valueOf(pair.key), (Node) pair.value, settings, manager);
+            Town town = Town.deserialize(Integer.valueOf(pair.key), (Node) pair.value, 
+              Services.settings(), Services.regions());
             Bukkit.getPluginManager().callEvent(new TownLoadEvent(town));
         }
     }

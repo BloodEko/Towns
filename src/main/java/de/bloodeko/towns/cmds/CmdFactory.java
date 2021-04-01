@@ -16,10 +16,7 @@ import de.bloodeko.towns.cmds.core.TestCmd;
 import de.bloodeko.towns.cmds.core.UnclaimCmd;
 import de.bloodeko.towns.cmds.map.MapCmd;
 import de.bloodeko.towns.cmds.map.MapFactory;
-import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.TownCmd;
-import de.bloodeko.towns.town.TownRegistry;
-import de.bloodeko.towns.town.settings.SettingsRegistry;
 import de.bloodeko.towns.town.settings.cmds.ExtensionCmd;
 import de.bloodeko.towns.town.settings.cmds.ExtensionsCmd;
 import de.bloodeko.towns.town.settings.cmds.RenameCmd;
@@ -44,7 +41,6 @@ import de.bloodeko.towns.town.settings.plots.cmds.PlotRentCmd;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotRentoutCmd;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotReserveCmd;
 import de.bloodeko.towns.util.Messages;
-import net.milkbowl.vault.economy.Economy;
 
 public class CmdFactory {
     
@@ -54,44 +50,41 @@ public class CmdFactory {
         plugin.getCommand("town").setExecutor(cmd);
         plugin.getCommand("town").setTabCompleter(cmd);
         
-        PlotCmd plotCmd = newPlotCmd(plugin.getChunkMap(), plugin.getEconomy());
+        PlotCmd plotCmd = newPlotCmd();
         plugin.getCommand("plot").setExecutor(plotCmd);
         plugin.getCommand("plot").setTabCompleter(plotCmd);
     }
     
     public static CmdHandler newCmdHandler(Towns plugin) {
         Map<String, CmdBase> cmds = new HashMap<>();
-        ChunkMap map = plugin.getChunkMap();
-        TownRegistry towns = plugin.getTownRegistry();
-        SettingsRegistry settings = plugin.getSettingsRegistry();
         
-        put(cmds, "map", new MapCmd(map, MapFactory.newClickHandler(plugin)));
-        put(cmds, "info", new InfoCmd(map, settings));
-        put(cmds, "settings", new SettingsCmd(map, settings));
-        put(cmds, "test", new TestCmd(map));
+        put(cmds, "map", new MapCmd(MapFactory.newClickHandler(plugin)));
+        put(cmds, "info", new InfoCmd());
+        put(cmds, "settings", new SettingsCmd());
+        put(cmds, "test", new TestCmd());
         
-        put(cmds, "claim", new ClaimCmd(map, plugin.getEconomy()));
-        put(cmds, "unclaim", new UnclaimCmd(map));
+        put(cmds, "claim", new ClaimCmd());
+        put(cmds, "unclaim", new UnclaimCmd());
         
-        put(cmds, "builder", new BuilderCmd(map));
-        put(cmds, "governor", new GovenorCmd(map));
-        put(cmds, "owner", new OwnerCmd(map));
-        put(cmds, "found", new FoundCmd(map, towns, plugin.getEconomy()));
-        put(cmds, "delete", new DeleteCmd(map, towns));
+        put(cmds, "builder", new BuilderCmd());
+        put(cmds, "governor", new GovenorCmd());
+        put(cmds, "owner", new OwnerCmd());
+        put(cmds, "found", new FoundCmd());
+        put(cmds, "delete", new DeleteCmd());
 
-        put(cmds, "extensions", new ExtensionsCmd(map, settings));
-        put(cmds, "extension", new ExtensionCmd(map, settings));
+        put(cmds, "extensions", new ExtensionsCmd());
+        put(cmds, "extension", new ExtensionCmd());
         
-        put(cmds, "tp", new TpCmd(map, towns));
-        put(cmds, "rename", new RenameCmd(map, towns));
-        put(cmds, "stage", new StageCmd(map));
-        put(cmds, "warp", new WarpCmd(map));
-        put(cmds, "pvp", new PvpProtectCmd(map, Messages.get("settings.pvp")));
-        put(cmds, "damageAnimals", new AnimalProtectCmd(map, Messages.get("settings.damageAnimals")));
-        put(cmds, "warp", new WarpCmd(map));
-        put(cmds, "pearl", new PearlCmd(map, Messages.get("settings.pearl")));
-        put(cmds, "slime", new SlimeCmd(map, Messages.get("settings.slime")));
-        put(cmds, "zombie", new ZombieCmd(map, Messages.get("settings.zombie")));
+        put(cmds, "tp", new TpCmd());
+        put(cmds, "rename", new RenameCmd());
+        put(cmds, "stage", new StageCmd());
+        put(cmds, "warp", new WarpCmd());
+        put(cmds, "pvp", new PvpProtectCmd(Messages.get("settings.pvp")));
+        put(cmds, "damageAnimals", new AnimalProtectCmd(Messages.get("settings.damageAnimals")));
+        put(cmds, "warp", new WarpCmd());
+        put(cmds, "pearl", new PearlCmd(Messages.get("settings.pearl")));
+        put(cmds, "slime", new SlimeCmd(Messages.get("settings.slime")));
+        put(cmds, "zombie", new ZombieCmd(Messages.get("settings.zombie")));
         
         return new CmdHandler(cmds);
     }
@@ -100,19 +93,19 @@ public class CmdFactory {
         cmds.put(Messages.get("cmds." + id), base);
     }
     
-    public static PlotCmd newPlotCmd(ChunkMap map, Economy economy) {
+    public static PlotCmd newPlotCmd() {
         Map<String, CmdBase> cmds = new HashMap<>();
-        put(cmds, "plot.builder", new PlotBuilderCmd(map));
-        put(cmds, "plot.create", new PlotCreateCmd(map));
-        put(cmds, "plot.expropriate", new PlotExpropriateCmd(map));
-        put(cmds, "plot.info", new PlotInfoCmd(map));
-        put(cmds, "plot.leave", new PlotLeaveCmd(map, economy));
-        put(cmds, "plot.list", new PlotListCmd(map));
-        put(cmds, "plot.name", new PlotNameCmd(map));
-        put(cmds, "plot.remove", new PlotRemoveCmd(map));
-        put(cmds, "plot.rent", new PlotRentCmd(map, economy));
-        put(cmds, "plot.rentout", new PlotRentoutCmd(map));
-        put(cmds, "plot.reserve", new PlotReserveCmd(map));
-        return new PlotCmd(map, new CmdHandler(cmds));
+        put(cmds, "plot.builder", new PlotBuilderCmd());
+        put(cmds, "plot.create", new PlotCreateCmd());
+        put(cmds, "plot.expropriate", new PlotExpropriateCmd());
+        put(cmds, "plot.info", new PlotInfoCmd());
+        put(cmds, "plot.leave", new PlotLeaveCmd());
+        put(cmds, "plot.list", new PlotListCmd());
+        put(cmds, "plot.name", new PlotNameCmd());
+        put(cmds, "plot.remove", new PlotRemoveCmd());
+        put(cmds, "plot.rent", new PlotRentCmd());
+        put(cmds, "plot.rentout", new PlotRentoutCmd());
+        put(cmds, "plot.reserve", new PlotReserveCmd());
+        return new PlotCmd(new CmdHandler(cmds));
     }
 }

@@ -12,19 +12,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import de.bloodeko.towns.chat.ChatFactory;
 import de.bloodeko.towns.cmds.CmdFactory;
-import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownDeleteListener;
 import de.bloodeko.towns.town.TownFactory;
 import de.bloodeko.towns.town.TownLoadListener;
-import de.bloodeko.towns.town.TownRegistry;
 import de.bloodeko.towns.town.settings.Settings;
-import de.bloodeko.towns.town.settings.SettingsRegistry;
 import de.bloodeko.towns.town.settings.plots.RentService;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotCmd;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotPayrentCmd;
 import de.bloodeko.towns.util.Messages;
-import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.Node;
 import de.bloodeko.towns.util.Util;
 import de.bloodeko.towns.util.YamlDeserializer;
@@ -32,65 +28,19 @@ import de.bloodeko.towns.util.YamlSerializer;
 import net.milkbowl.vault.economy.Economy;
 
 /**
- * TownCommand (handler system with tab completion)
- * ChunkHandler (variable in Towns)
- * ChunkDisplay (vriable in Towns)
- * /stadt map (uses chunkdisplay. with zoom etc.)
- * 
- * one package per feature.
- * > chunkmap. towns. claiming. map. info. commands. util.
- * > one package per command. features that are used by multiple commands, get an own package.
- * 
- * +FoundCMD, 
- * +AnimalProtect, +PVP, +Serialiable Settings objects.
- * +Messages
- * +Chunkrules
- * +registryIdFile
- * -PlayerCache. onEnable/onDisable/onJoin/Quit is set.
- * 
- * ?MoreSettings/+SettingsUpgrade
- * ?Plots, PlotManager. WorldMap, ChunkMap, ChunkToTownWrapper.
- * ?Location/Chunk/Region hooks. (for unclaim)
- * ?StufenAufstiege.
- * ?Chatsystem. 
- * ?Config.
- * ?Permissions town.mod/admin/notifyTownUpgrade
+ * Loads the services and towns. In case of an exception stops the server
+ * and creates an error file, that stops the server from further startups.
+ * Persists the towns on disable, if the startup was normal.
  */
 public class Towns extends JavaPlugin {
-    private ChunkMap chunkmap;
-    private TownRegistry registry;
-    private SettingsRegistry settings;
-    private Economy economy;
     private boolean shutdown;
-
-    public ChunkMap getChunkMap() {
-        return chunkmap;
-    }
-    
-    public TownRegistry getTownRegistry() {
-        return registry;
-    }
-
-    public SettingsRegistry getSettingsRegistry() {
-        return settings;
-    }
-    
-    public Economy getEconomy() {
-        if (economy == null) {
-            throw new ModifyException("Economy is null!");
-        }
-        return economy;
-    }
+    private Services locator;
     
     @Override
     public void onEnable() {
         try {
             checkError();
-            loadMessages();
-            loadChunkMap();
-            loadSettings();
-            loadNames();
-            loadEconomy();
+            loadCore();
             loadCommands();
             loadListeners();
             loadSerializer();
@@ -105,70 +55,101 @@ public class Towns extends JavaPlugin {
     
     private void checkError() {
         if (getErrorFile().exists()) {
-            throw new IllegalStateException("Cannot start due to shutdown error.");
+            throw new IllegalStateException("Towns is set to safetymode.");
         }
+    }
+    
+    /**
+     * Loads all core services and adds them to 
+     * the service locator.
+     */
+    private void loadCore() throws Exception {
+        loadMessages();
+        loadService();
+        loadChunks();
+        loadSettings();
+        loadNames();
+        loadEconomy();
     }
     
     private void loadMessages() {
         Messages.enable(Util.readLines(getResource("messages.properties")));
     }
     
-    private void loadChunkMap() {
-        chunkmap = TownFactory.newChunkMap();
+    private void loadService() {
+        Services.set(locator = new Services());
+        locator.plugin = this;
+        locator.manager = TownFactory.getWorldManager();
+    }
+    
+    private void loadChunks() {
+        locator.chunkmap = TownFactory.newChunkMap();
     }
     
     private void loadSettings() {
-        settings = Settings.newRegistry();
+        locator.settings = Settings.newRegistry();
     }
     
     private void loadNames() throws Exception {
-        File file = new File(getDataFolder() + "/registry.yml");
-        YamlConfiguration config = new YamlConfiguration();
-        config.load(file);
-        int id = config.getInt("id", 0);
-        registry = TownFactory.newRegistry(chunkmap, id);
+        int id = loadConfig("registry.yml").getInt("id", 0);
+        locator.registry = TownFactory.newRegistry(id);
     }
     
     private void loadEconomy() {
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
-            return;
+            throw new IllegalStateException("Economy not found.");
         }
-        economy = rsp.getProvider();
+        locator.economy = rsp.getProvider();
     }
     
+    /**
+     * Loads the commands module.
+     */
     private void loadCommands() {
         CmdFactory.init(this);
     }
     
+    /**
+     * Loads core listeners and other modules.
+     */
     private void loadListeners() {
-        Listener onLoad = new TownLoadListener(chunkmap, registry, TownFactory.getWorldManager());
+        Listener onLoad = new TownLoadListener();
         Bukkit.getPluginManager().registerEvents(onLoad, this);
         
-        Listener onDelete = new TownDeleteListener(registry, chunkmap, TownFactory.getWorldManager());
+        Listener onDelete = new TownDeleteListener();
         Bukkit.getPluginManager().registerEvents(onDelete, this);
         
-        RentService service = new RentService(TownFactory.getWorldManager(), registry, economy);
+        RentService service = new RentService();
         Bukkit.getPluginManager().registerEvents(service, this);
         
         PlotCmd cmd = (PlotCmd) Bukkit.getPluginCommand("plot").getExecutor();
-        cmd.register("payrent", new PlotPayrentCmd(chunkmap, service));
+        cmd.register("payrent", new PlotPayrentCmd(service));
         
         ChatFactory.load(this);
+    }
+    
+    /**
+     * Loads all towns into the plugin.
+     */
+    private void loadTowns() throws Exception {
+        Node towns = new YamlDeserializer(loadConfig("towns.yml")).getRoot();
+        TownFactory.loadTowns(towns);
     }
     
     private void loadSerializer() {
         YamlSerializer.class.getName();
     }
     
-    
-    private void loadTowns() throws Exception {
-        File file = new File(getDataFolder() + "/towns.yml");
-        YamlConfiguration config = new YamlConfiguration();
-        config.load(file);
-        
-        Node towns = new YamlDeserializer(config).getRoot();
-        TownFactory.loadTowns(towns, settings, TownFactory.getWorldManager());
+    private YamlConfiguration loadConfig(String path) {
+        try {
+            File file = new File(getDataFolder() + "/" + path);
+            YamlConfiguration config = new YamlConfiguration();
+            config.load(file);
+            return config;
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
     
     
@@ -178,41 +159,42 @@ public class Towns extends JavaPlugin {
             return;
         }
         try {
-            saveRegistry();
+            saveNames();
             saveTowns();
         } catch (Exception ex) {
             createErrorFile(ex);
         }
     }
     
-    
-    private void createErrorFile(Exception ex) {
-        ex.printStackTrace();
+    /**
+     * Creates an error file for the Exception, which 
+     * will prevent further startups until deletion.
+     */
+    private void createErrorFile(Exception error) {
+        error.printStackTrace();
         try {
             File file = getErrorFile();
             file.createNewFile();
-            ex.printStackTrace(new PrintWriter(file));
-        } catch (IOException e) {
+            error.printStackTrace(new PrintWriter(file));
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
-    
     
     private File getErrorFile() {
         return new File(getDataFolder() + "/error.dat");
     }
     
-    
-    public void saveRegistry() throws Exception {
+    public void saveNames() throws Exception {
         YamlConfiguration config = new YamlConfiguration();
-        config.set("id", registry.getId());
+        config.set("id", Services.towns().getId());
         config.save(getDataFolder() + "/registry.yml");
     }
     
     
     public void saveTowns() throws IOException {
         Node towns = new Node();
-        for (Town town : registry.getTowns()) {
+        for (Town town : Services.towns().getTowns()) {
             towns.set("" + town.getId(), town.serialize());
         }
         YamlSerializer serializer = new YamlSerializer(new YamlConfiguration(), towns);

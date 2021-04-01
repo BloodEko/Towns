@@ -5,6 +5,7 @@ import org.bukkit.event.Listener;
 
 import com.sk89q.worldguard.protection.managers.RegionManager;
 
+import de.bloodeko.towns.Services;
 import de.bloodeko.towns.util.Chunk;
 
 /**
@@ -15,10 +16,10 @@ public class TownLoadListener implements Listener {
     private TownRegistry names;
     private RegionManager manager;
     
-    public TownLoadListener(ChunkMap map, TownRegistry names, RegionManager manager) {
-        this.map = map;
-        this.names = names;
-        this.manager = manager;
+    public TownLoadListener() {
+        this.map = Services.chunkMap();
+        this.names = Services.towns();
+        this.manager = Services.regions();
     }
     
     @EventHandler

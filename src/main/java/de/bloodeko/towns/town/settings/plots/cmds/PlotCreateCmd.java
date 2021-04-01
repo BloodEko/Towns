@@ -8,7 +8,6 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
-import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.settings.plots.PlotData;
 import de.bloodeko.towns.town.settings.plots.PlotHandler;
@@ -17,10 +16,6 @@ import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.ModifyException;
 
 public class PlotCreateCmd extends PlotBaseCmd {
-    
-    public PlotCreateCmd(ChunkMap map) {
-        super(map);
-    }
 
     @Override
     public void execute(Player player, String[] args) {

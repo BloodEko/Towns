@@ -9,7 +9,6 @@ import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
-import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.settings.NameProvider;
 import de.bloodeko.towns.town.settings.Setting;
@@ -78,8 +77,8 @@ public class SlimeSetting extends Setting {
     
     public static class SlimeCmd extends BooleanCmd {
 
-        public SlimeCmd(ChunkMap map, String name) {
-            super(map, name, State.ALLOW, State.DENY);
+        public SlimeCmd(String name) {
+            super(name, State.ALLOW, State.DENY);
         }
         
         @Override

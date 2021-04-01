@@ -2,20 +2,14 @@ package de.bloodeko.towns.town.settings.cmds;
 
 import org.bukkit.entity.Player;
 
+import de.bloodeko.towns.Services;
 import de.bloodeko.towns.cmds.CmdBase;
-import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.town.TownRegistry;
 import de.bloodeko.towns.town.settings.Settings;
 import de.bloodeko.towns.util.Messages;
 
 public class RenameCmd extends CmdBase {
-    private TownRegistry registry;
-
-    public RenameCmd(ChunkMap map, TownRegistry registry) {
-        super(map);
-        this.registry = registry;
-    }
 
     @Override
     public void execute(Player player, String[] args) {
@@ -23,7 +17,7 @@ public class RenameCmd extends CmdBase {
             Messages.say(player, "cmds.rename.cmdUsage");
             return;
         }
-        rename(getTown(player), registry, args[0]);
+        rename(getTown(player), Services.towns(), args[0]);
         Messages.say(player, "cmds.rename.renamed", args[0]);
     }
     

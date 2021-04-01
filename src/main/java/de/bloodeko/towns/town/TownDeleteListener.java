@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 
 import com.sk89q.worldguard.protection.managers.RegionManager;
 
+import de.bloodeko.towns.Services;
 import de.bloodeko.towns.util.Chunk;
 
 /**
@@ -16,10 +17,10 @@ public class TownDeleteListener implements Listener {
     private ChunkMap map;
     private RegionManager manager;
     
-    public TownDeleteListener(TownRegistry registry, ChunkMap map, RegionManager manager) {
-        this.registry = registry;
-        this.map = map;
-        this.manager = manager;
+    public TownDeleteListener() {
+        this.registry = Services.towns();
+        this.map = Services.chunkMap();
+        this.manager = Services.regions();
     }
     
     @EventHandler(priority=EventPriority.HIGH)
