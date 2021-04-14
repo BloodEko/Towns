@@ -18,7 +18,7 @@ public class Services {
     public TownRegistry registry;
     public SettingsRegistry settings;
     public Economy economy;
-    public RegionManager manager;
+    public RegionManager regions;
     
     /**
      * Sets the registry, consider all field to be
@@ -49,6 +49,6 @@ public class Services {
     }
     
     public static RegionManager regions() {
-        return instance.manager;
+        return instance.regions;
     }
 }

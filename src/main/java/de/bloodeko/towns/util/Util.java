@@ -1,9 +1,12 @@
 package de.bloodeko.towns.util;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -168,5 +171,19 @@ public class Util {
         meta.setDisplayName(name);
         stack.setItemMeta(meta);
         return stack;
+    }
+
+    /**
+     * Writes the Exception to the file. In case of an
+     * IoException prints it to the console.
+     */
+    public static void writeException(File path, Exception error) {
+        try (FileWriter fw = new FileWriter(path, true);
+             PrintWriter pw = new PrintWriter(fw)) {
+            error.printStackTrace(pw);
+        }
+        catch(IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

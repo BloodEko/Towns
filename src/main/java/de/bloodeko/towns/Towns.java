@@ -2,7 +2,6 @@ package de.bloodeko.towns;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -28,9 +27,9 @@ import de.bloodeko.towns.util.YamlSerializer;
 import net.milkbowl.vault.economy.Economy;
 
 /**
- * Loads the services and towns. In case of an exception stops the server
- * and creates an error file, that stops the server from further startups.
- * Persists the towns on disable, if the startup was normal.
+ * Loads the services and towns, by an exception, stops the server.
+ * Persists the towns on disable, by an exception, creates an 
+ * error file, that prevents the server from further startups.
  */
 public class Towns extends JavaPlugin {
     private boolean shutdown;
@@ -79,18 +78,18 @@ public class Towns extends JavaPlugin {
     private void loadService() {
         Services.set(locator = new Services());
         locator.plugin = this;
-        locator.manager = TownFactory.getWorldManager();
     }
     
     private void loadChunks() {
         locator.chunkmap = TownFactory.newChunkMap();
+        locator.regions = TownFactory.getWorldManager();
     }
     
     private void loadSettings() {
         locator.settings = Settings.newRegistry();
     }
     
-    private void loadNames() throws Exception {
+    private void loadNames() {
         int id = loadConfig("registry.yml").getInt("id", 0);
         locator.registry = TownFactory.newRegistry(id);
     }
@@ -132,7 +131,7 @@ public class Towns extends JavaPlugin {
     /**
      * Loads all towns into the plugin.
      */
-    private void loadTowns() throws Exception {
+    private void loadTowns() {
         Node towns = new YamlDeserializer(loadConfig("towns.yml")).getRoot();
         TownFactory.loadTowns(towns);
     }
@@ -170,15 +169,9 @@ public class Towns extends JavaPlugin {
      * Creates an error file for the Exception, which 
      * will prevent further startups until deletion.
      */
-    private void createErrorFile(Exception error) {
-        error.printStackTrace();
-        try {
-            File file = getErrorFile();
-            file.createNewFile();
-            error.printStackTrace(new PrintWriter(file));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+    private void createErrorFile(Exception ex) {
+        ex.printStackTrace();
+        Util.writeException(getErrorFile(), ex);
     }
     
     private File getErrorFile() {
