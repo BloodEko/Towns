@@ -1,4 +1,4 @@
-package de.bloodeko.towns.town.settings.cmds;
+package de.bloodeko.towns.town.settings.stage.cmds;
 
 import org.bukkit.entity.Player;
 
