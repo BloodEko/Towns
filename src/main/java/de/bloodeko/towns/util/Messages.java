@@ -54,4 +54,16 @@ public class Messages {
             return key;
         }
     }
+    
+    /**
+     * Returns the raw message for this key
+     * without formatting applied.
+     */
+    public static String getRaw(String key) {
+        try {
+            return instance.map.get(key);
+        } catch (Exception ex) {
+            return key;
+        }
+    }
 }
