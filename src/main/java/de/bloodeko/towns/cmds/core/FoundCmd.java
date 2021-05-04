@@ -55,7 +55,7 @@ public class FoundCmd extends CmdBase {
     }
     
     /**
-     * Returns all regions in a square range arround the player.
+     * Returns all regions in a square range around the player.
      */
     private ApplicableRegionSet getNearRegions(Player player, int range) {
         Chunk pos = Chunk.fromEntity(player);

@@ -13,6 +13,7 @@ public class UnclaimCmd extends CmdBase {
     public void execute(Player player, String[] args) {
         Town town = getTown(player);
         town.getArea().contract(getMap(), Chunk.fromEntity(player));
-        Messages.say(player, "cmds.unclaim.unclaimed", Chunk.fromEntity(player), town);
+        String name = town.getSettings().getName();
+        Messages.say(player, "cmds.unclaim.unclaimed", Chunk.fromEntity(player), name);
     }
 }

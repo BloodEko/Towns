@@ -27,7 +27,7 @@ public class ChatFactory {
         String name = Messages.get("chats.local.name");
         String prefix = Messages.get("chats.local.prefix");
         String suffix = Messages.get("chats.local.suffix");
-        return new LocalChat(name, prefix, suffix, 10);
+        return new LocalChat(name, prefix, suffix, 120);
     }
     
     public static Chat newTeamChat() {

@@ -11,6 +11,7 @@ import de.bloodeko.towns.town.ChunkMap;
 import de.bloodeko.towns.town.Town;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.ModifyException;
+import de.bloodeko.towns.util.Util;
 import net.milkbowl.vault.economy.Economy;
 
 /**
@@ -89,8 +90,8 @@ public abstract class CmdBase {
      */
     public void checkMoney(Economy economy, Player player, double price) {
         if (economy.getBalance(player) < price) {
-            throw new ModifyException("cmds.base.notEnoughMoney", 
-              price, economy.currencyNamePlural());
+            throw new ModifyException("cmds.base.notEnoughMoney",
+              Util.format(price), economy.currencyNamePlural());
         }
     }
     

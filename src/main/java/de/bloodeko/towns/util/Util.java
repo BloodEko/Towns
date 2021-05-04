@@ -9,10 +9,13 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.StringJoiner;
 
@@ -23,6 +26,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
 public class Util {
+    private static DecimalFormat format = new DecimalFormat("0.##", 
+      DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+    
+    /**
+     * Formats the value by 2 places and stripping 
+     * trailing zeroes.
+     */
+    public static String format(double val) {
+        return format.format(val);
+    }
     
     /**
      * If the length is 0 returns the input. Returns

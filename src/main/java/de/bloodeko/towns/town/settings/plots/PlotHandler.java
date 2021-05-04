@@ -31,6 +31,7 @@ public class PlotHandler {
 
     public PlotData addPlot(int id, BlockVector3 pos1, BlockVector3 pos2, RegionManager manager) {
         ProtectedRegion region = new ProtectedCuboidRegion("plot_" + id + "_" + nextId, true, pos1, pos2);
+        region.setPriority(1);
         manager.addRegion(region);
         PlotData plot = PlotData.from(nextId, region);
         plots.put(nextId++, plot);

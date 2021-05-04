@@ -47,7 +47,7 @@ public class TownFactory {
         
         TownArea area = newArea(chunks, region);
         TownPeople people = newTownPeople(owner, region);
-        TownSettings settings = newSettings(region, name, 0);
+        TownSettings settings = newSettings(region, name, 1);
         
         return new Town(id, settings, area, people);
     }
