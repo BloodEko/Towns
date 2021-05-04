@@ -90,7 +90,7 @@ public class Towns extends JavaPlugin {
     }
     
     private void loadNames() {
-        int id = loadConfig("registry.yml").getInt("id", 0);
+        int id = loadYaml("registry.yml").getInt("id", 0);
         locator.registry = TownFactory.newRegistry(id);
     }
     
@@ -132,7 +132,7 @@ public class Towns extends JavaPlugin {
      * Loads all towns into the plugin.
      */
     private void loadTowns() {
-        Node towns = new YamlDeserializer(loadConfig("towns.yml")).getRoot();
+        Node towns = new YamlDeserializer(loadYaml("towns.yml")).getRoot();
         TownFactory.loadTowns(towns);
     }
     
@@ -140,11 +140,13 @@ public class Towns extends JavaPlugin {
         YamlSerializer.class.getName();
     }
     
-    private YamlConfiguration loadConfig(String path) {
+    private YamlConfiguration loadYaml(String path) {
         try {
             File file = new File(getDataFolder() + "/" + path);
             YamlConfiguration config = new YamlConfiguration();
-            config.load(file);
+            if (file.exists()) {
+                config.load(file);
+            }
             return config;
         } catch (Exception ex) {
             throw new RuntimeException(ex);
