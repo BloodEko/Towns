@@ -3,6 +3,7 @@ package de.bloodeko.towns.cmds;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.bloodeko.towns.Services;
 import de.bloodeko.towns.Towns;
 import de.bloodeko.towns.cmds.core.BuilderCmd;
 import de.bloodeko.towns.cmds.core.ClaimCmd;
@@ -20,7 +21,6 @@ import de.bloodeko.towns.town.TownCmd;
 import de.bloodeko.towns.town.settings.cmds.ExtensionCmd;
 import de.bloodeko.towns.town.settings.cmds.ExtensionsCmd;
 import de.bloodeko.towns.town.settings.cmds.RenameCmd;
-import de.bloodeko.towns.town.settings.cmds.StageCmd;
 import de.bloodeko.towns.town.settings.cmds.TpCmd;
 import de.bloodeko.towns.town.settings.general.DamageAnimalsSetting.AnimalProtectCmd;
 import de.bloodeko.towns.town.settings.general.PearlSetting.PearlCmd;
@@ -40,22 +40,33 @@ import de.bloodeko.towns.town.settings.plots.cmds.PlotRemoveCmd;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotRentCmd;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotRentoutCmd;
 import de.bloodeko.towns.town.settings.plots.cmds.PlotReserveCmd;
+import de.bloodeko.towns.town.settings.stage.StageFactory;
+import de.bloodeko.towns.town.settings.stage.ui.StageCmd;
 import de.bloodeko.towns.util.Messages;
 
 public class CmdFactory {
     
-    public static void init(Towns plugin) {
+    public static void load() {
+        Towns plugin = Services.plugin();
         CmdHandler handler = newCmdHandler(plugin);
         TownCmd cmd = new TownCmd(handler);
-        plugin.getCommand("town").setExecutor(cmd);
-        plugin.getCommand("town").setTabCompleter(cmd);
+        plugin.getCommand("stadt").setExecutor(cmd);
+        plugin.getCommand("stadt").setTabCompleter(cmd);
         
         PlotCmd plotCmd = newPlotCmd();
-        plugin.getCommand("plot").setExecutor(plotCmd);
-        plugin.getCommand("plot").setTabCompleter(plotCmd);
+        plugin.getCommand("gs").setExecutor(plotCmd);
+        plugin.getCommand("gs").setTabCompleter(plotCmd);
     }
     
-    public static CmdHandler newCmdHandler(Towns plugin) {
+    /**
+     * Uses the id to get a translated cmd name under "cmds.id"
+     * registers it with the CmdBase to the town command.
+     */
+    public static void put(Map<String, CmdBase> cmds, String id, CmdBase base) {
+        cmds.put(Messages.get("cmds." + id), base);
+    }
+    
+    private static CmdHandler newCmdHandler(Towns plugin) {
         Map<String, CmdBase> cmds = new HashMap<>();
         
         put(cmds, "map", new MapCmd(MapFactory.newClickHandler(plugin)));
@@ -74,6 +85,7 @@ public class CmdFactory {
 
         put(cmds, "extensions", new ExtensionsCmd());
         put(cmds, "extension", new ExtensionCmd());
+        StageFactory.load(cmds);
         
         put(cmds, "tp", new TpCmd());
         put(cmds, "rename", new RenameCmd());
@@ -89,11 +101,7 @@ public class CmdFactory {
         return new CmdHandler(cmds);
     }
     
-    public static void put(Map<String, CmdBase> cmds, String id, CmdBase base) {
-        cmds.put(Messages.get("cmds." + id), base);
-    }
-    
-    public static PlotCmd newPlotCmd() {
+    private static PlotCmd newPlotCmd() {
         Map<String, CmdBase> cmds = new HashMap<>();
         put(cmds, "plot.builder", new PlotBuilderCmd());
         put(cmds, "plot.create", new PlotCreateCmd());

@@ -106,7 +106,7 @@ public class Towns extends JavaPlugin {
      * Loads the commands module.
      */
     private void loadCommands() {
-        CmdFactory.init(this);
+        CmdFactory.load();
     }
     
     /**
@@ -122,7 +122,7 @@ public class Towns extends JavaPlugin {
         RentService service = new RentService();
         Bukkit.getPluginManager().registerEvents(service, this);
         
-        PlotCmd cmd = (PlotCmd) Bukkit.getPluginCommand("plot").getExecutor();
+        PlotCmd cmd = (PlotCmd) Bukkit.getPluginCommand("gs").getExecutor();
         cmd.register("payrent", new PlotPayrentCmd(service));
         
         ChatFactory.load(this);

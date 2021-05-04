@@ -7,9 +7,9 @@ api-version: 1.13
 softdepend: [WorldEdit, WorldGuard, Vault]
 
 commands:
-  town:
+  stadt:
     description: Town commands.
     usage: /<command>
-  plot:
+  gs:
     description: Plot commands.
     usage: /<command>
