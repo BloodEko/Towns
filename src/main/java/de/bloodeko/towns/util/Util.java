@@ -176,12 +176,15 @@ public class Util {
     
     /**
      * Creates an Item from the material and sets
-     * the display name.
+     * the display name. Optionally specify a lore.
      */
-    public static ItemStack createItem(Material mat, String name) {
+    public static ItemStack createItem(Material mat, String name, String... lore) {
         ItemStack stack = new ItemStack(mat);
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(name);
+        if (lore.length > 0) {
+            meta.setLore(Arrays.asList(lore));
+        }
         stack.setItemMeta(meta);
         return stack;
     }

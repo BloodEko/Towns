@@ -57,8 +57,8 @@ public class MapFactory {
     public static ItemStack[] newMapContent() {
         ItemStack[] items = new ItemStack[54];
         ItemStack pane = Util.createItem(Material.BLACK_STAINED_GLASS_PANE, "~~~");
-        items[0] = Util.createItem(Material.STONE, "center");
-        items[1] = Util.createItem(Material.STONE, "zoom");
+        items[0] = Util.createItem(Material.STONE, "Zentrum");
+        items[1] = Util.createItem(Material.STONE, "Zoom", "§fLK: nah", "§fRK: weg");
         items[2] = pane;
         items[3] = Util.createItem(Material.STONE, "↑");
         items[4] = Util.createItem(Material.STONE, "↓");
