@@ -123,7 +123,7 @@ public class Towns extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(service, this);
         
         PlotCmd cmd = (PlotCmd) Bukkit.getPluginCommand("gs").getExecutor();
-        cmd.register("payrent", new PlotPayrentCmd(service));
+        cmd.register("mietenzahlung", new PlotPayrentCmd(service));
         
         ChatFactory.load(this);
     }

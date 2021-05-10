@@ -59,26 +59,26 @@ public class RentService implements Listener {
         Economy economy = Services.economy();
         for (Town town : Services.towns().getTowns()) {
             UUID ownerId = town.getPeople().getGovernors().iterator().next();
-            OfflinePlayer owner = Bukkit.getPlayer(ownerId);
+            OfflinePlayer owner = Bukkit.getOfflinePlayer(ownerId);
             
             for (PlotData plot : getPlots(town)) {
                 int price = plot.rent;
                 if (plot.renter == null || price == 0) {
                     continue;
                 }
-                OfflinePlayer player = Bukkit.getPlayer(plot.renter);
+                OfflinePlayer player = Bukkit.getOfflinePlayer(plot.renter);
                 double money = economy.getBalance(player);
                 
                 if (money - price < 0) {
-                    plot.debt += price;
                     System.out.println(plot.id + ": Increasing depth " + price + " for " + owner.getName());
+                    plot.debt += price;
                 }
                 else {
-                    economy.withdrawPlayer(player, price);
-                    economy.depositPlayer(owner, price);
-                    
                     System.out.println(plot.id + ": Taking " + price + " from " + player.getName());
                     System.out.println(plot.id + ": Giving " + price + " to " + owner.getName());
+                    
+                    economy.withdrawPlayer(player, price);
+                    economy.depositPlayer(owner, price);
                 }
             }
         }
