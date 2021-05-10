@@ -63,6 +63,6 @@ public class PlotCreateCmd extends PlotBaseCmd {
     }
     
     public static int getMaxPlots(Town town) {
-        return town.getSettings().getStage() * 2;
+        return town.getSettings().getStage().getStage() * 2;
     }
 }

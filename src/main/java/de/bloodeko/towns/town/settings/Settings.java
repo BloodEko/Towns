@@ -7,7 +7,6 @@ import de.bloodeko.towns.town.settings.general.PearlSetting;
 import de.bloodeko.towns.town.settings.general.PvpSetting;
 import de.bloodeko.towns.town.settings.general.SlimeSetting;
 import de.bloodeko.towns.town.settings.general.SlimeSetting.SlimeDisplay;
-import de.bloodeko.towns.town.settings.general.StageSetting;
 import de.bloodeko.towns.town.settings.general.WarpSetting;
 import de.bloodeko.towns.town.settings.general.WarpSetting.WarpDisplay;
 import de.bloodeko.towns.town.settings.general.ZombieSetting;
@@ -18,7 +17,6 @@ import de.bloodeko.towns.util.Messages;
 
 public class Settings {
     public static final NameSetting NAME = new NameSetting();
-    public static final StageSetting STAGE = new StageSetting();
     public static final DamageAnimalsSetting DAMAGE_ANIMALS = new DamageAnimalsSetting();
     public static final PvpSetting PVP = new PvpSetting();
     public static final WarpSetting WARP = new WarpSetting();
@@ -31,7 +29,6 @@ public class Settings {
         SettingsRegistry registry = new SettingsRegistry();
         
         AdvancedSetting name = newSetting(NAME, 0, 0, newHiddenDisplay());
-        AdvancedSetting stage = newSetting(STAGE, 0, 0, newHiddenDisplay());
         AdvancedSetting animals = newSetting(DAMAGE_ANIMALS, 1, 3000, "damageAnimals");
         AdvancedSetting pvp = newSetting(PVP, 1, 1000, "pvp");
         AdvancedSetting warp = newSetting(WARP, 2, 4000, new WarpDisplay());
@@ -41,7 +38,6 @@ public class Settings {
         AdvancedSetting zombie = newSetting(ZOMBIE, 2, 5000, new ZombieDisplay());
         
         registry.register(name);
-        registry.register(stage);
         registry.register(animals);
         registry.register(pvp);
         registry.register(warp);
@@ -80,7 +76,7 @@ public class Settings {
         
         @Override
         public boolean canBuy(Town town) {
-            return town.getSettings().getStage() >= minStage;
+            return town.getSettings().getStage().getStage() >= minStage;
         }
     }
     

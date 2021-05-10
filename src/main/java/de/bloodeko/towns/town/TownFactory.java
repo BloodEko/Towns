@@ -2,6 +2,7 @@ package de.bloodeko.towns.town;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -21,6 +22,7 @@ import de.bloodeko.towns.town.area.TownSides;
 import de.bloodeko.towns.town.people.TownPeople;
 import de.bloodeko.towns.town.settings.Settings;
 import de.bloodeko.towns.town.settings.TownSettings;
+import de.bloodeko.towns.town.settings.stage.StageFactory;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.Node;
 import de.bloodeko.towns.util.Node.Pair;
@@ -47,7 +49,7 @@ public class TownFactory {
         
         TownArea area = newArea(chunks, region);
         TownPeople people = newTownPeople(owner, region);
-        TownSettings settings = newSettings(region, name, 1);
+        TownSettings settings = newSettings(region, name);
         
         return new Town(id, settings, area, people);
     }
@@ -92,10 +94,12 @@ public class TownFactory {
     /**
      * Creates default settings, which also update the ChunkRegion flags.
      */
-    public static TownSettings newSettings(ChunkRegion region, String name, int stage) {
-        TownSettings settings = TownSettings.fromFlagMap(new HashSet<>(), region.getFlags());
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public static TownSettings newSettings(ChunkRegion region, String name) {
+        TownSettings settings = new TownSettings(new HashSet<>(),
+          (Map) region.getFlags(), StageFactory.getStartStage());
+        
         Settings.NAME.set(settings.getFlags(), name);
-        Settings.STAGE.set(settings.getFlags(), stage);
         return settings.updateFlags();
     }
 

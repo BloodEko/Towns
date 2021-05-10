@@ -4,10 +4,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.Flags;
 
 import de.bloodeko.towns.town.area.ChunkRegion;
+import de.bloodeko.towns.town.settings.stage.StageFactory;
+import de.bloodeko.towns.town.settings.stage.data.StageSerializer;
+import de.bloodeko.towns.town.settings.stage.domain.Stage;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.Node;
@@ -16,17 +18,14 @@ import de.bloodeko.towns.util.Node.Pair;
 public class TownSettings {
     private Set<Setting> settings;
     private Map<Object, Object> flags;
+    private Stage stage;
     
-    public TownSettings(Set<Setting> settings, Map<Object, Object> flags) {
+    public TownSettings(Set<Setting> settings, Map<Object, Object> flags, Stage stage) {
         this.settings = settings;
         this.flags = flags;
+        this.stage = stage;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static TownSettings fromFlagMap(Set<Setting> settings, Map<Flag<?>, Object> flags) {
-        return new TownSettings(settings, (Map<Object, Object>) (Map) flags);
-    }
-    
     public Set<Setting> settings() {
         return settings;
     }
@@ -35,8 +34,8 @@ public class TownSettings {
         return flags.get(Settings.NAME).toString();
     }
     
-    public int getStage() {
-        return (int) flags.get(Settings.STAGE);
+    public Stage getStage() {
+        return stage;
     }
     
     public Map<Object, Object> getFlags() {
@@ -87,7 +86,7 @@ public class TownSettings {
             node.set(setting.getId(), setting.serialize(flags));
         }
         node.set(Settings.NAME.getId(), Settings.NAME.serialize(flags));
-        node.set(Settings.STAGE.getId(), Settings.STAGE.serialize(flags));
+        node.set("stage", StageSerializer.serialize(stage));
         return node;
     }
     
@@ -101,13 +100,25 @@ public class TownSettings {
         Set<Setting> set = new HashSet<>();
         
         for (Pair pair : settings.entries()) {
+            if (pair.key.equals("stage")) {
+                continue;
+            }
+            
             AdvancedSetting advanced = registry.fromId(pair.key);
             Setting setting = advanced.settingKey;
-            
             set.add(setting);
             setting.deserialize(map, pair.value);
         }
-        return new TownSettings(set, map).updateFlags();
+        
+        Stage stage;
+        Object val = settings.get("stage");
+        if (val instanceof Node) {
+            stage = StageSerializer.deserialize((Node) val);
+        } else {
+            stage = StageFactory.getStartStage();
+        }
+        
+        return new TownSettings(set, map, stage).updateFlags();
     }
 
 }
