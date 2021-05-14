@@ -2,9 +2,9 @@ package de.bloodeko.towns;
 
 import com.sk89q.worldguard.protection.managers.RegionManager;
 
-import de.bloodeko.towns.town.ChunkMap;
-import de.bloodeko.towns.town.TownRegistry;
-import de.bloodeko.towns.town.settings.SettingsRegistry;
+import de.bloodeko.towns.core.towns.legacy.ChunkMap;
+import de.bloodeko.towns.core.towns.legacy.TownRegistry;
+import de.bloodeko.towns.core.townsettings.legacy.SettingsRegistry;
 import net.milkbowl.vault.economy.Economy;
 
 /**

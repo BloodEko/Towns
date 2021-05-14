@@ -9,21 +9,21 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import de.bloodeko.towns.chat.ChatFactory;
-import de.bloodeko.towns.cmds.CmdFactory;
-import de.bloodeko.towns.town.Town;
-import de.bloodeko.towns.town.TownDeleteListener;
-import de.bloodeko.towns.town.TownFactory;
-import de.bloodeko.towns.town.TownLoadListener;
-import de.bloodeko.towns.town.settings.Settings;
-import de.bloodeko.towns.town.settings.plots.RentService;
-import de.bloodeko.towns.town.settings.plots.cmds.PlotCmd;
-import de.bloodeko.towns.town.settings.plots.cmds.PlotPayrentCmd;
+import de.bloodeko.towns.core.townplots.RentService;
+import de.bloodeko.towns.core.townplots.ui.PlotCmd;
+import de.bloodeko.towns.core.townplots.ui.PlotPayrentCmd;
+import de.bloodeko.towns.core.towns.legacy.Town;
+import de.bloodeko.towns.core.towns.legacy.TownDeleteListener;
+import de.bloodeko.towns.core.towns.legacy.TownFactory;
+import de.bloodeko.towns.core.towns.legacy.TownLoadListener;
+import de.bloodeko.towns.core.townsettings.legacy.Settings;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.Node;
 import de.bloodeko.towns.util.Util;
 import de.bloodeko.towns.util.YamlDeserializer;
 import de.bloodeko.towns.util.YamlSerializer;
+import de.bloodeko.towns.util.chat.ChatFactory;
+import de.bloodeko.towns.util.cmds.CmdFactory;
 import net.milkbowl.vault.economy.Economy;
 
 /**
