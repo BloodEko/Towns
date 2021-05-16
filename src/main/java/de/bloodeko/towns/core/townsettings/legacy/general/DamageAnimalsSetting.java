@@ -49,7 +49,7 @@ public class DamageAnimalsSetting extends Setting {
     public static class AnimalProtectCmd extends BooleanCmd {
 
         public AnimalProtectCmd(String name) {
-            super(name, State.ALLOW, State.DENY);
+            super(name, State.DENY, State.ALLOW);
         }
         
         @Override 

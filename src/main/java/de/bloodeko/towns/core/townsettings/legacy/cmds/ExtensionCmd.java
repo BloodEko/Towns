@@ -16,7 +16,8 @@ public class ExtensionCmd extends CmdBase {
     
     @Override
     public void execute(Player player, String[] args) {
-        AdvancedSetting setting = Services.settings().fromDisplay(getArg(0, args));
+        String arg = getArg(0, args, "cmds.extension.notFound");
+        AdvancedSetting setting = Services.settings().fromDisplay(arg);
         if (setting == null) {
             Messages.say(player, "cmds.extension.notFound");
             return;

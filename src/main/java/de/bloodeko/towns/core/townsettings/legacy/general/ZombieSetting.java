@@ -78,7 +78,7 @@ public class ZombieSetting extends Setting {
     public static class ZombieCmd extends BooleanCmd {
 
         public ZombieCmd(String name) {
-            super(name, State.ALLOW, State.DENY);
+            super(name, State.DENY, State.ALLOW);
         }
         
         @Override

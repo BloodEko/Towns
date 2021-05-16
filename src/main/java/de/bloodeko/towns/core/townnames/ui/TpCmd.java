@@ -20,12 +20,12 @@ public class TpCmd extends CmdBase {
             return;
         }
         Town town = Services.towns().get(args[0]);
-        Location loc = (Location) town.getSettings().get(Settings.WARP);
-        if (loc == null) {
-            Messages.say(player, "cmds.tp.warpNotSet");
-        } else {
-            player.teleport(loc);
+        Object loc = town.getSettings().get(Settings.WARP);
+        if (loc instanceof Location) {
+            player.teleport((Location) loc);
             Messages.say(player, "cmds.tp.teleport", town.getSettings().getName());
+        } else {
+            Messages.say(player, "cmds.tp.warpNotSet");
         }
     }
     

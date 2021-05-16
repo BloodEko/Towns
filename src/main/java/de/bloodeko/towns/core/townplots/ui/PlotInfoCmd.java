@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.math.BlockVector3;
 
+import de.bloodeko.towns.Services;
 import de.bloodeko.towns.core.townplots.PlotData;
 import de.bloodeko.towns.core.towns.ui.InfoCmd;
 import de.bloodeko.towns.util.Messages;
@@ -103,7 +104,8 @@ public class PlotInfoCmd extends PlotBaseCmd {
         
         private void debt() {
             if (plot.debt != 0) {
-                Messages.say(player, "settings.plot.infocmd.debt", plot.debt);
+                Messages.say(player, "settings.plot.infocmd.debt", plot.debt, 
+                  PlotExpropriateCmd.getMinDebt(plot), Services.economy().currencyNamePlural());
             }
         }
         

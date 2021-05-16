@@ -47,13 +47,13 @@ public class Util {
     }
 
     /**
-     * Returns a list of entries that start with the argument.
-     * Ignores case sensitivity.
+     * Uses the input and creates a new filtered list of strings
+     * that start with the given argument. Ignores casing.
      */
-    public static List<String> filterLowerList(Collection<String> filter, String arg) {
+    public static List<String> filterLowerList(Collection<String> input, String arg) {
         List<String> list = new ArrayList<>();
         arg = arg.toLowerCase();
-        for (String key : filter) {
+        for (String key : input) {
             if (key.toLowerCase().startsWith(arg)) {
                 list.add(key);
             }
@@ -62,11 +62,12 @@ public class Util {
     }
     
     /**
-     * Returns a list of entries that start with the argument.
+     * Uses the input and creates a new filtered list of strings
+     * that start with the given argument.
      */
-    public static List<String> filterList(Collection<String> filter, String arg) {
+    public static List<String> filterList(Collection<String> input, String arg) {
         List<String> list = new ArrayList<>();
-        for (String key : filter) {
+        for (String key : input) {
             if (key.startsWith(arg)) {
                 list.add(key);
             }

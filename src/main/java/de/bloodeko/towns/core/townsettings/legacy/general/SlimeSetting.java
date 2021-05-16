@@ -78,7 +78,7 @@ public class SlimeSetting extends Setting {
     public static class SlimeCmd extends BooleanCmd {
 
         public SlimeCmd(String name) {
-            super(name, State.ALLOW, State.DENY);
+            super(name, State.DENY, State.ALLOW);
         }
         
         @Override

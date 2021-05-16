@@ -49,7 +49,7 @@ public class PearlSetting extends Setting {
     public static class PearlCmd extends BooleanCmd {
 
         public PearlCmd(String name) {
-            super(name, State.ALLOW, State.DENY);
+            super(name, State.DENY, State.ALLOW);
         }
         
         @Override 

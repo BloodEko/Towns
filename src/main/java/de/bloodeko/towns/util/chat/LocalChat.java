@@ -8,6 +8,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import de.bloodeko.towns.util.Messages;
+
 /**
  * LocalChat which only sends messages to players
  * that are in range of the message sender.
@@ -26,8 +28,9 @@ public class LocalChat extends Chat {
         List<Player> near = getNearPlayers(event.getPlayer().getLocation(), range);
         event.getRecipients().clear();
         event.getRecipients().addAll(near);
-        if (near.isEmpty()) {
-            event.getPlayer().sendMessage("Nobody hears you.");
+        if (near.size() == 1) {
+            event.setMessage(event.getMessage() + '\n' 
+            + Messages.get("chats.noNearPlayers"));
         }
     }
     

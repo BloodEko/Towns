@@ -46,7 +46,7 @@ public class PvpSetting extends Setting {
     public static class PvpProtectCmd extends BooleanCmd {
 
         public PvpProtectCmd(String name) {
-            super(name, State.ALLOW, State.DENY);
+            super(name, State.DENY, State.ALLOW);
         }
         
         @Override 

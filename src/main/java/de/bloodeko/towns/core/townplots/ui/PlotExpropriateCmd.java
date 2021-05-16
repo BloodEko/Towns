@@ -16,7 +16,7 @@ public class PlotExpropriateCmd extends PlotBaseCmd {
             Messages.say(player, "settings.plot.expropriatecmd.hasNoRenter");
             return;
         }
-        if (getMinDebt(plot) < plot.debt) {
+        if (getMinDebt(plot) > plot.debt) {
             Messages.say(player, "settings.plot.expropriatecmd.notEnoughDebt");
             return;
         }
@@ -32,7 +32,11 @@ public class PlotExpropriateCmd extends PlotBaseCmd {
         Messages.say(player, "settings.plot.expropriatecmd.expropriated");
     }
     
-    private int getMinDebt(PlotData plot) {
+    /**
+     * Returns the minimum depth required for a
+     * plot to be expropriated.
+     */
+    static int getMinDebt(PlotData plot) {
         return plot.rent * 5;
     }
 }

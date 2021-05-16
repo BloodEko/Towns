@@ -63,7 +63,7 @@ public class Settings {
     }
     
     public static NameProvider newHiddenDisplay() {
-        return new DefaultDisplay(null, "hiden", true);
+        return new DefaultDisplay(null, "hiddenDisplay", true);
     }
     
     
