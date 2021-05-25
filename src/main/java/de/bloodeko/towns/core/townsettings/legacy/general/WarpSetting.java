@@ -7,7 +7,7 @@ import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import de.bloodeko.towns.core.towns.legacy.Town;
+import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.core.townsettings.legacy.NameProvider;
 import de.bloodeko.towns.core.townsettings.legacy.Setting;
 import de.bloodeko.towns.core.townsettings.legacy.Settings;
@@ -33,7 +33,7 @@ public class WarpSetting extends Setting {
     }
 
     @Override
-    public void init(Map<Object, Object> map) {
+    public void init(Map<Object, Object> map, Integer id) {
         map.put(Settings.WARP, "x");
     }
     

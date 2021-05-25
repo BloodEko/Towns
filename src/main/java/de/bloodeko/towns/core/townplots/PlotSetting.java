@@ -1,16 +1,17 @@
 package de.bloodeko.towns.core.townplots;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import de.bloodeko.towns.Services;
 import de.bloodeko.towns.core.townplots.ui.PlotCreateCmd;
-import de.bloodeko.towns.core.towns.legacy.Town;
+import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.core.townsettings.legacy.NameProvider;
 import de.bloodeko.towns.core.townsettings.legacy.Setting;
 import de.bloodeko.towns.core.townsettings.legacy.Settings;
 import de.bloodeko.towns.util.Messages;
-import de.bloodeko.towns.util.Node;
 
+//can the working behavior of the dummies
+//be fully proved in contrast to the old values?
 public class PlotSetting extends Setting {
 
     @Override
@@ -18,36 +19,52 @@ public class PlotSetting extends Setting {
         return "plots";
     }
 
+    /**
+     * Would return the PlotHandler ID.
+     */
     @Override
     public Object read(Map<Object, Object> map) {
-        return map.get(Settings.PLOTS);
+        throw new IllegalStateException();
     }
 
+    /**
+     * Would sets the PlotHandler ID.
+     */
     @Override
     public void set(Map<Object, Object> map, Object obj) {
-        map.put(Settings.PLOTS, obj);
+        throw new IllegalStateException();
     }
 
+    /**
+     * Initializes a new PlotHandler object.
+     */
     @Override
-    public void init(Map<Object, Object> map) {
-        map.put(Settings.PLOTS, new PlotHandler(new HashMap<>(), 0));
+    public void init(Map<Object, Object> map, Integer id) {
+        Services.plotservice().setHandler(id, new PlotHandler());
+        map.put(Settings.PLOTS, "x");
     }
 
+    /**
+     * Would serialize the PlotHandler ID from the map.
+     */
     @Override
     public Object serialize(Map<Object, Object> map) {
-        return ((PlotHandler) read(map)).serialize();
+        return "x";
     }
 
+    /**
+     * Would deserialize the PlotHandler ID to the map.
+     */
     @Override
     public void deserialize(Map<Object, Object> map, Object obj) {
-        set(map, PlotHandler.deserialize((Node) obj));
+        map.put(Settings.PLOTS, "x");
     }
     
     
     public static class PlotDisplay implements NameProvider {
         
         public String display(Town town) {
-            PlotHandler handler = (PlotHandler) Settings.PLOTS.read(town.getSettings().getFlags());
+            PlotHandler handler = town.getPlots();
             return handler.plots.size() + "/" + PlotCreateCmd.getMaxPlots(town);
         }
 

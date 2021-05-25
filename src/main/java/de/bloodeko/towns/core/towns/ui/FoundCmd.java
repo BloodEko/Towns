@@ -6,16 +6,17 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import de.bloodeko.towns.Services;
+import de.bloodeko.towns.core.TownFactory;
 import de.bloodeko.towns.core.townplots.ui.PlotBaseCmd;
-import de.bloodeko.towns.core.towns.legacy.Town;
+import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.cmds.CmdBase;
 
 public class FoundCmd extends CmdBase {
-    private static int price = 1000;
-    private static int range = 7;
+    private static final int price = 1000;
+    private static final int range = 7;
 
     @Override
     public void execute(Player player, String[] args) {
@@ -23,7 +24,7 @@ public class FoundCmd extends CmdBase {
         checkMoney(Services.economy(), player, price);
         
         String name = getArg(0, args, "cmds.found.needName");
-        Services.towns().createTown(Chunk.fromEntity(player), name, player.getUniqueId());
+        TownFactory.createTown(name, Chunk.fromEntity(player), player.getUniqueId());
         
         Services.economy().withdrawPlayer(player, price);
         Messages.say(player, "cmds.found.created", name);
@@ -41,17 +42,18 @@ public class FoundCmd extends CmdBase {
                     continue;
                 }
                 throw new ModifyException("cmds.found.townInWay",
-                  town.getSettings().getName(), range);
+                  town.getName(), range);
             }
         }
     }
     
     /**
-     * Returns the town for that region id.
+     * Returns the town for that region ID which is
+     * in the format "towns_0".
      */
     private Town getTown(String regionId) {
-        String id = regionId.split("_")[1];
-        return Services.towns().getId(id);
+        Integer id = Integer.valueOf(regionId.split("_")[1]);
+        return Services.townservice().get(id);
     }
     
     /**

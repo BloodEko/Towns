@@ -30,7 +30,7 @@ public class DamageAnimalsSetting extends Setting {
 
 
     @Override
-    public void init(Map<Object, Object> map) {
+    public void init(Map<Object, Object> map, Integer id) {
         map.put(Flags.DAMAGE_ANIMALS, State.DENY);
     }
 

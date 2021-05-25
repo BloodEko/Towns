@@ -10,14 +10,35 @@ import org.bukkit.Location;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
 public abstract class Setting {
+    /**
+     * Returns the ID for that setting, mostly used in files.
+     */
     public abstract String getId();
-    //public abstract Flag<?> getFlag();
     
+    /**
+     * Reads the value for an setting from the flag-map.
+     */
     public abstract Object read(Map<Object, Object> map);
-    public abstract void set(Map<Object, Object> map, Object obj);
-    public abstract void init(Map<Object, Object> map);
     
+    /**
+     * Sets the value for an setting to the flag-map.
+     */
+    public abstract void set(Map<Object, Object> map, Object obj);
+    
+    /**
+     * Sets the value for an setting to the flag-map.
+     * When it is initialized for the first time for that town.
+     */
+    public abstract void init(Map<Object, Object> map, Integer id);
+    
+    /**
+     * Serializes the setting to an Object from the flag-map.
+     */
     public abstract Object serialize(Map<Object, Object> map);
+    
+    /**
+     * Deserializes the object and sets it to the flag-map.
+     */
     public abstract void deserialize(Map<Object, Object> map, Object obj);
     
     /**

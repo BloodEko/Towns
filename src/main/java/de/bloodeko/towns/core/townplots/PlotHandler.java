@@ -9,9 +9,6 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
-import de.bloodeko.towns.util.Node;
-import de.bloodeko.towns.util.Node.Pair;
-
 public class PlotHandler {
     public Map<Integer, PlotData> plots;
     public int nextId;
@@ -21,6 +18,11 @@ public class PlotHandler {
         this.nextId = nextId;
     }
     
+    public PlotHandler() {
+        this.plots = new HashMap<>();
+        this.nextId = 1;
+    }
+
     public PlotData getPlot(int id) {
         return plots.get(id);
     }
@@ -43,28 +45,5 @@ public class PlotHandler {
         if (removed != null) {
             manager.removeRegion(removed.region.getId());
         }
-    }
-
-    public Node serialize() {
-        Node node = new Node();
-        node.set("nextId", nextId);
-        
-        Node plots = node.newNode("plots");
-        for (PlotData plot : this.plots.values()) {
-            plots.set(String.valueOf(plot.id), plot.serialize());
-        }
-        return node;
-    }
-    
-    public static PlotHandler deserialize(Node plotSetting) {
-        Map<Integer, PlotData> map = new HashMap<>();
-        Node plots = plotSetting.getNode("plots");
-        
-        for (Pair pair : plots.entries()) {
-            int id = Integer.valueOf(pair.key);
-            Node plot = plots.getNode(pair.key);
-            map.put(id, PlotData.deserialize(plot, id));
-        }
-        return new PlotHandler(map, plotSetting.getInt("nextId"));
     }
 }

@@ -2,7 +2,7 @@ package de.bloodeko.towns.core.townstages.ui;
 
 import org.bukkit.entity.Player;
 
-import de.bloodeko.towns.core.towns.legacy.Town;
+import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.core.townstages.StageFactory;
 import de.bloodeko.towns.core.townstages.domain.Stage;
 import de.bloodeko.towns.util.ModifyException;
@@ -22,7 +22,7 @@ public class StageViewCmd extends CmdBase {
     @Override
     public void execute(Player player, String[] args) {
         Town town = getTown(player);
-        Stage stage = town.getSettings().getStage();
+        Stage stage = town.getStage();
         
         if (stage.getStage() >= Stage.MAX_STAGE) {
             throw new ModifyException("settings.stage.townAlreadyMaxStage");

@@ -9,7 +9,7 @@ import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
-import de.bloodeko.towns.core.towns.legacy.Town;
+import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.core.townsettings.TownSettings;
 import de.bloodeko.towns.core.townsettings.legacy.NameProvider;
 import de.bloodeko.towns.core.townsettings.legacy.Setting;
@@ -60,7 +60,7 @@ public class ZombieSetting extends Setting {
     }
 
     @Override
-    public void init(Map<Object, Object> map) {
+    public void init(Map<Object, Object> map, Integer id) {
         set(map, State.DENY);
     }
     

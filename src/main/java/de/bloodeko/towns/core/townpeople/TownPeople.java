@@ -5,9 +5,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-import de.bloodeko.towns.core.townarea.legacy.ChunkRegion;
+import de.bloodeko.towns.core.townarea.TownRegion;
 import de.bloodeko.towns.util.ModifyException;
-import de.bloodeko.towns.util.Node;
 
 /**
  * Entity that holds defined groups of people 
@@ -17,13 +16,18 @@ public class TownPeople {
     private UUID owner;
     private Set<UUID> governors;
     private Set<UUID> builders;
-    private ChunkRegion region;
+    private TownRegion region;
     
-    public TownPeople(UUID owner, Set<UUID> governors, Set<UUID> builders, ChunkRegion region) {
+    public TownPeople(UUID owner, Set<UUID> governors, Set<UUID> builders, TownRegion region) {
         this.owner = owner;
         this.governors = governors;
         this.builders = builders;
         this.region = region;
+    }
+    
+    public TownPeople(UUID owner, TownRegion region) {
+        this(owner, new HashSet<>(), new HashSet<>(), region);
+        governors.add(owner);
     }
     
     /**
@@ -143,25 +147,5 @@ public class TownPeople {
         }
         region.getMembers().removePlayer(target);
         builders.remove(target);
-    }
-    
-    public Node serialize() {
-        Node node = new Node();
-        node.set("owner", owner);
-        node.set("governors", governors);
-        node.set("builders", builders);
-        return node;
-    }
-    
-    public static TownPeople deserialize(Node people, ChunkRegion region) {
-        Set<UUID> governors = people.getUUIDSet("governors");
-        Set<UUID> builders = people.getUUIDSet("builders");
-        for (UUID uuid : governors) {
-            region.getMembers().addPlayer(uuid);
-        }
-        for (UUID uuid : builders) {
-            region.getMembers().addPlayer(uuid);
-        }
-        return new TownPeople(people.getUUID("owner"), governors, builders, region);
     }
 }

@@ -1,7 +1,9 @@
-package de.bloodeko.towns.core.townarea.legacy;
+package de.bloodeko.towns.core.townarea.ui;
 
-import de.bloodeko.towns.core.towns.legacy.ChunkMap;
-import de.bloodeko.towns.core.towns.legacy.Town;
+import de.bloodeko.towns.core.townarea.ChunkArea;
+import de.bloodeko.towns.core.townarea.ChunkService;
+import de.bloodeko.towns.core.townarea.ChunkSides;
+import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.ModifyException;
 
@@ -16,14 +18,15 @@ public class ClaimRules {
      * Checks whether the expansion results in a valid town shape.
      * Throws an exception else. Skips the check for a size of 0.
      */
-    public void checkExpand(ChunkMap map, Town town, TownArea area, Chunk chunk) {
-        if (area.getSize() == 0) {
+    public void checkExpand(ChunkService map, Town town, ChunkArea area, Chunk chunk) {
+        if (area.size() == 0) {
             return;
         }
-        TownSides newSides = area.getSides();
-        newSides.update(chunk);
+        ChunkSides newSides = area.getSides();
+        newSides.updateFor(chunk);
         checkSideRatio(newSides, area);
-        if (area.getSize() > MIN_CHUNKS) {
+        
+        if (area.size() > MIN_CHUNKS) {
             checkPercentage(newSides, area);
             checkNear(map, town, chunk);
         }
@@ -33,9 +36,9 @@ public class ClaimRules {
      * Ensures with the new claimed chunk taken into account,
      * the sides of the town would remain in an 1:2 ratio.
      */
-    private void checkSideRatio(TownSides newSides, TownArea area) {
-        int lengthX = newSides.maxX - newSides.minX + 1;
-        int lengthZ = newSides.maxZ - newSides.minZ + 1;
+    private void checkSideRatio(ChunkSides newSides, ChunkArea area) {
+        int lengthX = newSides.maxX() - newSides.minX() + 1;
+        int lengthZ = newSides.maxZ() - newSides.minZ() + 1;
         double minSide = Math.min(lengthX, lengthZ);
         double maxSide = Math.max(lengthX, lengthZ);
         if (maxSide / minSide > SIDES_RATIO) {
@@ -45,14 +48,14 @@ public class ClaimRules {
     
     /**
      * Ensures that X percent of sides² without the new chunk taken into account 
-     * are claimed. Only checks for this, when the sides UpdatedSide increased. 
+     * are claimed. Only checks for this, when the sides UpdatedSide changed. 
      * If sides are blocked by other towns, giving up claims is the only way.
      */
-    private void checkPercentage(TownSides newSides, TownArea townArea) {
+    private void checkPercentage(ChunkSides newSides, ChunkArea townArea) {
         if (townArea.getSides().equals(newSides)) {
             return;
         }
-        double areaCur = townArea.getSize();
+        double areaCur = townArea.size();
         double areaMax = townArea.getMaxSize();
         double percentage = areaCur/areaMax;
         if (percentage < AREA_PERCENTAGE) {
@@ -65,7 +68,7 @@ public class ClaimRules {
      * Ensures that in a range of X for the newly claimed 
      * chunk are at least X chunks of the town.
      */
-    private void checkNear(ChunkMap map, Town town, Chunk chunk) {
+    private void checkNear(ChunkService map, Town town, Chunk chunk) {
         int count = 0;
         for (Chunk ch : chunk.getNear(NEAR_RANGE)) {
             if (map.getTown(ch) == town) count++;

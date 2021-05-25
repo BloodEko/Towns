@@ -6,8 +6,8 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import de.bloodeko.towns.core.towns.legacy.ChunkMap;
-import de.bloodeko.towns.core.towns.legacy.Town;
+import de.bloodeko.towns.core.townarea.ChunkService;
+import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.Util;
 
@@ -24,14 +24,14 @@ public class MapView {
     private static final int MIN_ZOOM = 1;
     private static final int MAX_ZOOM = 4;
     
-    protected final ChunkMap map;
+    protected final ChunkService map;
     protected final MapRotation rotation;
     protected final Player player;
     protected final Inventory inv;
     private Chunk center;
     private int zoom;
     
-    public MapView(ChunkMap map, MapRotation rotation, Player player, int zoom, Chunk center, Inventory inv) {
+    public MapView(ChunkService map, MapRotation rotation, Player player, int zoom, Chunk center, Inventory inv) {
         this.map = map;
         this.rotation = rotation;
         this.player = player;
@@ -158,7 +158,7 @@ public class MapView {
     protected ItemStack getIcon(Chunk chunk) {
         Town town = map.getTown(chunk);
         if (town != null) {
-            return Util.createItem(Material.LIME_STAINED_GLASS_PANE, town.getSettings().getName());
+            return Util.createItem(Material.LIME_STAINED_GLASS_PANE, town.getName());
         }
         return Util.createItem(Material.BROWN_STAINED_GLASS_PANE, chunk.toString());
     }

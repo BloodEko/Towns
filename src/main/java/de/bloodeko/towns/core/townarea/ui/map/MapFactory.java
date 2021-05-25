@@ -9,8 +9,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import de.bloodeko.towns.Towns;
-import de.bloodeko.towns.core.towns.legacy.ChunkMap;
-import de.bloodeko.towns.core.towns.legacy.Town;
+import de.bloodeko.towns.core.townarea.ChunkService;
+import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.Util;
 import de.bloodeko.towns.util.Yaw;
@@ -21,7 +21,7 @@ public class MapFactory {
      * Returns a new MapView backed with the
      * ChunkMap, player, and default settings.
      */
-    public static MapView newGlobalView(ChunkMap map, Player player) {
+    public static MapView newGlobalView(ChunkService map, Player player) {
         MapRotation rotation = getMapRotation(player.getLocation().getYaw());
         int zoom = 1;
         Chunk center = Chunk.fromEntity(player);
@@ -33,7 +33,7 @@ public class MapFactory {
      * Returns a new local MapView backed with the 
      * ChunkMap, player, and default settings.
      */
-    public static TownView newTownView(ChunkMap map, Player player, Town town) {
+    public static TownView newTownView(ChunkService map, Player player, Town town) {
         MapRotation rotation = getMapRotation(player.getLocation().getYaw());
         int zoom = 1;
         Chunk center = Chunk.fromEntity(player);

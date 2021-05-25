@@ -16,11 +16,10 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 
+import de.bloodeko.towns.Services;
 import de.bloodeko.towns.core.townplots.PlotData;
 import de.bloodeko.towns.core.townplots.PlotHandler;
-import de.bloodeko.towns.core.towns.legacy.Town;
-import de.bloodeko.towns.core.towns.legacy.TownFactory;
-import de.bloodeko.towns.core.townsettings.legacy.Settings;
+import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.cmds.CmdBase;
 import net.milkbowl.vault.economy.Economy;
@@ -28,7 +27,7 @@ import net.milkbowl.vault.economy.Economy;
 public abstract class PlotBaseCmd extends CmdBase {
     
     public PlotHandler getPlotHandler(Town town) {
-        PlotHandler handler = (PlotHandler) town.getSettings().get(Settings.PLOTS);
+        PlotHandler handler = town.getPlots();
         if (handler == null) {
             throw new ModifyException("settings.plot.basecmd.settingNotBought");
         }
@@ -45,7 +44,7 @@ public abstract class PlotBaseCmd extends CmdBase {
         if (plotId == null) {
             throw new ModifyException("settings.plot.basecmd.noPlotAtLocation");
         }
-        PlotHandler handler = (PlotHandler) town.getSettings().get(Settings.PLOTS);
+        PlotHandler handler = town.getPlots();
         return handler.getPlot(Integer.valueOf(plotId));
     }
     
@@ -126,7 +125,7 @@ public abstract class PlotBaseCmd extends CmdBase {
      * Gets the rg manager for "world".
      */
     public static RegionManager getRegionManager() {
-        return TownFactory.getWorldManager();
+        return Services.regionmanager();
     }
     
     /**

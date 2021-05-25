@@ -23,6 +23,9 @@ import de.bloodeko.towns.util.cmds.CmdFactory;
 
 public class StageFactory {
     
+    /**
+     * Loads and registers the stage UI elements.
+     */
     public static void load(Map<String, CmdBase> cmds) {
         CmdFactory.put(cmds, "stageItems", new StageViewCmd(StageFactory.newGuiService()));
         CmdFactory.put(cmds, "rise", new RiseCmd());

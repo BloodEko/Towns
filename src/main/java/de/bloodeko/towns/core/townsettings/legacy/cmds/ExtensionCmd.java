@@ -5,7 +5,7 @@ import java.util.List;
 import org.bukkit.entity.Player;
 
 import de.bloodeko.towns.Services;
-import de.bloodeko.towns.core.towns.legacy.Town;
+import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.core.townsettings.legacy.AdvancedSetting;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.Messages;
@@ -17,21 +17,23 @@ public class ExtensionCmd extends CmdBase {
     @Override
     public void execute(Player player, String[] args) {
         String arg = getArg(0, args, "cmds.extension.notFound");
-        AdvancedSetting setting = Services.settings().fromDisplay(arg);
+        AdvancedSetting setting = Services.settingsservice().registry().fromDisplay(arg);
         if (setting == null) {
             Messages.say(player, "cmds.extension.notFound");
             return;
         }
-        getTown(player).getSettings().addSetting(setting.settingKey);
+        Town town = getTown(player);
+        town.getSettings().addSetting(setting.settingKey, town.getId());
         Messages.say(player, "cmds.extension.bought", setting.names.getName());
     }
     
     @Override
     public List<String> completeTab(String[] args, Player player) {
-        Town town = getMap().getTown(Chunk.fromEntity(player));
+        Integer id = getMap().get(Chunk.fromEntity(player));
+        Town town = Services.townservice().get(id);
         if (town == null || !town.getPeople().isGovernor(player.getUniqueId())) {
             return null;
         }
-        return Util.filterLowerList(Services.settings().getMachesNames(getTown(player)), args[0]);
+        return Util.filterLowerList(Services.settingsservice().registry().getMachesNames(getTown(player)), args[0]);
     }
 }

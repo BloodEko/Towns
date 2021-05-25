@@ -28,7 +28,7 @@ public class PvpSetting extends Setting {
     }
 
     @Override
-    public void init(Map<Object, Object> map) {
+    public void init(Map<Object, Object> map, Integer id) {
         map.put(Flags.PVP, State.DENY);
     }
 

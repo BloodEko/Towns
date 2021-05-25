@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
-import de.bloodeko.towns.core.towns.legacy.Town;
+import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.core.townsettings.TownSettings;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.Util;

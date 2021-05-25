@@ -3,8 +3,7 @@ package de.bloodeko.towns.core.townarea.ui.map;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import de.bloodeko.towns.core.towns.legacy.ChunkMap;
-import de.bloodeko.towns.core.towns.legacy.Town;
+import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.cmds.CmdBase;
 
@@ -22,24 +21,24 @@ public class MapCmd extends CmdBase {
     @Override
     public void execute(Player player, String[] args) {
         boolean local = hasTown(player.getLocation());
-        MapView view = newView(getMap(), player, local);
+        MapView view = newView(player, local);
         listener.add(player.getUniqueId(), view);
         view.open();
     }
     
     private boolean hasTown(Location location) {
-        return getMap().hasTown(Chunk.fromLocation(location));
+        return getMap().has(Chunk.fromLocation(location));
     }
 
     /**
      * Returns a new MapView either to either display 
      * the global map or a single town.
      */
-    private MapView newView(ChunkMap map, Player player, boolean local) {
+    private MapView newView(Player player, boolean local) {
         if (local) {
             Town town = getTownAsPlayer(player);
-            return MapFactory.newTownView(map, player, town);
+            return MapFactory.newTownView(getMap(), player, town);
         }
-        return MapFactory.newGlobalView(map, player);
+        return MapFactory.newGlobalView(getMap(), player);
     }
 }

@@ -1,4 +1,4 @@
-package de.bloodeko.towns.core.towns.legacy;
+package de.bloodeko.towns.util.cmds;
 
 import java.util.List;
 
@@ -9,7 +9,6 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import de.bloodeko.towns.util.ModifyException;
-import de.bloodeko.towns.util.cmds.CmdHandler;
 
 
 public class TownCmd implements CommandExecutor, TabCompleter {

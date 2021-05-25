@@ -76,7 +76,7 @@ public class Util {
     }
     
     /**
-     * The input is checked against alphabetic letters,
+     * The input is checked against lowercase letters, 
      * numbers and basic symbols.
      */
     public static boolean isValidName(String name) {

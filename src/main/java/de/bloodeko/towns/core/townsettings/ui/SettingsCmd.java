@@ -8,7 +8,7 @@ import java.util.List;
 import org.bukkit.entity.Player;
 
 import de.bloodeko.towns.Services;
-import de.bloodeko.towns.core.towns.legacy.Town;
+import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.core.townsettings.legacy.AdvancedSetting;
 import de.bloodeko.towns.core.townsettings.legacy.Setting;
 import de.bloodeko.towns.core.townsettings.legacy.SettingsRegistry;
@@ -22,7 +22,7 @@ public class SettingsCmd extends CmdBase {
         Town town = getTown(player);
         Messages.say(player, "cmds.info.settingsHeader");
         
-        for (AdvancedSetting setting : getSettings(Services.settings(), town)) {
+        for (AdvancedSetting setting : getSettings(Services.settingsservice().registry(), town)) {
             Messages.say(player, "cmds.info.setting", 
              setting.names.getName(), setting.names.display(town));
         }

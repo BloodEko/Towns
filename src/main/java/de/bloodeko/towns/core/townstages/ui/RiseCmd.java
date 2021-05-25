@@ -8,7 +8,7 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 
-import de.bloodeko.towns.core.towns.legacy.Town;
+import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.core.townstages.domain.Stage;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.ModifyException;
@@ -23,14 +23,14 @@ public class RiseCmd extends CmdBase {
     @Override
     public void execute(Player player, String[] args) {
         Town town = getTown(player);
-        Stage stage = town.getSettings().getStage();
+        Stage stage = town.getStage();
         
         if (stage.getStage() >= Stage.MAX_STAGE) {
             throw new ModifyException("settings.stage.townAlreadyMaxStage");
         }
         
         stage.riseStage();
-        Messages.say(player, "cmds.stage.risedToStage", town.getSettings().getName(), stage.getStage());
+        Messages.say(player, "cmds.stage.risedToStage", town.getName(), stage.getStage());
         spawnFireWork(player.getLocation());
     }
     

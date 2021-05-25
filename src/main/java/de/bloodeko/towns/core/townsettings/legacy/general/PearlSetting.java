@@ -30,7 +30,7 @@ public class PearlSetting extends Setting {
 
 
     @Override
-    public void init(Map<Object, Object> map) {
+    public void init(Map<Object, Object> map, Integer id) {
         map.put(Flags.ENDERPEARL, State.DENY);
     }
 

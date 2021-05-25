@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 import de.bloodeko.towns.Services;
 import de.bloodeko.towns.core.townpeople.TownPeople;
-import de.bloodeko.towns.core.towns.legacy.Town;
+import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.core.townsettings.legacy.AdvancedSetting;
 import de.bloodeko.towns.core.townsettings.ui.SettingsCmd;
 import de.bloodeko.towns.util.Messages;
@@ -34,9 +34,9 @@ public class InfoCmd extends CmdBase {
     private void showCore(Player player, Town town) {
         Messages.say(player, "cmds.info.townHeader");
         Messages.say(player, "cmds.info.id", town.getId());
-        Messages.say(player, "cmds.info.name", town.getSettings().getName());
-        Messages.say(player, "cmds.info.stage", town.getSettings().getStage().getStage());
-        Messages.say(player, "cmds.info.size", town.getArea().getSize());
+        Messages.say(player, "cmds.info.name", town.getName());
+        Messages.say(player, "cmds.info.stage", town.getStage().getStage());
+        Messages.say(player, "cmds.info.size", town.getArea().size());
     }
     
     
@@ -48,7 +48,7 @@ public class InfoCmd extends CmdBase {
     
     
     private void showSettings(Player player, Town town) {
-        List<AdvancedSetting> list = SettingsCmd.getSettings(Services.settings(), town);
+        List<AdvancedSetting> list = SettingsCmd.getSettings(Services.settingsservice().registry(), town);
         if (list.isEmpty()) {
             return;
         }

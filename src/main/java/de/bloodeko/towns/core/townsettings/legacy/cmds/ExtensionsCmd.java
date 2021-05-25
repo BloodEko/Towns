@@ -13,7 +13,7 @@ public class ExtensionsCmd extends CmdBase {
     
     @Override
     public void execute(Player player, String[] args) {
-        List<String> list = Services.settings().getMachesNames(getTown(player));
+        List<String> list = Services.settingsservice().registry().getMachesNames(getTown(player));
         Messages.say(player, "cmds.extensions.list", Util.join(list, ", "));
     }
 }

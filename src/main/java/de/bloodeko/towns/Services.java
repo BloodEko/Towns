@@ -1,10 +1,19 @@
 package de.bloodeko.towns;
 
+import org.bukkit.Bukkit;
+
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.World;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 
-import de.bloodeko.towns.core.towns.legacy.ChunkMap;
-import de.bloodeko.towns.core.towns.legacy.TownRegistry;
-import de.bloodeko.towns.core.townsettings.legacy.SettingsRegistry;
+import de.bloodeko.towns.core.townarea.ChunkService;
+import de.bloodeko.towns.core.townnames.NameService;
+import de.bloodeko.towns.core.townpeople.PeopleService;
+import de.bloodeko.towns.core.townplots.PlotService;
+import de.bloodeko.towns.core.towns.TownService;
+import de.bloodeko.towns.core.townsettings.SettingsService;
+import de.bloodeko.towns.core.townstages.domain.StageService;
 import net.milkbowl.vault.economy.Economy;
 
 /**
@@ -13,42 +22,67 @@ import net.milkbowl.vault.economy.Economy;
  */
 public class Services {
     private static Services instance;
-    public Towns plugin;
-    public ChunkMap chunkmap;
-    public TownRegistry registry;
-    public SettingsRegistry settings;
-    public Economy economy;
-    public RegionManager regions;
     
     /**
-     * Sets the registry, consider all field to be
-     * non-null, to prevent problems at the runtime.
+     * Sets the registry for the plugin. Consider all fields 
+     * to be set non-null, problems at the runtime.
      */
-    public static void set(Services locator) {
-        instance = locator;
+    public static Services init(Towns plugin) {
+        instance = new Services();
+        instance.plugin = plugin;
+        return instance;
     }
+
+    Towns plugin;
+    Economy economy;
+    
+    TownService townService;
+    NameService nameService;
+    ChunkService chunkService;
+    PeopleService peopleService;
+    SettingsService settingsService;
+    StageService stageService;
+    PlotService plotService;
+    
     
     public static Towns plugin() {
         return instance.plugin;
-    }
-    
-    public static ChunkMap chunkMap() {
-        return instance.chunkmap;
-    }
-    
-    public static TownRegistry towns() {
-        return instance.registry;
-    }
-    
-    public static SettingsRegistry settings() {
-        return instance.settings;
     }
     
     public static Economy economy() {
         return instance.economy;
     }
     
-    public static RegionManager regions() {
-        return instance.regions;
+    public static TownService townservice() {
+        return instance.townService;
+    }
+    
+    public static NameService nameservice() {
+        return instance.nameService;
+    }
+    
+    public static ChunkService chunkservice() {
+        return instance.chunkService;
+    }
+    
+    public static PeopleService peopleservice() {
+        return instance.peopleService;
+    }
+    
+    public static RegionManager regionmanager() {
+        World world = BukkitAdapter.adapt(Bukkit.getWorld("world"));
+        return WorldGuard.getInstance().getPlatform().getRegionContainer().get(world);
+    }
+
+    public static SettingsService settingsservice() {
+        return instance.settingsService;
+    }
+    
+    public static StageService stageservice() {
+        return instance.stageService;
+    }
+    
+    public static PlotService plotservice() {
+        return instance.plotService;
     }
 }

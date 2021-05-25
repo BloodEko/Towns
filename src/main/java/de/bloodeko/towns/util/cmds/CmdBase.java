@@ -7,8 +7,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import de.bloodeko.towns.Services;
-import de.bloodeko.towns.core.towns.legacy.ChunkMap;
-import de.bloodeko.towns.core.towns.legacy.Town;
+import de.bloodeko.towns.core.townarea.ChunkService;
+import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.Util;
@@ -29,8 +29,8 @@ public abstract class CmdBase {
         return null;
     }
     
-    public ChunkMap getMap() {
-        return Services.chunkMap();
+    public ChunkService getMap() {
+        return Services.chunkservice();
     }
     
     /**
@@ -112,7 +112,8 @@ public abstract class CmdBase {
      * Throws an exception, if no Town is found.
      */
     public Town getTownAsPlayer(Player player) {
-        Town town = getMap().getTown(Chunk.fromEntity(player));
+        Integer id = getMap().get(Chunk.fromEntity(player));
+        Town town = Services.townservice().get(id);
         if (town == null) {
             throw new ModifyException("cmds.base.noTownAtLocation");
         }

@@ -6,7 +6,7 @@ import java.util.List;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import de.bloodeko.towns.core.towns.legacy.Town;
+import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.Util;
 import de.bloodeko.towns.util.cmds.CmdBase;
@@ -29,7 +29,7 @@ public class GovenorCmd extends CmdBase {
             Player target = getTarget(name);
             town.getPeople().addGovenor(player.getUniqueId(), target.getUniqueId());
             Messages.say(player, "cmds.governor.addedPlayer", target.getName());
-            Messages.say(target, "cmds.governor.gainedRank", town.getSettings().getName());
+            Messages.say(target, "cmds.governor.gainedRank", town.getName());
         }
         else if (action.equals(removeAction)) {
             OfflinePlayer target = getOfflineTarget(name);

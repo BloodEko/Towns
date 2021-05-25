@@ -10,7 +10,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import de.bloodeko.towns.core.townplots.PlotData;
 import de.bloodeko.towns.core.townplots.PlotHandler;
-import de.bloodeko.towns.core.towns.legacy.Town;
+import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.ModifyException;
@@ -63,6 +63,6 @@ public class PlotCreateCmd extends PlotBaseCmd {
     }
     
     public static int getMaxPlots(Town town) {
-        return town.getSettings().getStage().getStage() * 2;
+        return town.getStage().getStage() * 2;
     }
 }

@@ -1,4 +1,4 @@
-package de.bloodeko.towns.core.townnames.ui;
+package de.bloodeko.towns.core.townsettings.ui;
 
 import java.util.List;
 
@@ -6,9 +6,10 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import de.bloodeko.towns.Services;
-import de.bloodeko.towns.core.towns.legacy.Town;
+import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.core.townsettings.legacy.Settings;
 import de.bloodeko.towns.util.Messages;
+import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.cmds.CmdBase;
 
 public class TpCmd extends CmdBase {
@@ -19,11 +20,15 @@ public class TpCmd extends CmdBase {
             Messages.say(player, "cmds.tp.cmdUsage");
             return;
         }
-        Town town = Services.towns().get(args[0]);
+        Integer id = Services.nameservice().getId(args[0]);
+        if (id == null) {
+            throw new ModifyException("town.townregistry.nameNotFound");
+        }
+        Town town = Services.townservice().get(id);
         Object loc = town.getSettings().get(Settings.WARP);
         if (loc instanceof Location) {
             player.teleport((Location) loc);
-            Messages.say(player, "cmds.tp.teleport", town.getSettings().getName());
+            Messages.say(player, "cmds.tp.teleport", town.getName());
         } else {
             Messages.say(player, "cmds.tp.warpNotSet");
         }
@@ -32,6 +37,6 @@ public class TpCmd extends CmdBase {
     @Override
     public List<String> completeTab(String[] args) {
         String name = args.length == 0 ? "" : args[0];
-        return Services.towns().getMatches(name);
+        return Services.nameservice().startingWith(name);
     }
 }
