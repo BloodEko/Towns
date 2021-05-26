@@ -83,6 +83,7 @@ public class SlimeSetting extends Setting {
         
         @Override
         public void setValue(TownSettings settings, State obj) {
+            checkHasBought(settings, Settings.SLIME);
             Settings.SLIME.set(settings.getFlags(), obj);
         }
     }

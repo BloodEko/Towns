@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import de.bloodeko.towns.core.towns.Town;
+import de.bloodeko.towns.core.townsettings.TownSettings;
 import de.bloodeko.towns.core.townsettings.legacy.NameProvider;
 import de.bloodeko.towns.core.townsettings.legacy.Setting;
 import de.bloodeko.towns.core.townsettings.legacy.Settings;
@@ -57,11 +58,14 @@ public class WarpSetting extends Setting {
 
         @Override
         public void execute(Player player, String[] args) {
+            TownSettings settings = getTown(player).getSettings();
+            checkHasBought(settings, Settings.WARP);
+            
             if (args.length == 0) {
-                Settings.WARP.set(getTown(player).getSettings().getFlags(), player.getLocation());
+                Settings.WARP.set(settings.getFlags(), player.getLocation());
                 Messages.say(player, "settings.warp.set");
             } else {
-                Settings.WARP.set(getTown(player).getSettings().getFlags(), "x");
+                Settings.WARP.set(settings.getFlags(), "x");
                 Messages.say(player, "settings.warp.disabled");
             }
         }

@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import de.bloodeko.towns.Services;
 import de.bloodeko.towns.core.townarea.ChunkService;
 import de.bloodeko.towns.core.towns.Town;
+import de.bloodeko.towns.core.townsettings.TownSettings;
+import de.bloodeko.towns.core.townsettings.legacy.Setting;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.Util;
@@ -130,5 +132,15 @@ public abstract class CmdBase {
             throw new ModifyException("cmds.base.noModPermission");
         }
         return town;
+    }
+    
+    /**
+     * Ensures the setting was bought. 
+     * Throws an exception otherwise.
+     */
+    protected void checkHasBought(TownSettings settings, Setting setting) {
+        if (!settings.has(setting)) {
+            throw new ModifyException("town.townsettings.notBought");
+        }
     }
 }

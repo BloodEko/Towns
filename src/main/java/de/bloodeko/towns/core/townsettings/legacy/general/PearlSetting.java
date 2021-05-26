@@ -54,6 +54,7 @@ public class PearlSetting extends Setting {
         
         @Override 
         public void setValue(TownSettings settings, State obj) {
+            checkHasBought(settings, Settings.PEARL);
             Settings.PEARL.set(settings.getFlags(), obj);
         }
     }

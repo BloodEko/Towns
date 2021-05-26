@@ -83,6 +83,7 @@ public class ZombieSetting extends Setting {
         
         @Override
         public void setValue(TownSettings settings, State obj) {
+            checkHasBought(settings, Settings.ZOMBIE);
             Settings.ZOMBIE.set(settings.getFlags(), obj);
         }
     }

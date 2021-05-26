@@ -9,6 +9,7 @@ import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.core.townsettings.legacy.AdvancedSetting;
 import de.bloodeko.towns.util.Chunk;
 import de.bloodeko.towns.util.Messages;
+import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.Util;
 import de.bloodeko.towns.util.cmds.CmdBase;
 
@@ -22,7 +23,12 @@ public class ExtensionCmd extends CmdBase {
             Messages.say(player, "cmds.extension.notFound");
             return;
         }
+        
         Town town = getTown(player);
+        if (!setting.condition.canBuy(town)) {
+            throw new ModifyException("cmds.extension.conditionFailed");
+        }
+        
         town.getSettings().addSetting(setting.settingKey, town.getId());
         Messages.say(player, "cmds.extension.bought", setting.names.getName());
     }

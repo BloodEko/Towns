@@ -51,6 +51,7 @@ public class PvpSetting extends Setting {
         
         @Override 
         public void setValue(TownSettings settings, State obj) {
+            checkHasBought(settings, Settings.PVP);
             Settings.PVP.set(settings.getFlags(), obj);
         }
     }

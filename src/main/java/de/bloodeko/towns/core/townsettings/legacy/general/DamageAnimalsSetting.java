@@ -54,6 +54,7 @@ public class DamageAnimalsSetting extends Setting {
         
         @Override 
         public void setValue(TownSettings settings, State obj) {
+            checkHasBought(settings, Settings.DAMAGE_ANIMALS);
             Settings.DAMAGE_ANIMALS.set(settings.getFlags(), obj);
         }
     }

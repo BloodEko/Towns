@@ -6,7 +6,7 @@ import de.bloodeko.towns.core.towns.Town;
 public class AdvancedSetting {
     public final Setting settingKey;
     public final PriceProvider prices;
-    public final BuyCondition stages;
+    public final BuyCondition condition;
     public final NameProvider names;
     
     /*
@@ -18,15 +18,15 @@ public class AdvancedSetting {
     public DisplayHandler displayHandler;
     */
     
-    public AdvancedSetting(Setting setting, PriceProvider prices, BuyCondition stages, NameProvider names) {
+    public AdvancedSetting(Setting setting, PriceProvider prices, BuyCondition condition, NameProvider names) {
         this.settingKey = setting;
         this.prices = prices;
-        this.stages = stages;
+        this.condition = condition;
         this.names = names;
     }
     
     public boolean matches(Town town) {
-        return stages.canBuy(town);
+        return condition.canBuy(town);
     }
     
     

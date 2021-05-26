@@ -181,7 +181,7 @@ public class StageView implements GUIView {
      * Takes as much items as possible up to the quantity 
      * from the inventory that match the given material.
      */
-    private void takeItems(Inventory inv, Material material, int qty) {
+    private void takeItems(Inventory inv, Material material, int take) {
         ItemStack[] content = inv.getContents();
         for (int i = 0; i < content.length; i++) {
             ItemStack stack = content[i];
@@ -189,15 +189,15 @@ public class StageView implements GUIView {
                 continue;
             }
             int stackAmount = stack.getAmount();
-            if (qty >= stackAmount) {
+            if (take >= stackAmount) {
                 inv.clear(i);
-                qty -= stackAmount;
+                take -= stackAmount;
             } else {
-                stack.setAmount(stackAmount - qty);
-                qty -= stackAmount - qty;
+                stack.setAmount(stackAmount - take);
+                take = 0;
             }
             
-            if (qty <= 0) {
+            if (take <= 0) {
                 return;
             }
         }

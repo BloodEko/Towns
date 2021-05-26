@@ -26,6 +26,10 @@ import net.milkbowl.vault.economy.Economy;
 
 public abstract class PlotBaseCmd extends CmdBase {
     
+    /**
+     * Returns the PlotHandler for that town.
+     * Throws an exception if it is not bought.
+     */
     public PlotHandler getPlotHandler(Town town) {
         PlotHandler handler = town.getPlots();
         if (handler == null) {
