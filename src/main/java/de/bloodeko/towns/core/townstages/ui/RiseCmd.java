@@ -11,7 +11,6 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.core.townstages.domain.Stage;
 import de.bloodeko.towns.util.Messages;
-import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.cmds.CmdBase;
 
 /**
@@ -19,16 +18,12 @@ import de.bloodeko.towns.util.cmds.CmdBase;
  * requirements for that stage are matched.
  */
 public class RiseCmd extends CmdBase {
-
+    
     @Override
     public void execute(Player player, String[] args) {
         Town town = getTown(player);
         Stage stage = town.getStage();
-        
-        if (stage.getStage() >= Stage.MAX_STAGE) {
-            throw new ModifyException("settings.stage.townAlreadyMaxStage");
-        }
-        
+        stage.checkCanRise();
         stage.riseStage();
         Messages.say(player, "cmds.stage.risedToStage", town.getName(), stage.getStage());
         spawnFireWork(player.getLocation());

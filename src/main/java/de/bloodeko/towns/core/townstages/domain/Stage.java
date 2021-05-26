@@ -34,7 +34,6 @@ public class Stage {
      * Rises to the next stage and sets the new items.
      */
     public void riseStage() {
-        checkCanRise();
         stage++;
         setItems();
     }
@@ -57,8 +56,8 @@ public class Stage {
      * Throws an Exception with a specific message if
      * the stage can't rise to the next stage.
      */
-    private void checkCanRise() {
-        if (stage == MAX_STAGE) {
+    public void checkCanRise() {
+        if (stage >=  MAX_STAGE) {
             throw new ModifyException("settings.stage.townAlreadyMaxStage");
         }
         for (Bundle bundle : items.values()) {

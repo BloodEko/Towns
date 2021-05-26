@@ -10,22 +10,35 @@ import de.bloodeko.towns.core.TownFactory;
 import de.bloodeko.towns.core.townplots.ui.PlotBaseCmd;
 import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.util.Chunk;
+import de.bloodeko.towns.util.DoubleCheck;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.cmds.CmdBase;
 
+/**
+ * Allows players to found a new town. Ensures that it is in 
+ * distance to other towns. Adds the town to all basic services.
+ */
 public class FoundCmd extends CmdBase {
     private static final int price = 1000;
     private static final int range = 7;
-
+    private final DoubleCheck check = new DoubleCheck(10000);
+    
     @Override
     public void execute(Player player, String[] args) {
         checkNearTowns(player, range);
         checkMoney(Services.economy(), player, price);
-        
         String name = getArg(0, args, "cmds.found.needName");
-        TownFactory.createTown(name, Chunk.fromEntity(player), player.getUniqueId());
         
+        if (!check.passForgetting(player.getUniqueId())) {
+            String currency = Services.economy().currencyNamePlural();
+            String verify = Messages.get("cmds.found.verfiyBuy", name, price, currency);
+            String confirm = Messages.get("cmds.base.typeAgain", check.toSeconds());
+            player.sendMessage(verify + confirm);
+            return;
+        }
+        
+        TownFactory.createTown(name, Chunk.fromEntity(player), player.getUniqueId());
         Services.economy().withdrawPlayer(player, price);
         Messages.say(player, "cmds.found.created", name);
     }

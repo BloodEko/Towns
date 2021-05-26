@@ -8,25 +8,39 @@ import de.bloodeko.towns.Services;
 import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.core.townsettings.legacy.AdvancedSetting;
 import de.bloodeko.towns.util.Chunk;
+import de.bloodeko.towns.util.DoubleCheck;
+import de.bloodeko.towns.util.DoubleCheck.Combined;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.Util;
 import de.bloodeko.towns.util.cmds.CmdBase;
 
+/**
+ * Allows governors to buy extensions for their towns.
+ * Ensures that the town has the requirements to do so.
+ */
 public class ExtensionCmd extends CmdBase {
+    private final DoubleCheck check = new DoubleCheck(10000);
     
     @Override
     public void execute(Player player, String[] args) {
         String arg = getArg(0, args, "cmds.extension.notFound");
         AdvancedSetting setting = Services.settingsservice().registry().fromDisplay(arg);
         if (setting == null) {
-            Messages.say(player, "cmds.extension.notFound");
-            return;
+            throw new ModifyException("cmds.extension.notFound");
         }
         
         Town town = getTown(player);
         if (!setting.condition.canBuy(town)) {
             throw new ModifyException("cmds.extension.conditionFailed");
+        }
+        
+        Combined key = new Combined(player.getUniqueId(), setting);
+        if (!check.passForgetting(key)) {
+            Messages.say(player, "cmds.extension.verfiyBuy", setting.names.getName(), 
+              setting.prices.getPrice(), Services.economy().currencyNamePlural());
+            Messages.say(player, "cmds.base.typeAgain", check.toSeconds());
+            return;
         }
         
         town.getSettings().addSetting(setting.settingKey, town.getId());

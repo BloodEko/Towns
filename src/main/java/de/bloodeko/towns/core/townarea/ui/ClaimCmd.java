@@ -8,19 +8,32 @@ import org.bukkit.entity.Player;
 import de.bloodeko.towns.Services;
 import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.util.Chunk;
+import de.bloodeko.towns.util.DoubleCheck;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.Yaw;
 import de.bloodeko.towns.util.cmds.CmdBase;
 
+/**
+ * Allows governors of towns to increase their land.
+ * Updates the area with the newly claimed chunk.
+ */
 public class ClaimCmd extends CmdBase {
     private static final int PRICE = 512;
     private static final ClaimRules RULES = new ClaimRules();
+    private final DoubleCheck check = new DoubleCheck(60000);
     
     @Override
     public void execute(Player player, String[] args) {
         checkMoney(Services.economy(), player, PRICE);
         getMap().verify(Chunk.fromEntity(player));
+        
+        if (!check.passExtending(player.getUniqueId())) {
+            String currency = Services.economy().currencyNamePlural();
+            Messages.say(player, "cmds.claim.verfiyBuy", PRICE, currency);
+            Messages.say(player, "cmds.claim.confirmBuy", check.toSeconds());
+            return;
+        }
         
         if (args.length == 0) {
             Town town = combine(getNearTowns(player));
