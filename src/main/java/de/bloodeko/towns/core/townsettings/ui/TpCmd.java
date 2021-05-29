@@ -12,6 +12,10 @@ import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.cmds.CmdBase;
 
+/**
+ * Allows player to teleport to a town, if the warp 
+ * is bought and set.
+ */
 public class TpCmd extends CmdBase {
 
     @Override

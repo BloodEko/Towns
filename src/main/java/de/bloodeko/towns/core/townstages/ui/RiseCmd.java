@@ -25,7 +25,7 @@ public class RiseCmd extends CmdBase {
         Stage stage = town.getStage();
         stage.checkCanRise();
         stage.riseStage();
-        Messages.say(player, "cmds.stage.risedToStage", town.getName(), stage.getStage());
+        Messages.say(player, "cmds.stage.risedToStage", town.getName(), stage.getValue());
         spawnFireWork(player.getLocation());
     }
     

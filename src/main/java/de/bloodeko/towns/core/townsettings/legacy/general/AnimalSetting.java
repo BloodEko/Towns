@@ -10,7 +10,7 @@ import de.bloodeko.towns.core.townsettings.legacy.Setting;
 import de.bloodeko.towns.core.townsettings.legacy.Settings;
 import de.bloodeko.towns.core.townsettings.legacy.cmds.BooleanCmd;
 
-public class DamageAnimalsSetting extends Setting {
+public class AnimalSetting extends Setting {
 
     @Override
     public String getId() {
@@ -36,7 +36,7 @@ public class DamageAnimalsSetting extends Setting {
 
 
     @Override
-    public Object serialize(Map<Object, Object> map) {
+    public String serialize(Map<Object, Object> map) {
         return serializeState(read(map));
     }
 

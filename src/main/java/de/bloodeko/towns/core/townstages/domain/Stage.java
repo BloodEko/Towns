@@ -21,10 +21,16 @@ public class Stage {
         this.items = map;
     }
     
-    public int getStage() {
+    /**
+     * Returns the stage simplified.
+     */
+    public int getValue() {
         return stage;
     }
     
+    /**
+     * Returns the items stored in the current stage.
+     */
     public Map<Material, Bundle> getItems() {
         return items;
     }

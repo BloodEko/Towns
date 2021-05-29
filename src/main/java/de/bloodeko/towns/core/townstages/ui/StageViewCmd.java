@@ -24,7 +24,7 @@ public class StageViewCmd extends CmdBase {
         Town town = getTown(player);
         Stage stage = town.getStage();
         
-        if (stage.getStage() >= Stage.MAX_STAGE) {
+        if (stage.getValue() >= Stage.MAX_STAGE) {
             throw new ModifyException("settings.stage.townAlreadyMaxStage");
         }
         

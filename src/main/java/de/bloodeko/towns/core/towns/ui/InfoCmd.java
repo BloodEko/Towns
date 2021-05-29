@@ -35,7 +35,7 @@ public class InfoCmd extends CmdBase {
         Messages.say(player, "cmds.info.townHeader");
         Messages.say(player, "cmds.info.id", town.getId());
         Messages.say(player, "cmds.info.name", town.getName());
-        Messages.say(player, "cmds.info.stage", town.getStage().getStage());
+        Messages.say(player, "cmds.info.stage", town.getStage().getValue());
         Messages.say(player, "cmds.info.size", town.getArea().size());
     }
     

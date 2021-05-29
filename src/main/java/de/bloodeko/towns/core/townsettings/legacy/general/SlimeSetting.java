@@ -27,6 +27,10 @@ public class SlimeSetting extends Setting {
         return "slime";
     }
     
+    /**
+     * Returns State.DENY if the Flags.DENY_SPAWN 
+     * contains the mob type, State.ALLOW otherwise.
+     */
     @SuppressWarnings("unchecked")
     @Override 
     public Object read(Map<Object, Object> map) {
@@ -37,7 +41,11 @@ public class SlimeSetting extends Setting {
         boolean result = !((Set<EntityType>) set).contains(MOB);
         return Util.toState(result);
     }
-
+    
+    /**
+     * Set as input State.ALLOW to remove the mob from 
+     * Flags.DENY_SPAWN or State.DENY to add/init it.
+     */
     @SuppressWarnings("unchecked")
     @Override
     public void set(Map<Object, Object> map, Object obj) {
@@ -58,17 +66,28 @@ public class SlimeSetting extends Setting {
             ((Set<EntityType>) set).add(MOB);
         }
     }
-
+    
+    /**
+     * Initializes the map by setting State.DENY to it.
+     */
     @Override
     public void init(Map<Object, Object> map, Integer id) {
         set(map, State.DENY);
     }
     
+    /**
+     * Reads value from the map and returns either "deny" 
+     * if the value is present, or "allow" otherwise.
+     */
     @Override
     public String serialize(Map<Object, Object> map) {
         return serializeState(read(map));
     }
-
+    
+    /**
+     * Reads the obj as String and sets the deserialized
+     * value, State.ALLOW for "allow" or State.DENY otherwise.
+     */
     @Override
     public void deserialize(Map<Object, Object> map, Object obj) {
         set(map, deserializeState(obj));

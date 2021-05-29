@@ -31,7 +31,7 @@ import de.bloodeko.towns.core.towns.ui.InfoCmd;
 import de.bloodeko.towns.core.towns.ui.TestCmd;
 import de.bloodeko.towns.core.townsettings.legacy.cmds.ExtensionCmd;
 import de.bloodeko.towns.core.townsettings.legacy.cmds.ExtensionsCmd;
-import de.bloodeko.towns.core.townsettings.legacy.general.DamageAnimalsSetting.AnimalProtectCmd;
+import de.bloodeko.towns.core.townsettings.legacy.general.AnimalSetting.AnimalProtectCmd;
 import de.bloodeko.towns.core.townsettings.legacy.general.PearlSetting.PearlCmd;
 import de.bloodeko.towns.core.townsettings.legacy.general.PvpSetting.PvpProtectCmd;
 import de.bloodeko.towns.core.townsettings.legacy.general.SlimeSetting.SlimeCmd;

@@ -16,15 +16,25 @@ public class SettingsRegistry {
         byInternal = new HashMap<>();
     }
 
+    /**
+     * Adds the setting to the registry, so it can be 
+     * identified by its ID and display name.
+     */
     public void register(AdvancedSetting setting) {
         byInternal.put(setting.settingKey.getId(), setting);
         byDisplay.put(setting.names.getName(), setting);
     }
 
+    /**
+     * Returns the setting, or null by its display name.
+     */
     public AdvancedSetting fromDisplay(String key) {
         return byDisplay.get(key);
     }
     
+    /**
+     * Returns the setting, or null by its ID.
+     */
     public AdvancedSetting fromId(String key) {
         return byInternal.get(key);
     }

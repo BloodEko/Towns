@@ -23,23 +23,38 @@ public class WarpSetting extends Setting {
         return "warp";
     }
 
+    /**
+     * Returns the Location of the warp if
+     * is set, a String or null otherwise.
+     */
     @Override
     public Object read(Map<Object, Object> map) {
         return map.get(Settings.WARP);
     }
 
+    /**
+     * Sets a Location as value or a String to 
+     * unset the warp.
+     */
     @Override
     public void set(Map<Object, Object> map, Object obj) {
         map.put(Settings.WARP, obj);
     }
 
+    /**
+     * Initializes the an empty warp.
+     */
     @Override
     public void init(Map<Object, Object> map, Integer id) {
         map.put(Settings.WARP, "x");
     }
     
+    /**
+     * Returns the serialized Location
+     * or "x" if the warp is not set.
+     */
     @Override
-    public Object serialize(Map<Object, Object> map) {
+    public String serialize(Map<Object, Object> map) {
         Object obj = read(map);
         if (obj instanceof Location) {
             return serializeLocation((Location) obj);
@@ -47,6 +62,10 @@ public class WarpSetting extends Setting {
         return "x";
     }
 
+    /**
+     * Sets a deserializes a String object and 
+     * writes it as a Location to the map.
+     */
     @Override
     public void deserialize(Map<Object, Object> map, Object obj) {
         if (obj.equals("x")) return;

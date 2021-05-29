@@ -33,7 +33,7 @@ public class PvpSetting extends Setting {
     }
 
     @Override
-    public Object serialize(Map<Object, Object> map) {
+    public String serialize(Map<Object, Object> map) {
         return serializeState(read(map));
     }
 

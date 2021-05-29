@@ -54,6 +54,10 @@ public abstract class BooleanCmd extends CmdBase {
         sendError(player);
     }
     
+    /**
+     * Checks availability and then updates the 
+     * town settings/flags to perform the action.
+     */
     public abstract void setValue(TownSettings settings, State value);
     
     private void sendError(Player player) {

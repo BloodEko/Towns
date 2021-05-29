@@ -60,7 +60,7 @@ public class StageSerializer {
      */
     public static Node serialize(Stage stage) {
         Node node = new Node();
-        node.set("stage", stage.getStage());
+        node.set("stage", stage.getValue());
         node.set("items", BundleSerializer.serialize(stage.getItems()));
         return node;
     }

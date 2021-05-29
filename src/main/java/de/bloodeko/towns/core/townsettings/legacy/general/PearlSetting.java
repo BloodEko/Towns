@@ -17,18 +17,30 @@ public class PearlSetting extends Setting {
         return "pearl";
     }
 
+    /**
+     * Reads the pearl flag and returns State.ALLOW
+     * if it is allowed, or State.DENY or null else. 
+     */
     @Override
     public Object read(Map<Object, Object> map) {
         return map.get(Flags.ENDERPEARL);
     }
 
 
+    /**
+     * Set State.ALLOW to allow the use of 
+     * pearls or State.DENY otherwise.
+     */
     @Override
     public void set(Map<Object, Object> map, Object obj) {
         map.put(Flags.ENDERPEARL, obj);
     }
 
 
+    /**
+     * Initializes the setting with State.DENY to
+     * prevent the use of enderpearls.
+     */
     @Override
     public void init(Map<Object, Object> map, Integer id) {
         map.put(Flags.ENDERPEARL, State.DENY);
@@ -36,7 +48,7 @@ public class PearlSetting extends Setting {
 
 
     @Override
-    public Object serialize(Map<Object, Object> map) {
+    public String serialize(Map<Object, Object> map) {
         return serializeState(read(map));
     }
 

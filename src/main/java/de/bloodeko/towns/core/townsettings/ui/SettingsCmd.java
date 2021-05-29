@@ -15,6 +15,10 @@ import de.bloodeko.towns.core.townsettings.legacy.SettingsRegistry;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.cmds.CmdBase;
 
+/**
+ * Allows governors to list setting the town has bought 
+ * with their defined values.
+ */
 public class SettingsCmd extends CmdBase {
 
     @Override

@@ -34,7 +34,7 @@ public abstract class Setting {
     /**
      * Serializes the setting to an Object from the flag-map.
      */
-    public abstract Object serialize(Map<Object, Object> map);
+    public abstract String serialize(Map<Object, Object> map);
     
     /**
      * Deserializes the object and sets it to the flag-map.
@@ -43,7 +43,7 @@ public abstract class Setting {
     
     /**
      * Converts a State to a String.
-     * The result will be "true" or "false".
+     * The result will be "allow" or "deny".
      */
     public String serializeState(Object obj) {
         if (obj instanceof Boolean) {
@@ -54,7 +54,7 @@ public abstract class Setting {
     
     /**
      * Converts String back to a State.
-     * Reads for the format "true" or "false".
+     * Reads for the format "allow" or "deny".
      */
     public State deserializeState(Object obj) {
         return "allow".equals(obj) ? State.ALLOW : State.DENY;

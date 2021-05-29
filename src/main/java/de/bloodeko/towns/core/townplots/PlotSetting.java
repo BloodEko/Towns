@@ -48,7 +48,7 @@ public class PlotSetting extends Setting {
      * Would serialize the PlotHandler ID from the map.
      */
     @Override
-    public Object serialize(Map<Object, Object> map) {
+    public String serialize(Map<Object, Object> map) {
         return "x";
     }
 

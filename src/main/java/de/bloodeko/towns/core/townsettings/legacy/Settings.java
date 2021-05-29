@@ -3,7 +3,7 @@ package de.bloodeko.towns.core.townsettings.legacy;
 import de.bloodeko.towns.core.townplots.PlotSetting;
 import de.bloodeko.towns.core.townplots.PlotSetting.PlotDisplay;
 import de.bloodeko.towns.core.towns.Town;
-import de.bloodeko.towns.core.townsettings.legacy.general.DamageAnimalsSetting;
+import de.bloodeko.towns.core.townsettings.legacy.general.AnimalSetting;
 import de.bloodeko.towns.core.townsettings.legacy.general.PearlSetting;
 import de.bloodeko.towns.core.townsettings.legacy.general.PvpSetting;
 import de.bloodeko.towns.core.townsettings.legacy.general.SlimeSetting;
@@ -15,7 +15,7 @@ import de.bloodeko.towns.core.townsettings.legacy.general.ZombieSetting.ZombieDi
 import de.bloodeko.towns.util.Messages;
 
 public class Settings {
-    public static final DamageAnimalsSetting DAMAGE_ANIMALS = new DamageAnimalsSetting();
+    public static final AnimalSetting DAMAGE_ANIMALS = new AnimalSetting();
     public static final PvpSetting PVP = new PvpSetting();
     public static final WarpSetting WARP = new WarpSetting();
     public static final PlotSetting PLOTS = new PlotSetting();
@@ -23,7 +23,9 @@ public class Settings {
     public static final SlimeSetting SLIME = new SlimeSetting();
     public static final ZombieSetting ZOMBIE = new ZombieSetting();
     
-    
+    /**
+     * Returns a new SettingsRegistry with all known settings included.
+     */
     public static SettingsRegistry newRegistry() {
         SettingsRegistry registry = new SettingsRegistry();
         
@@ -46,39 +48,45 @@ public class Settings {
         return registry;
     }
     
-    public static AdvancedSetting newSetting(Setting setting, int minStage, int price, NameProvider names) {
+    private static AdvancedSetting newSetting(Setting setting, int minStage, int price, NameProvider names) {
         BuyCondition stages = new MinStage(minStage);
         PriceProvider prices = new DefaultPrice(price);
         return new AdvancedSetting(setting, prices, stages, names);
     }
     
-    public static AdvancedSetting newSetting(Setting setting, int minStage, int price, String name) {
+    private static AdvancedSetting newSetting(Setting setting, int minStage, int price, String name) {
         BuyCondition stages = new MinStage(minStage);
         NameProvider names = new DefaultDisplay(setting, Messages.get("settings." + name), false);
         PriceProvider prices = new DefaultPrice(price);
         return new AdvancedSetting(setting, prices, stages, names);
     }
     
-    public static NameProvider newHiddenDisplay() {
-        return new DefaultDisplay(null, "hiddenDisplay", true);
-    }
-    
-    
-    public static class MinStage implements BuyCondition {
+    /**
+     * Default implementation to define a minimum required
+     * stage a setting would require to be purchased.
+     */
+    private static class MinStage implements BuyCondition {
         private int minStage;
         
         public MinStage(int minStage) {
             this.minStage = minStage;
         }
         
+        /**
+         * Returns true if the towns stage is greater or equal 
+         * to the minimum required stage.
+         */
         @Override
         public boolean canBuy(Town town) {
-            return town.getStage().getStage() >= minStage;
+            return town.getStage().getValue() >= minStage;
         }
     }
     
-    
-    public static class DefaultPrice implements PriceProvider {
+    /**
+     * Default implementation to define a price 
+     * for a setting. Uses the given integer.
+     */
+    private static class DefaultPrice implements PriceProvider {
         private int price;
         
         public DefaultPrice(int price) {
@@ -91,8 +99,11 @@ public class Settings {
         }
     }
     
-    
-    public static class DefaultDisplay implements NameProvider {
+    /**
+     * Default implementation to help displaying a setting.
+     * Uses a name given and lets the Setting display values.
+     */
+    private static class DefaultDisplay implements NameProvider {
         private Setting setting;
         private String name;
         private boolean hidden;
