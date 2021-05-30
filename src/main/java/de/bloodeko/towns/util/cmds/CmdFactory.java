@@ -32,6 +32,7 @@ import de.bloodeko.towns.core.towns.ui.TestCmd;
 import de.bloodeko.towns.core.townsettings.legacy.cmds.ExtensionCmd;
 import de.bloodeko.towns.core.townsettings.legacy.cmds.ExtensionsCmd;
 import de.bloodeko.towns.core.townsettings.legacy.general.AnimalSetting.AnimalProtectCmd;
+import de.bloodeko.towns.core.townsettings.legacy.general.BankSetting.BankCommand;
 import de.bloodeko.towns.core.townsettings.legacy.general.PearlSetting.PearlCmd;
 import de.bloodeko.towns.core.townsettings.legacy.general.PvpSetting.PvpProtectCmd;
 import de.bloodeko.towns.core.townsettings.legacy.general.SlimeSetting.SlimeCmd;
@@ -93,6 +94,7 @@ public class CmdFactory {
         put(cmds, "pvp", new PvpProtectCmd(Messages.get("settings.pvp")));
         put(cmds, "damageAnimals", new AnimalProtectCmd(Messages.get("settings.damageAnimals")));
         put(cmds, "warp", new WarpCmd());
+        put(cmds, "bank", new BankCommand());
         put(cmds, "pearl", new PearlCmd(Messages.get("settings.pearl")));
         put(cmds, "slime", new SlimeCmd(Messages.get("settings.slime")));
         put(cmds, "zombie", new ZombieCmd(Messages.get("settings.zombie")));

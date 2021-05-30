@@ -25,7 +25,7 @@ public class ClaimCmd extends CmdBase {
     
     @Override
     public void execute(Player player, String[] args) {
-        checkMoney(Services.economy(), player, PRICE);
+        checkMoney(player, PRICE);
         getMap().verify(Chunk.fromEntity(player));
         
         if (!check.passExtending(player.getUniqueId())) {

@@ -82,7 +82,7 @@ public abstract class PlotBaseCmd extends CmdBase {
      * Pays the price to the towns first found governor.
      */
     public void payRentToTown(Economy economy, Player player, int price, Town town) {
-        checkMoney(economy, player, price);
+        checkMoney(player, price);
         UUID toUUID = town.getPeople().getGovernors().iterator().next();
         OfflinePlayer toPlayer = Bukkit.getOfflinePlayer(toUUID);
         economy.withdrawPlayer(player, price);

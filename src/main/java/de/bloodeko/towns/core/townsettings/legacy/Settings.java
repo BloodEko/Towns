@@ -4,6 +4,7 @@ import de.bloodeko.towns.core.townplots.PlotSetting;
 import de.bloodeko.towns.core.townplots.PlotSetting.PlotDisplay;
 import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.core.townsettings.legacy.general.AnimalSetting;
+import de.bloodeko.towns.core.townsettings.legacy.general.BankSetting;
 import de.bloodeko.towns.core.townsettings.legacy.general.PearlSetting;
 import de.bloodeko.towns.core.townsettings.legacy.general.PvpSetting;
 import de.bloodeko.towns.core.townsettings.legacy.general.SlimeSetting;
@@ -36,6 +37,7 @@ public class Settings {
         AdvancedSetting pearl = newSetting(PEARL, 2, 4000, "pearl");
         AdvancedSetting slime = newSetting(SLIME, 2, 5000, new SlimeDisplay());
         AdvancedSetting zombie = newSetting(ZOMBIE, 2, 5000, new ZombieDisplay());
+        AdvancedSetting bank = newSetting(BankSetting.VALUE, 2, 6000, "bank");
         
         registry.register(animals);
         registry.register(pvp);
@@ -44,6 +46,7 @@ public class Settings {
         registry.register(pearl);
         registry.register(slime);
         registry.register(zombie);
+        registry.register(bank);
         
         return registry;
     }

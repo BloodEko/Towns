@@ -90,7 +90,8 @@ public abstract class CmdBase {
      * Checks if the player has enough money.
      * Throws an exception otherwise.
      */
-    public void checkMoney(Economy economy, Player player, double price) {
+    public void checkMoney(Player player, double price) {
+        Economy economy = Services.economy();
         if (economy.getBalance(player) < price) {
             throw new ModifyException("cmds.base.notEnoughMoney",
               Util.format(price), economy.currencyNamePlural());

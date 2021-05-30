@@ -27,7 +27,7 @@ public class FoundCmd extends CmdBase {
     @Override
     public void execute(Player player, String[] args) {
         checkNearTowns(player, range);
-        checkMoney(Services.economy(), player, price);
+        checkMoney(player, price);
         String name = getArg(0, args, "cmds.found.needName");
         
         if (!check.passForgetting(player.getUniqueId())) {
