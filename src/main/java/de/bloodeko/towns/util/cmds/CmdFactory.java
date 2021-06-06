@@ -9,6 +9,7 @@ import de.bloodeko.towns.core.townarea.ui.ClaimCmd;
 import de.bloodeko.towns.core.townarea.ui.UnclaimCmd;
 import de.bloodeko.towns.core.townarea.ui.map.MapCmd;
 import de.bloodeko.towns.core.townarea.ui.map.MapFactory;
+import de.bloodeko.towns.core.townchat.ChatFactory;
 import de.bloodeko.towns.core.townnames.ui.RenameCmd;
 import de.bloodeko.towns.core.townpeople.ui.BuilderCmd;
 import de.bloodeko.towns.core.townpeople.ui.GovenorCmd;
@@ -86,6 +87,7 @@ public class CmdFactory {
         put(cmds, "extensions", new ExtensionsCmd());
         put(cmds, "extension", new ExtensionCmd());
         StageFactory.load(cmds);
+        ChatFactory.load(cmds);
         
         put(cmds, "tp", new TpCmd());
         put(cmds, "rename", new RenameCmd());

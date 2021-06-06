@@ -8,6 +8,7 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 
 import de.bloodeko.towns.core.townarea.ChunkService;
+import de.bloodeko.towns.core.townchat.domain.TownChatService;
 import de.bloodeko.towns.core.townnames.NameService;
 import de.bloodeko.towns.core.townpeople.PeopleService;
 import de.bloodeko.towns.core.townplots.PlotService;
@@ -43,6 +44,7 @@ public class Services {
     SettingsService settingsService;
     StageService stageService;
     PlotService plotService;
+    TownChatService townchatService;
     
     
     public static Towns plugin() {
@@ -84,5 +86,9 @@ public class Services {
     
     public static PlotService plotservice() {
         return instance.plotService;
+    }
+
+    public static TownChatService townchat() {
+        return instance.townchatService;
     }
 }

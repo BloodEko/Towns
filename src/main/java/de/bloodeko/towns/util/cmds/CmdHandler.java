@@ -3,6 +3,7 @@ package de.bloodeko.towns.util.cmds;
 import static de.bloodeko.towns.util.Util.filterList;
 import static de.bloodeko.towns.util.Util.strip0;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,8 +20,18 @@ public class CmdHandler {
         this.cmds = cmds;
     }
     
+    /**
+     * Creates an empty handler with a HashMap.
+     */
+    public CmdHandler() {
+        this.cmds = new HashMap<>();
+    }
+
+    /**
+     * Adds a sub-command to the map.
+     */
     public void register(String key, CmdBase cmd) {
-        this.cmds.put(key, cmd);
+        cmds.put(key, cmd);
     }
     
     /**

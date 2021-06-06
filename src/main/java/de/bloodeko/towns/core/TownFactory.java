@@ -63,6 +63,7 @@ public class TownFactory {
         Services.nameservice().remove(id);
         Services.regionmanager().removeRegion(region.getId());
         Services.plotservice().remove(id);
+        Services.townchat().destroy(id);
     }
     
     /**

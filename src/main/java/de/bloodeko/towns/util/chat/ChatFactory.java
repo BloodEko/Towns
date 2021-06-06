@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.bloodeko.towns.Towns;
+import de.bloodeko.towns.core.townchat.ui.TownChat;
 import de.bloodeko.towns.util.Messages;
 
 /**
@@ -18,6 +19,7 @@ public class ChatFactory {
         map.put('$', newChat("trade"));
         map.put('!', newChat("global"));
         map.put('?', newChat("help"));
+        map.put('#', newTownChat());
         
         ChatListener listener = new ChatListener(map, map.get('!'));
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);
@@ -28,6 +30,13 @@ public class ChatFactory {
         String prefix = Messages.get("chats.local.prefix");
         String suffix = Messages.get("chats.local.suffix");
         return new LocalChat(name, prefix, suffix, 120);
+    }
+    
+    public static Chat newTownChat() {
+        String name = Messages.get("chats.town.name");
+        String prefix = Messages.get("chats.town.prefix");
+        String suffix = Messages.get("chats.town.suffix");
+        return new TownChat(name, prefix, suffix);
     }
     
     public static Chat newTeamChat() {

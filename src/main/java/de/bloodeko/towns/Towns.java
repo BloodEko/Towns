@@ -8,6 +8,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.bloodeko.towns.core.townarea.ChunkData;
+import de.bloodeko.towns.core.townchat.data.ChatData;
 import de.bloodeko.towns.core.townnames.NameData;
 import de.bloodeko.towns.core.townpeople.PeopleData;
 import de.bloodeko.towns.core.townplots.PlotData;
@@ -76,6 +77,7 @@ public class Towns extends JavaPlugin {
         locator.settingsService = SettingsData.read(root.getNode("townsettings"));
         locator.stageService = StageSerializer.read(root.getNode("townstages"));
         locator.townService = TownsData.read(       root.getNode("towns"));
+        locator.townchatService = ChatData.read(    root.getNode("townchats"));
     }
     
     /**
@@ -90,6 +92,7 @@ public class Towns extends JavaPlugin {
         root.set("townsettings", SettingsData.write(locator.settingsService));
         root.set("townstages",   StageSerializer.write(locator.stageService));
         root.set("towns",        TownsData.write(locator.townService));
+        root.set("townchats",    ChatData.write(locator.townchatService));
         
         YamlSerializer serializer = new YamlSerializer(new YamlConfiguration(), root);
         serializer.getResult().save(townsFile);

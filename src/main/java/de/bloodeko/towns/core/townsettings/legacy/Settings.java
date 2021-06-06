@@ -1,5 +1,7 @@
 package de.bloodeko.towns.core.townsettings.legacy;
 
+import de.bloodeko.towns.core.townchat.ChatSetting;
+import de.bloodeko.towns.core.townchat.ui.ChatDisplay;
 import de.bloodeko.towns.core.townplots.PlotSetting;
 import de.bloodeko.towns.core.townplots.PlotSetting.PlotDisplay;
 import de.bloodeko.towns.core.towns.Town;
@@ -38,6 +40,7 @@ public class Settings {
         AdvancedSetting slime = newSetting(SLIME, 2, 5000, new SlimeDisplay());
         AdvancedSetting zombie = newSetting(ZOMBIE, 2, 5000, new ZombieDisplay());
         AdvancedSetting bank = newSetting(BankSetting.VALUE, 2, 6000, "bank");
+        AdvancedSetting chat = newSetting(ChatSetting.VALUE, 2, 5000, new ChatDisplay());
         
         registry.register(animals);
         registry.register(pvp);
@@ -47,6 +50,7 @@ public class Settings {
         registry.register(slime);
         registry.register(zombie);
         registry.register(bank);
+        registry.register(chat);
         
         return registry;
     }
