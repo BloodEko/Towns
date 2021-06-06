@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 import de.bloodeko.towns.Services;
 import de.bloodeko.towns.core.towns.Town;
+import de.bloodeko.towns.core.townsettings.legacy.NameProvider;
 import de.bloodeko.towns.core.townsettings.legacy.Setting;
 import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.ModifyException;
@@ -55,6 +56,29 @@ public class BankSetting extends Setting {
     }
     
     /**
+     * Displays the amount of money in the bank to 
+     * governors in the town overview.
+     */
+    public static class BankDisplay implements NameProvider {
+
+        @Override
+        public String display(Town town) {
+            Object value = town.getSettings().get(VALUE);
+            return value + " " + Services.economy().currencyNamePlural();
+        }
+
+        @Override
+        public String getName() {
+            return Messages.get("settings.bank");
+        }
+        
+        @Override
+        public int getPriority() {
+            return 1;
+        }
+    }
+    
+    /**
      * Allows members of a town to view the balance and 
      * deposit money, and governors to withdraw.
      */
@@ -81,7 +105,7 @@ public class BankSetting extends Setting {
                 getTown(player);
                 BigDecimal deposit = parse(args[1]);
                 checkMoney(player, deposit.doubleValue());
-                Services.economy().withdrawPlayer(player, deposit.doubleValue());
+                takeMoney(player, deposit.doubleValue());
                 bank.add(deposit);
                 Messages.say(player, "cmds.bank.deposited", deposit, bank.currencyName());
                 return;

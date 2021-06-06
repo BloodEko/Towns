@@ -7,7 +7,6 @@ import de.bloodeko.towns.core.townplots.ui.PlotCreateCmd;
 import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.core.townsettings.legacy.NameProvider;
 import de.bloodeko.towns.core.townsettings.legacy.Setting;
-import de.bloodeko.towns.core.townsettings.legacy.Settings;
 import de.bloodeko.towns.util.Messages;
 
 //can the working behavior of the dummies
@@ -41,7 +40,6 @@ public class PlotSetting extends Setting {
     @Override
     public void init(Map<Object, Object> map, Integer id) {
         Services.plotservice().setHandler(id, new PlotHandler());
-        map.put(Settings.PLOTS, "x");
     }
 
     /**
@@ -57,7 +55,6 @@ public class PlotSetting extends Setting {
      */
     @Override
     public void deserialize(Map<Object, Object> map, Object obj) {
-        map.put(Settings.PLOTS, "x");
     }
     
     
@@ -76,11 +73,6 @@ public class PlotSetting extends Setting {
         @Override
         public int getPriority() {
             return 2;
-        }
-
-        @Override
-        public boolean isHidden() {
-            return false;
         }
     }
 }

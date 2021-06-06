@@ -30,6 +30,6 @@ public class StageViewCmd extends CmdBase {
         
         StageView view = StageFactory.newView(stage);
         listener.add(player.getUniqueId(), view);
-        view.open(player, StageFactory.newMapInventory());
+        view.open(player, StageFactory.newMapInventory(stage.getValue()));
     }
 }

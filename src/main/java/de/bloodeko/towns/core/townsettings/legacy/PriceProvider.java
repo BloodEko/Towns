@@ -5,5 +5,5 @@ public interface PriceProvider {
     /**
      * Returns the price this setting would cost.
      */
-    public int getPrice();
+    int getPrice();
 }

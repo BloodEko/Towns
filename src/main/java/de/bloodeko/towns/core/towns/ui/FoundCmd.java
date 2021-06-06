@@ -39,7 +39,7 @@ public class FoundCmd extends CmdBase {
         }
         
         TownFactory.createTown(name, Chunk.fromEntity(player), player.getUniqueId());
-        Services.economy().withdrawPlayer(player, price);
+        takeMoney(player, price);
         Messages.say(player, "cmds.found.created", name);
     }
     

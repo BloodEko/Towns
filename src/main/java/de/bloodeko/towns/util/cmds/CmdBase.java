@@ -99,6 +99,14 @@ public abstract class CmdBase {
     }
     
     /**
+     * Takes the amount of money from the player.
+     * May result in a negative balance.
+     */
+    public void takeMoney(Player player, double val) {
+        Services.economy().withdrawPlayer(player, val);
+    }
+    
+    /**
      * Gets the town at the current location with permission checks.
      * Otherwise throws an exception.
      */

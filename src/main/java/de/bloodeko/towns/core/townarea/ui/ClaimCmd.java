@@ -43,7 +43,7 @@ public class ClaimCmd extends CmdBase {
             claim(town, Chunk.fromEntity(player));
         }
         
-        Services.economy().withdrawPlayer(player, PRICE);
+        takeMoney(player, PRICE);
         Messages.say(player, "cmds.claim.claimedChunk");
     }
     

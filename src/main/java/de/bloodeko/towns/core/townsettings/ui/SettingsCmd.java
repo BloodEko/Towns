@@ -40,12 +40,9 @@ public class SettingsCmd extends CmdBase {
         List<AdvancedSetting> list = new ArrayList<>();
         for (Setting flag : town.getSettings().settings()) {
             AdvancedSetting setting = settings.fromId(flag.getId());
-            if (setting == null)
-                continue;
-            if (setting.names.isHidden()) 
-                continue;
-            
-            list.add(setting);
+            if (setting != null) {
+                list.add(setting);
+            }
         }
         Collections.sort(list, Comparator.comparing(SettingsCmd::getPriority).reversed());
         return list;

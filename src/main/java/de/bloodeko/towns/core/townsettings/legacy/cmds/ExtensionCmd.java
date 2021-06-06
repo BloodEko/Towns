@@ -43,6 +43,9 @@ public class ExtensionCmd extends CmdBase {
             return;
         }
         
+        checkMoney(player, setting.prices.getPrice());
+        takeMoney(player, setting.prices.getPrice());
+        
         town.getSettings().addSetting(setting.settingKey, town.getId());
         Messages.say(player, "cmds.extension.bought", setting.names.getName());
     }

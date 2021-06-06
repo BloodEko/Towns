@@ -9,13 +9,10 @@ import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
-import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.core.townsettings.TownSettings;
-import de.bloodeko.towns.core.townsettings.legacy.NameProvider;
 import de.bloodeko.towns.core.townsettings.legacy.Setting;
 import de.bloodeko.towns.core.townsettings.legacy.Settings;
 import de.bloodeko.towns.core.townsettings.legacy.cmds.BooleanCmd;
-import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.Util;
 
 public class ZombieSetting extends Setting {
@@ -104,30 +101,6 @@ public class ZombieSetting extends Setting {
         public void setValue(TownSettings settings, State obj) {
             checkHasBought(settings, Settings.ZOMBIE);
             Settings.ZOMBIE.set(settings.getFlags(), obj);
-        }
-    }
-    
-    
-    public static class ZombieDisplay implements NameProvider {
-        
-        @Override
-        public String display(Town town) {
-            return Settings.ZOMBIE.read(town.getSettings().getFlags()) + "";
-        }
-
-        @Override
-        public String getName() {
-            return Messages.get("settings.zombie");
-        }
-        
-        @Override
-        public int getPriority() {
-            return 1;
-        }
-        
-        @Override
-        public boolean isHidden() {
-            return false;
         }
     }
 }

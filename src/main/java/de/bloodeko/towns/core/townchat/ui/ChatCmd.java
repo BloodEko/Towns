@@ -32,6 +32,9 @@ public class ChatCmd extends CmdBase {
     
     @Override
     public void execute(Player player, String[] args) {
+        if (args.length == 0) {
+            throw new ModifyException("cmds.chat.syntax");
+        }
         handler.onCommand(player, args);
     }
     

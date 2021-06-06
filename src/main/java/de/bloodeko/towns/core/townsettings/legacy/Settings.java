@@ -7,14 +7,13 @@ import de.bloodeko.towns.core.townplots.PlotSetting.PlotDisplay;
 import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.core.townsettings.legacy.general.AnimalSetting;
 import de.bloodeko.towns.core.townsettings.legacy.general.BankSetting;
+import de.bloodeko.towns.core.townsettings.legacy.general.BankSetting.BankDisplay;
 import de.bloodeko.towns.core.townsettings.legacy.general.PearlSetting;
 import de.bloodeko.towns.core.townsettings.legacy.general.PvpSetting;
 import de.bloodeko.towns.core.townsettings.legacy.general.SlimeSetting;
-import de.bloodeko.towns.core.townsettings.legacy.general.SlimeSetting.SlimeDisplay;
 import de.bloodeko.towns.core.townsettings.legacy.general.WarpSetting;
 import de.bloodeko.towns.core.townsettings.legacy.general.WarpSetting.WarpDisplay;
 import de.bloodeko.towns.core.townsettings.legacy.general.ZombieSetting;
-import de.bloodeko.towns.core.townsettings.legacy.general.ZombieSetting.ZombieDisplay;
 import de.bloodeko.towns.util.Messages;
 
 public class Settings {
@@ -37,9 +36,9 @@ public class Settings {
         AdvancedSetting warp = newSetting(WARP, 2, 4000, new WarpDisplay());
         AdvancedSetting plots = newSetting(PLOTS, 2, 5000, new PlotDisplay());
         AdvancedSetting pearl = newSetting(PEARL, 2, 4000, "pearl");
-        AdvancedSetting slime = newSetting(SLIME, 2, 5000, new SlimeDisplay());
-        AdvancedSetting zombie = newSetting(ZOMBIE, 2, 5000, new ZombieDisplay());
-        AdvancedSetting bank = newSetting(BankSetting.VALUE, 2, 6000, "bank");
+        AdvancedSetting slime = newSetting(SLIME, 2, 5000, "slime");
+        AdvancedSetting zombie = newSetting(ZOMBIE, 2, 5000, "zombie");
+        AdvancedSetting bank = newSetting(BankSetting.VALUE, 2, 6000, new BankDisplay());
         AdvancedSetting chat = newSetting(ChatSetting.VALUE, 2, 5000, new ChatDisplay());
         
         registry.register(animals);
@@ -63,7 +62,7 @@ public class Settings {
     
     private static AdvancedSetting newSetting(Setting setting, int minStage, int price, String name) {
         BuyCondition stages = new MinStage(minStage);
-        NameProvider names = new DefaultDisplay(setting, Messages.get("settings." + name), false);
+        NameProvider names = new DefaultDisplay(setting, Messages.get("settings." + name));
         PriceProvider prices = new DefaultPrice(price);
         return new AdvancedSetting(setting, prices, stages, names);
     }
@@ -113,12 +112,10 @@ public class Settings {
     private static class DefaultDisplay implements NameProvider {
         private Setting setting;
         private String name;
-        private boolean hidden;
         
-        public DefaultDisplay(Setting setting, String name, boolean hidden) {
+        public DefaultDisplay(Setting setting, String name) {
             this.setting = setting;
             this.name = name;
-            this.hidden = hidden;
         }
         
         @Override
@@ -129,16 +126,6 @@ public class Settings {
         @Override
         public String getName() {
             return name;
-        }
-        
-        @Override
-        public int getPriority() {
-            return 1;
-        }
-
-        @Override
-        public boolean isHidden() {
-            return hidden;
         }
     }
 }

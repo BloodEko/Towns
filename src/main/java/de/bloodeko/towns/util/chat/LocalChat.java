@@ -34,7 +34,7 @@ public class LocalChat extends Chat {
         }
     }
     
-    public List<Player> getNearPlayers(Location loc, int distance) {
+    private List<Player> getNearPlayers(Location loc, int distance) {
         List<Player> list = new ArrayList<>();
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.getLocation().distance(loc) < distance) {

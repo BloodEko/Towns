@@ -12,6 +12,7 @@ import de.bloodeko.towns.Towns;
 import de.bloodeko.towns.core.townarea.ChunkService;
 import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.util.Chunk;
+import de.bloodeko.towns.util.Messages;
 import de.bloodeko.towns.util.Util;
 import de.bloodeko.towns.util.Yaw;
 
@@ -45,7 +46,8 @@ public class MapFactory {
      * Returns a new inventory with the TownMap design.
      */
     public static Inventory newMapInventory() {
-        Inventory inv = Bukkit.createInventory(null, 54, "Townmap");
+        String name = Messages.get("cmds.map.gui.header");
+        Inventory inv = Bukkit.createInventory(null, 54, name);
         inv.setContents(newMapContent());
         return inv;
     }

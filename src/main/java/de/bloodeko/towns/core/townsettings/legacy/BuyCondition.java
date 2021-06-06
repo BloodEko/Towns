@@ -8,5 +8,5 @@ public interface BuyCondition {
      * Returns true if the town fulfills the 
      * requirements for a purchase of something.
      */
-    public boolean canBuy(Town town);
+    boolean canBuy(Town town);
 }

@@ -26,9 +26,4 @@ public class ChatDisplay implements NameProvider {
     public int getPriority() {
         return 1;
     }
-
-    @Override
-    public boolean isHidden() {
-        return false;
-    }
 }

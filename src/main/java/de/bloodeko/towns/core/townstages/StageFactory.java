@@ -53,9 +53,9 @@ public class StageFactory {
      * Returns a new inventory with the Stage design.
      * Picks an inventory size to fit all the items.
      */
-    public static Inventory newMapInventory() {
+    public static Inventory newMapInventory(int stage) {
         Inventory inv = Bukkit.createInventory(null, 18, 
-          Messages.get("cmds.stage.gui.header"));
+          Messages.get("cmds.stage.gui.header", stage, stage+1));
         
         for (int i = 0; i < 9; i++) {
             ItemStack item = Util.createItem(Material.BLACK_STAINED_GLASS_PANE, "~~~");

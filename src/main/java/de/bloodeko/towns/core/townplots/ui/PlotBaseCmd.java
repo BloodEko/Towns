@@ -22,7 +22,6 @@ import de.bloodeko.towns.core.townplots.PlotHandler;
 import de.bloodeko.towns.core.towns.Town;
 import de.bloodeko.towns.util.ModifyException;
 import de.bloodeko.towns.util.cmds.CmdBase;
-import net.milkbowl.vault.economy.Economy;
 
 public abstract class PlotBaseCmd extends CmdBase {
     
@@ -81,12 +80,12 @@ public abstract class PlotBaseCmd extends CmdBase {
      * Checks if the player has enough money. Otherwise throws an exception.
      * Pays the price to the towns first found governor.
      */
-    public void payRentToTown(Economy economy, Player player, int price, Town town) {
+    public void payRentToTown(Player player, int price, Town town) {
         checkMoney(player, price);
         UUID toUUID = town.getPeople().getGovernors().iterator().next();
         OfflinePlayer toPlayer = Bukkit.getOfflinePlayer(toUUID);
-        economy.withdrawPlayer(player, price);
-        economy.depositPlayer(toPlayer, price);
+        Services.economy().withdrawPlayer(player, price);
+        Services.economy().depositPlayer(toPlayer, price);
     }
     
     /**

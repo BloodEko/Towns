@@ -2,7 +2,6 @@ package de.bloodeko.towns.core.townplots.ui;
 
 import org.bukkit.entity.Player;
 
-import de.bloodeko.towns.Services;
 import de.bloodeko.towns.core.townplots.PlotData;
 import de.bloodeko.towns.util.Messages;
 
@@ -25,7 +24,7 @@ public class PlotRentCmd extends PlotBaseCmd {
             return;
         }
         
-        payRentToTown(Services.economy(), player, plot.rent, getTownAsPlayer(player));
+        payRentToTown(player, plot.rent, getTownAsPlayer(player));
         plot.rentable = false;
         plot.reversedFor = null;
         plot.renter = player.getUniqueId();

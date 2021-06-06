@@ -7,21 +7,18 @@ public interface NameProvider {
     /**
      * Reads the setting from the town and displays its value.
      */
-    public String display(Town town);
+    String display(Town town);
     
     /**
      * Returns the display name of the setting.
      */
-    public String getName();
+    String getName();
     
     /**
-     * Returns the display priority.
-     * Higher priorities are listed first.
+     * Returns the display priority, higher priorities 
+     * are listed first. Returns 0 by default.
      */
-    public int getPriority();
-    
-    /**
-     * Returns true for settings which are not meant to be displayed.
-     */
-    public boolean isHidden();
+    default int getPriority() {
+        return 0;
+    }
 }

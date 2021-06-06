@@ -116,10 +116,5 @@ public class WarpSetting extends Setting {
         public int getPriority() {
             return 3;
         }
-
-        @Override
-        public boolean isHidden() {
-            return false;
-        }
     }
 }

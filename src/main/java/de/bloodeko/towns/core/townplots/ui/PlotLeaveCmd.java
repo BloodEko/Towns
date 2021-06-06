@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
-import de.bloodeko.towns.Services;
 import de.bloodeko.towns.core.townplots.PlotData;
 import de.bloodeko.towns.util.Messages;
 
@@ -22,7 +21,7 @@ public class PlotLeaveCmd extends PlotBaseCmd {
         
         if (plot.debt > 0) {
             if (plot.debt < (plot.rent * maxDepthRatio)) {
-                payRentToTown(Services.economy(), player, plot.debt, getTownAsPlayer(player));
+                payRentToTown(player, plot.debt, getTownAsPlayer(player));
             }
             plot.debt = 0;
         }
