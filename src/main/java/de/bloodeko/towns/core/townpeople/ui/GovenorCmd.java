@@ -28,12 +28,14 @@ public class GovenorCmd extends CmdBase {
         if (action.equals(addAction)) {
             Player target = getTarget(name);
             town.getPeople().addGovenor(player.getUniqueId(), target.getUniqueId());
+            town.addedPlayer(target.getUniqueId());
             Messages.say(player, "cmds.governor.addedPlayer", target.getName());
             Messages.say(target, "cmds.governor.gainedRank", town.getName());
         }
         else if (action.equals(removeAction)) {
             OfflinePlayer target = getOfflineTarget(name);
             town.getPeople().removeGovenor(player.getUniqueId(), target.getUniqueId());
+            town.removedPlayer(target.getUniqueId());
             Messages.say(player, "cmds.governor.removedPlayer", target.getName());
         } 
         else {

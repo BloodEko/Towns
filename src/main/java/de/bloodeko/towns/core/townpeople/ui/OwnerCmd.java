@@ -26,6 +26,7 @@ public class OwnerCmd extends CmdBase {
         
         canPerform(people, player.getUniqueId(), target.getUniqueId());
         town.getPeople().setOwner(target.getUniqueId());
+        town.addedPlayer(target.getUniqueId());
         Messages.say(player, "cmds.owner.setOwner", target.getName());
     }
     

@@ -1,5 +1,7 @@
 package de.bloodeko.towns.core.towns;
 
+import java.util.UUID;
+
 import de.bloodeko.towns.Services;
 import de.bloodeko.towns.core.townarea.ChunkArea;
 import de.bloodeko.towns.core.townpeople.TownPeople;
@@ -46,5 +48,21 @@ public class Town {
      */
     public PlotHandler getPlots() {
         return Services.plotservice().getPlots(id);
+    }
+
+    /**
+     * Should be called when an player is added to a town
+     * entity to update chats and other services.
+     */
+    public void addedPlayer(UUID uuid) {
+        Services.peopleservice().onAdddedMember(id, uuid);
+    }
+    
+    /**
+     * Should be called when an player is removed from a
+     * town entity to update chats and other services.
+     */
+    public void removedPlayer(UUID uuid) {
+        Services.peopleservice().onRemovedMember(id, uuid);
     }
 }

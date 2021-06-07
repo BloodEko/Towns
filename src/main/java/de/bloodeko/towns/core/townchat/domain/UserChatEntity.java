@@ -32,9 +32,13 @@ public class UserChatEntity {
     
     /**
      * Adds the user to chat, so it can select these.
+     * Selects the chat if there is no other one.
      */
     void add(Integer id) {
         chats.add(id);
+        if (chats.size() == 1) {
+            selected = id;
+        }
     }
     
     /**

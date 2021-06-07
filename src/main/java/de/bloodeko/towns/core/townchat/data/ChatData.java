@@ -53,15 +53,17 @@ public class ChatData {
     public static Node write(TownChatService townchatService) {
         Node node = new Node();
         Node towns = node.newNode("towns");
-        for (Integer id : Services.townchat().getTowns()) {
-            Set<UUID> members = Services.townchat().getPlayers(id);
+
+        TownChatService service = Services.townchat();
+        for (Integer id : service.getTowns()) {
+            Set<UUID> members = service.getPlayers(id);
             towns.set(id.toString(), members.isEmpty() ? "x" : members);
         }
 
         Node selectors = node.newNode("selectors");
-        for (Integer id : Services.townchat().getTowns()) {
-            for (UUID uuid : Services.townchat().getPlayers(id)) {
-                selectors.set(uuid.toString(), id);
+        for (Integer id : service.getTowns()) {
+            for (UUID uuid : service.getPlayers(id)) {
+                selectors.set(uuid.toString(), service.getSelected(uuid));
             }
         }
         return node;
